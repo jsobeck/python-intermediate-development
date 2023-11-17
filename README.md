@@ -67,7 +67,9 @@ To cite this lesson, please consult with [CITATION](CITATION).
 
 ## Acknowledgements
 
-Original lesson authors Aleksandra Nenadic, James Graham, and Steve Crouch were supported by the [UK's Software Sustainability Institute][ssi] via the [EPSRC, BBSRC, ESRC, NERC, AHRC, STFC and MRC grant EP/S021779/1](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/S021779/1).
+The authors of this lesson are endorsed by the LSST TVS Science Collaboration.
+
+The authors of the original "Intermediate Research Software Development" lesson, Aleksandra Nenadic, James Graham, and Steve Crouch, were supported by the [UK's Software Sustainability Institute][ssi] via the [EPSRC, BBSRC, ESRC, NERC, AHRC, STFC and MRC grant EP/S021779/1](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/S021779/1).
 
 [swc-lessons]: https://software-carpentry.org/lessons/
 [best-practices]: http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001745
