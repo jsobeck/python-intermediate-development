@@ -253,6 +253,6 @@ If you are using a Python 3 distribution from [Python.org](https://www.python.or
 two tools (that correspond to your Python distribution) installed on your machine.
 
 ## PyCharm IDE
-We use [Jupyter Lab] (https://jupyter.org/install) for the course. It can be installed using `pip`.
+We use [Jupyter Lab](https://jupyter.org/install) for the course. It can be installed using `pip`.
 
 {% include links.md %}
