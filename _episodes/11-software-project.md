@@ -15,37 +15,21 @@ keypoints:
 how the application itself interacts with its users."
 - "MVC is a software design architecture which divides the application into three interconnected modules: Model (data),
 View (user interface), and Controller (input/output and data manipulation)."
-- "The software project we use throughout this course is an example of an MVC application that manipulates
-patients’ inflammation data and performs basic statistical analysis using Python."
+- "The software project we use throughout this course is an example of an MVC application that **DEFINE_THIS**."
 ---
 
-## Patient Inflammation Study Project
+## Light Curve Analysis Project
 So, you have joined a software development team that has been working on the
-[patient inflammation study project](https://github.com/carpentries-incubator/python-intermediate-inflammation)
+[light curve analysis project](https://github.com/ShrRa/InterPython_Workshop_Example)
 developed in Python and stored on GitHub.
-The project analyses the data to study the effect of a new treatment for arthritis
-by analysing the inflammation levels in patients who have been given this treatment.
-It reuses the inflammation datasets from the
-[Software Carpentry Python novice lesson](https://swcarpentry.github.io/python-novice-inflammation/index.html).
+PROJECT DESCRIPTION HERE
 
-![Snapshot of the inflammation dataset](../fig/inflammation-study-pipeline.png){: .image-with-shadow width="800px" }
-<p style="text-align: center;">Inflammation study pipeline from the <a href="https://swcarpentry.github.io/python-novice-inflammation/fig/lesson-overview.svg">Software Carpentry Python novice lesson</a></p>
+![Snapshot of the light curve dataset](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+<p style="text-align: center;">Figure title</p>
 
-> ## What Does Patient Inflammation Data Contain?
+> ## What Does Light Curve Dataset Contain?
 >
-> Each dataset records inflammation measurements from a separate clinical trial of the drug,
-> and each dataset contains information for 60 patients,
-> who had their inflammation levels recorded for 40 days whilst participating in the trial
-> (a snapshot of one of the data files is shown in diagram above).
->
-> Each of the data files uses the popular
-> [comma-separated (CSV) format](https://en.wikipedia.org/wiki/Comma-separated_values)
-> to represent the data, where:
->
-> - Each row holds inflammation measurements for a single patient,
-> - Each column represents a successive day in the trial,
-> - Each cell represents an inflammation reading on a given day for a patient
->   (in some arbitrary units of inflammation measurement).
+> Dataset description
 {: .callout}
 
 The project is not finished and contains some errors.
@@ -63,10 +47,10 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
    and that you have set up your SSH key pair for authentication with GitHub,
    as explained in [Setup](../setup.html#secure-access-to-github-using-git-from-command-line).
 2. Log into your GitHub account.
-3. Go to the [software project template repository](https://github.com/carpentries-incubator/python-intermediate-inflammation)
+3. Go to the [software project template repository](https://github.com/ShrRa/InterPython_Workshop_Example)
    in GitHub.
 
-   ![Software project template repository in GitHub](../fig/template-repository.png){: .image-with-shadow width="800px" }
+   ![Software project template repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="800px" }
 
 4. Click the `Use this template` button
    towards the top right of the template repository's GitHub page to create
@@ -76,20 +60,20 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
    Also, we are not forking the directory but creating a copy
    (remember - you can have only one *fork* but can have multiple *copies* of a repository in GitHub).
 5. Make sure to select your personal account
-   and set the name of the project to `python-intermediate-inflammation`
+   and set the name of the project to `python-intermediate-light-curve`
    (you can call it anything you like,
    but it may be easier for future group exercises if everyone uses the same name).
    Also set the new repository's visibility to 'Public' -
    so it can be seen by others and by third-party Continuous Integration (CI) services
    (to be covered later on in the course).
 
-   ![Making a copy of the software project template repository in GitHub](../fig/copy-template-repository.png){: .image-with-shadow width="600px" }
+   ![Making a copy of the software project template repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="600px" }
 
 6. Click the `Create repository from template` button
    and wait for GitHub to import the copy of the repository under your account.
 7. Locate the copied repository under your own GitHub account.
 
-   ![View of the own copy of the software template repository in GitHub](../fig/own-template-repository.png){: .image-with-shadow width="800px" }
+   ![View of the own copy of the software template repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="800px" }
 
 > ## Exercise: Obtain the Software Project Locally
 > Using the command line, clone the copied repository
@@ -102,7 +86,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 > > Also make sure you select the **SSH tab** and not the **HTTPS** one -
 > > you'll be able to clone with HTTPS, but not to send your changes back to GitHub!
 > >
-> > ![URL to clone the repository in GitHub](../fig/clone-repository.png){: .image-with-shadow width="800px" }
+> > ![URL to clone the repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="800px" }
 > >
 > > 2. Make sure you are located in your home directory in the command line with:
 > >     ~~~
@@ -111,20 +95,20 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 > >     {: .language-bash}
 > > 3. From your home directory in the command line, do:
 > >     ~~~
-> >     $ git clone git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-inflammation.git
+> >     $ git clone git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-light-curve.git
 > >     ~~~
 > >     {: .language-bash}
 > >    Make sure you are cloning your copy of the software project and not the template repository.
 > >
 > > 4. Navigate into the cloned repository folder in your command line with:
 > >     ~~~
-> >     $ cd python-intermediate-inflammation
+> >     $ cd python-intermediate-light-curve
 > >     ~~~
 > >     {: .language-bash}
 > > Note: If you have accidentally copied the **HTTPS** URL of your repository instead of the SSH one,
 > > you can easily fix that from your project folder in the command line with:
 > >     ~~~
-> >     $ git remote set-url origin git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-inflammation.git
+> >     $ git remote set-url origin git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-light-curve.git
 > >     ~~~
 > >     {: .language-bash}
 > {: .solution}
@@ -137,79 +121,26 @@ you can use the command `ls -l` to get a more detailed list of the contents.
 You should see something similar to the following.
 
 ~~~
-$ cd ~/python-intermediate-inflammation
+$ cd ~/python-intermediate-light-curve
 $ ls -l
 total 24
 -rw-r--r--   1 carpentry  users  1055 20 Apr 15:41 README.md
 drwxr-xr-x  18 carpentry  users   576 20 Apr 15:41 data
-drwxr-xr-x   5 carpentry  users   160 20 Apr 15:41 inflammation
--rw-r--r--   1 carpentry  users  1122 20 Apr 15:41 inflammation-analysis.py
-drwxr-xr-x   4 carpentry  users   128 20 Apr 15:41 tests
+...
 ~~~
 {: .language-bash}
 
-As can be seen from the above, our software project contains the `README` file
-(that typically describes the project, its usage, installation, authors and how to contribute),
-Python script `inflammation-analysis.py`,
-and three directories -
-`inflammation`, `data` and `tests`.
 
-The Python script `inflammation-analysis.py` provides
-the main entry point in the application,
-and on closer inspection,
-we can see that the `inflammation` directory contains two more Python scripts -
-`views.py` and `models.py`.
-We will have a more detailed look into these shortly.
-
-~~~
-$ ls -l inflammation
-total 24
--rw-r--r--  1 alex  staff   71 29 Jun 09:59 __init__.py
--rw-r--r--  1 alex  staff  838 29 Jun 09:59 models.py
--rw-r--r--  1 alex  staff  649 25 Jun 13:13 views.py
-~~~
-{: .language-bash}
-
-Directory `data` contains several files with patients’ daily inflammation information
-(along with some other files):
-
-~~~
-$ ls -l data
-total 264
--rw-r--r--  1 alex  staff   5365 25 Jun 13:13 inflammation-01.csv
--rw-r--r--  1 alex  staff   5314 25 Jun 13:13 inflammation-02.csv
--rw-r--r--  1 alex  staff   5127 25 Jun 13:13 inflammation-03.csv
--rw-r--r--  1 alex  staff   5367 25 Jun 13:13 inflammation-04.csv
--rw-r--r--  1 alex  staff   5345 25 Jun 13:13 inflammation-05.csv
--rw-r--r--  1 alex  staff   5330 25 Jun 13:13 inflammation-06.csv
--rw-r--r--  1 alex  staff   5342 25 Jun 13:13 inflammation-07.csv
--rw-r--r--  1 alex  staff   5127 25 Jun 13:13 inflammation-08.csv
--rw-r--r--  1 alex  staff   5327 25 Jun 13:13 inflammation-09.csv
--rw-r--r--  1 alex  staff   5342 25 Jun 13:13 inflammation-10.csv
--rw-r--r--  1 alex  staff   5127 25 Jun 13:13 inflammation-11.csv
--rw-r--r--  1 alex  staff   5340 25 Jun 13:13 inflammation-12.csv
--rw-r--r--  1 alex  staff  22554 25 Jun 13:13 python-novice-inflammation-data.zip
--rw-r--r--  1 alex  staff     12 25 Jun 13:13 small-01.csv
--rw-r--r--  1 alex  staff     15 25 Jun 13:13 small-02.csv
--rw-r--r--  1 alex  staff     12 25 Jun 13:13 small-03.csv
-~~~
-{: .language-bash}
-
-As [previously mentioned](#what-is-the-format-of-the-data),
-each of the inflammation data files contains separate trial data for 60 patients over 40 days.
 
 > ## Exercise: Have a Peek at the Data
-> Which command(s) would you use to list the contents or a first few lines of `data/inflammation-01.csv` file?
+> Which command(s) would you use to list the contents or a first few lines of `data/kepler-lc.csv` file?
 > > ## Solution
-> > 1. To list the entire content of a file from the project root do: `cat data/inflammation-01.csv`.
-> > 2. To list the first 5 lines of a file from the project root do: `head -n 5 data/inflammation-01.csv`.
+> > 1. To list the entire content of a file from the project root do: `cat data/kepler-lc.csv`.
+> > 2. To list the first 5 lines of a file from the project root do: `head -n 5 data/kepler-lc.csv`.
 > >
 > > ~~~
 > 0,0,1,3,2,3,6,4,5,7,2,4,11,11,3,8,8,16,5,13,16,5,8,8,6,9,10,10,9,3,3,5,3,5,4,5,3,3,0,1
-> 0,1,1,2,2,5,1,7,4,2,5,5,4,6,6,4,16,11,14,16,14,14,8,17,4,14,13,7,6,3,7,7,5,6,3,4,2,2,1,1
-> 0,1,1,1,4,1,6,4,6,3,6,5,6,4,14,13,13,9,12,19,9,10,15,10,9,10,10,7,5,6,8,6,6,4,3,5,2,1,1,1
-> 0,0,0,1,4,5,6,3,8,7,9,10,8,6,5,12,15,5,10,5,8,13,18,17,14,9,13,4,10,11,10,8,8,6,5,5,2,0,2,0
-> 0,0,1,0,3,2,5,4,8,2,9,3,3,10,12,9,14,11,13,8,6,18,11,9,13,11,8,5,5,2,8,5,3,5,4,1,3,1,1,0
+> ...
 > > ~~~
 > >{: .output}
 > {: .solution}
@@ -295,7 +226,7 @@ into three interconnected modules:
 **Model** represents the data used by a program and also contains operations/rules
 for manipulating and changing the data in the model.
 This may be a database, a file, a single data object or a series of objects -
-for example a table representing patients' data.
+for example a table representing light curve observations.
 
 **View** is the means of displaying data to users/clients within an application
 (i.e. provides visualisation of the state of the model).
@@ -377,13 +308,13 @@ For example, the diagram below depicts the use of MVC architecture for the
 #### Our Project's MVC Architecture
 
 Our software project uses the MVC architecture.
-The file `inflammation-analysis.py` is the **Controller** module
-that performs basic statistical analysis over patient data
+The file `lightcurve-analysis.py` is the **Controller** module
+that performs basic statistical analysis over light curve data
 and provides the main entry point into the application.
 The **View** and **Model** modules are contained in the files `views.py` and `models.py`, respectively,
 and are conveniently named.
 Data underlying the **Model** is contained within the directory `data` -
-as we have seen already it contains several files with patients’ daily inflammation information.
+as we have seen already it contains several files with light curves.
 
 We will revisit the software architecture and MVC topics once again in later episodes
 when we talk in more detail about software's
@@ -391,6 +322,6 @@ when we talk in more detail about software's
 and [software design](../32-software-design/index.html).
 We now proceed to set up our virtual development environment
 and start working with the code using a more convenient graphical tool -
-[IDE PyCharm](https://www.jetbrains.com/pycharm/).
+[IDE Jupyter Lab](https://jupyter.org/).
 
 {% include links.md %}
