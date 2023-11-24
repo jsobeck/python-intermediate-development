@@ -57,6 +57,10 @@ and isolate our software project from other Python projects we may work on.
 [see the solution to this issue](../common-issues/index.html#python-hangs-in-git-bash).*
 
 ### Integrated Development Environment (IDE)
+> [!IMPORTANT]
+> Alex: This section has to be expanded with a discussion on which IDE is better,
+> why we are choosing Jupyter Lab and with references to the original PyCharm episodes.
+
 An IDE integrates a number of tools that we need
 to develop a software project that goes beyond a single script -
 including a smart code editor, a code compiler/interpreter, a debugger, etc.
@@ -70,7 +74,9 @@ as this knowledge can be ported to other programming languages
 and command line tools you may use in the future
 (but is applicable to the integrated versions too).
 
-We will use [PyCharm](https://www.jetbrains.com/pycharm/) in this course -
+~~~We will use [PyCharm](https://www.jetbrains.com/pycharm/) in this course -
+a free, open source IDE.~~~
+We will use [Jupyter Lab](https://jupyter.org/install) in this course -
 a free, open source IDE.
 
 ### Git & GitHub
