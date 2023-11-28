@@ -158,6 +158,9 @@ it interacts and obtains the packages from the central repository called
 > from remote package repositories and install them on your system, and
 > (2) it is also a virtual environment manager.
 > So, you can use `conda` for both tasks instead of using `venv` and `pip`.
+> However, there are some differences in the way `pip` and `conda` work.
+> Quoting Jake VanderPlas, "`pip` installs _python_ packages in any environment.
+> `conda` installs _any_ package in `conda` environments. Here is [a great intro](https://jakevdp.github.io/blog/2016/08/25/conda-myths-and-misconceptions/) into the topic.
 {: .callout}
 
 ### Many Tools for the Job
