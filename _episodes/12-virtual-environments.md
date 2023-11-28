@@ -28,11 +28,9 @@ We now want to run our code to see what it does -
 let's do that from the command line.
 For the most part of the course we will run our code
 and interact with Git from the command line.
-While we will develop and debug our code using the PyCharm IDE
-and it is possible to use Git from PyCharm too,
-typing commands in the command line allows you to familiarise yourself and learn it well.
-A bonus is that this knowledge is transferable to running code in other programming languages
-and is independent from any IDE you may use in the future.
+While we will develop and debug our code using the Jupyter Lab
+and it is possible to use Git with a Jupyter Lab extension (and many other IDEs have built-in functionality for this too),
+typing commands in the command line allows you to familiarise yourself and learn it well. Running Git from the command line does not depend on the IDE and for the most part, uses the same commands in different OS, so it is the most universal way of using it.
 
 If you have a little peek into our code
 (e.g. run `cat inflammation/views.py` from the project root),
@@ -139,9 +137,6 @@ all will do the job of managing Python virtual environments for you
 and it may be a matter of personal preference which one you go for.
 In this course, we will use `venv` to create and manage our virtual environment
 (which is the preferred way for Python 3.3+).
-The upside is that `venv` virtual environments created from the command line are
-also recognised and picked up automatically by PyCharm IDE,
-as we will see in the next episode.
 
 ### Managing External Packages
 
