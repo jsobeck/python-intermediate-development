@@ -14,15 +14,15 @@ keypoints:
 
 ## Verifying Code Style Using Linters
 
-We've seen how we can use PyCharm to help us format our Python code in a consistent style.
-This aids reusability,
+We've seen how we can use Jupyter Lab to help us format our Python code consistently.
+This aids reusability
 since consistent-looking code is easier to modify
 since it's easier to read and understand.
 We can also use tools,
 called [**code linters**](https://en.wikipedia.org/wiki/Lint_%28software%29),
 to identify consistency issues in a report-style.
 Linters analyse source code to identify and report on stylistic and even programming errors.
-Let's look at a very well used one of these called `pylint`.
+Let's look at a very well-used one of these called `pylint`.
 
 First, let's ensure we are on the `style-fixes` branch once again.
 
@@ -31,21 +31,7 @@ $ git checkout style-fixes
 ~~~
 {: .language-bash}
 
-Pylint is just a Python package so we can install it in our virtual environment using:
-
-~~~
-$ pip3 install pylint
-$ pylint --version
-~~~
-{: .language-bash}
-
-We should see the version of Pylint, something like:
-
-~~~
-pylint 2.13.3
-...
-~~~
-{: .output}
+**Instructions on how to install pylint (or rather `nbQA`) for Jupyter Lab**
 
 We should also update our `requirements.txt` with this new addition:
 
@@ -54,10 +40,11 @@ $ pip3 freeze > requirements.txt
 ~~~
 {: .language-bash}
 
+**Instructions on how to run Pylint with `nbQA`**
 Pylint is a command-line tool that can help our code in many ways:
 
 - **Check PEP8 compliance:**
-  whilst in-IDE context-sensitive highlighting such as that provided via PyCharm
+  whilst in-IDE context-sensitive highlighting such as that provided via Jupyter Lab (**?**)
   helps us stay consistent with PEP8 as we write code, this tool provides a full report
 - **Perform basic error detection:** Pylint can look for certain Python type errors
 - **Check variable naming conventions**:
