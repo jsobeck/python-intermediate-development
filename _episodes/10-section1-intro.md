@@ -57,9 +57,6 @@ and isolate our software project from other Python projects we may work on.
 [see the solution to this issue](../common-issues/index.html#python-hangs-in-git-bash).*
 
 ### Integrated Development Environment (IDE)
-> [!IMPORTANT]
-> Alex: This section has to be expanded with a discussion on which IDE is better,
-> why we are choosing Jupyter Lab and with references to the original PyCharm episodes.
 
 An IDE integrates a number of tools that we need
 to develop a software project that goes beyond a single script -
@@ -74,10 +71,23 @@ as this knowledge can be ported to other programming languages
 and command line tools you may use in the future
 (but is applicable to the integrated versions too).
 
-~~ We will use [PyCharm](https://www.jetbrains.com/pycharm/) in this course -
-a free, open source IDE. ~~
-We will use [Jupyter Lab](https://jupyter.org/install) in this course -
-a free, open source IDE.
+There are several popular IDEs for Python, such as IDLE, PyCharm, Spyder, VS Studio, 
+and so on. In this course, we will use [Jupyter Lab](https://jupyter.org/install) - 
+a free, open-source IDE, widely used in the astronomic community.
+
+> ## Is JupyterLab actually an IDE? 
+> JupyterLab is the next evolutionary step for the Jupyter Notebooks, a web-based interactive environment for
+> exploratory coding. While Jupyter Notebooks lack some of the features of classical IDEs (most notably, a debugger),
+> the latest versions of JupyterLab include all the necessary functionality. Terminology aside, JupyterLab is a very popular
+> tool for data analysis and in the research community. More so, JupyterLab still bears a strong resemblance to Jupyter Notebooks,
+> Google Colab and LSST Rubin Science Platform (RSP) Notebook aspect. Many astronomical platforms that provide access to
+> computational resources and observational datasets also have Jupyter Notebooks installed. For this reason, in this course, we aim to
+> show which tools and practices can help you write high-quality, reusable, and reliable software using JupyterLab.
+> The original version of this course was developed for PyCharm IDE, which is usually considered to be
+> more suited for software development that is not related to data exploration and analysis. That course is included in
+> the Carpentries Incubator program, and you can access it [here](https://carpentries-incubator.github.io/python-intermediate-development/).
+{: .callout}
+
 
 ### Git & GitHub
 [Git](https://git-scm.com/) is a free and open source distributed version control system
