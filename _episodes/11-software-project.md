@@ -19,17 +19,22 @@ View (user interface), and Controller (input/output and data manipulation)."
 ---
 
 ## Light Curve Analysis Project
-So, you have joined a software development team that has been working on the
+For this workshop, let's assume that you  have joined a software development team that has been working on the
 [light curve analysis project](https://github.com/ShrRa/InterPython_Workshop_Example)
-developed in Python and stored on GitHub.
-PROJECT DESCRIPTION HERE
+developed in Python and stored on GitHub. The purpose of this software is to analyze the variability of astronomical sources, 
+using observations that come from different instruments.
 
 ![Snapshot of the light curve dataset](../fig/imgDummy.png){: .image-with-shadow width="800px" }
 <p style="text-align: center;">Figure title</p>
 
 > ## What Does Light Curve Dataset Contain?
 >
-> Dataset description
+> For developing and testing our software project, we will use two RR Lyrae variability datasets.
+>
+> The first dataset contains observations coming from the Kepler space telescope. In this dataset, all observations are related to the same source,
+> i.e. the whole table represents a single light curve. The second dataset contains observations of 25 astronomical sources. Considering that the datasets
+> come from different instruments, they also have different formats and column names - a common situation in real life. It is always a good idea to develop your
+> software in such a way that it remains usable even if the format of the input data has changed.
 {: .callout}
 
 The project is not finished and contains some errors.
@@ -50,7 +55,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 3. Go to the [software project template repository](https://github.com/ShrRa/InterPython_Workshop_Example)
    in GitHub.
 
-   ![Software project template repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+   ![Software project template repository in GitHub](../fig/11_2_soft_proj_repo.png){: .image-with-shadow width="800px" }
 
 4. Click the `Use this template` button
    towards the top right of the template repository's GitHub page to create
