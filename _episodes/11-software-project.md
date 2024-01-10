@@ -72,13 +72,13 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
    so it can be seen by others and by third-party Continuous Integration (CI) services
    (to be covered later on in the course).
 
-   ![Making a copy of the software project template repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="600px" }
+   ![Making a copy of the software project template repository in GitHub](../fig/11_3_soft_proj_repo.png){: .image-with-shadow width="600px" }
 
 6. Click the `Create repository from template` button
    and wait for GitHub to import the copy of the repository under your account.
 7. Locate the copied repository under your own GitHub account.
 
-   ![View of the own copy of the software template repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+   ![View of the own copy of the software template repository in GitHub](../fig/11_4_soft_proj_repo.png){: .image-with-shadow width="800px" }
 
 > ## Exercise: Obtain the Software Project Locally
 > Using the command line, clone the copied repository
@@ -91,7 +91,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 > > Also make sure you select the **SSH tab** and not the **HTTPS** one -
 > > you'll be able to clone with HTTPS, but not to send your changes back to GitHub!
 > >
-> > ![URL to clone the repository in GitHub](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+> > ![URL to clone the repository in GitHub](../fig/11_5_soft_proj_repo.png){: .image-with-shadow width="800px" }
 > >
 > > 2. Make sure you are located in your home directory in the command line with:
 > >     ~~~
@@ -128,31 +128,64 @@ You should see something similar to the following.
 ~~~
 $ cd ~/python-intermediate-light-curve
 $ ls -l
-total 24
--rw-r--r--   1 carpentry  users  1055 20 Apr 15:41 README.md
-drwxr-xr-x  18 carpentry  users   576 20 Apr 15:41 data
+total 284
+drwxrwxr-x 2 alex alex     52 Jan 10 20:29 data
+-rw-rw-r-- 1 alex alex 285218 Jan 10 20:29 light-curve-analysis.ipynb
+drwxrwxr-x 2 alex alex     58 Jan 10 20:29 lightcurves
+-rw-rw-r-- 1 alex alex   1171 Jan 10 20:29 README.md
+drwxrwxr-x 2 alex alex     51 Jan 10 20:29 tests
 ...
 ~~~
 {: .language-bash}
 
+As can be seen from the above, our software project contains the README file 
+(that typically describes the project, its usage, installation, authors and how to contribute), 
+Jupyter Notebook light-curve-analysis.ipynb, and three directories - lightcurves, data and tests.
 
+The Jupyter Notebook light-curve-analysis.ipynb is where exploratory analysis is done, 
+and on closer inspection, we can see that the lightcurves directory contains two Python 
+scripts - views.py and models.py. We will have a more detailed look into these shortly.
+
+~~~
+$ cd ~/python-intermediate-light-curve/lightcurve
+$ ls -l
+total 12
+-rw-rw-r-- 1 alex alex 903 Jan 10 20:29 models.py
+-rw-rw-r-- 1 alex alex 718 Jan 10 20:29 views.py
+...
+~~~
+{: .language-bash}
+
+Directory data contains two files with the lightcurves coming from two instruments, Kepler and LSST:
+~~~
+$ cd ~/python-intermediate-light-curve/data
+$ ls -l
+total 24008
+-rw-rw-r-- 1 alex alex 23686283 Jan 10 20:29 kepler_RRLyr.csv
+-rw-rw-r-- 1 alex alex   895553 Jan 10 20:29 lsst_RRLyr.pkl
+...
+~~~
+{: .language-bash}
 
 > ## Exercise: Have a Peek at the Data
-> Which command(s) would you use to list the contents or a first few lines of `data/kepler-lc.csv` file?
+> Which command(s) would you use to list the contents or a first few lines of `data/kepler_RRLyr.csv` file?
 > > ## Solution
-> > 1. To list the entire content of a file from the project root do: `cat data/kepler-lc.csv`.
-> > 2. To list the first 5 lines of a file from the project root do: `head -n 5 data/kepler-lc.csv`.
+> > 1. To list the entire content of a file from the project root do: `cat data/kepler_RRLyr.csv`.
+> > 2. To list the first 5 lines of a file from the project root do: `head -n 5 data/kepler_RRLyr.csv`.
 > >
 > > ~~~
-> 0,0,1,3,2,3,6,4,5,7,2,4,11,11,3,8,8,16,5,13,16,5,8,8,6,9,10,10,9,3,3,5,3,5,4,5,3,3,0,1
+> time,flux,flux_err,quality,timecorr,centroid_col,centroid_row,cadenceno,sap_flux,sap_flux_err,sap_bkg,sap_bkg_err,pdcsap_flux,pdcsap_flux_err,sap_quality,psf_centr1,psf_centr1_err,psf_centr2,psf_centr2_err,mom_centr1,mom_centr1_err,mom_centr2,mom_centr2_err,pos_corr1,pos_corr2
 > ...
 > > ~~~
+> > Pay attention that while the `.csv` format is human-readable, if you try to run `head -n 5 data/lsst_RRLyr.pkl`, the output will be non-human-readable. 
 > >{: .output}
 > {: .solution}
 {: .challenge}
 
 Directory `tests` contains several tests that have been implemented already.
 We will be adding more tests during the course as our code grows.
+
+**TELL MORE ABOUT THE TESTS**
 
 An important thing to note here is that the structure of the project is not arbitrary.
 One of the big differences between novice and intermediate software development is
