@@ -33,18 +33,18 @@ and it is possible to use Git with a Jupyter Lab extension (and many other IDEs 
 typing commands in the command line allows you to familiarise yourself and learn it well. Running Git from the command line does not depend on the IDE and for the most part, uses the same commands in different OS, so it is the most universal way of using it.
 
 If you have a little peek into our code
-(e.g. run `cat inflammation/views.py` from the project root),
+(e.g. run `cat lightcurves/views.py` from the project root),
 you will see the following two lines somewhere at the top.
 
 ~~~
 from matplotlib import pyplot as plt
-import numpy as np
+import pandas as pd
 ~~~
 {: .language-python}
 
 This means that our code requires two *external libraries*
 (also called third-party packages or dependencies) -
-`numpy` and `matplotlib`.
+`pandas` and `matplotlib`.
 Python applications often use external libraries that don’t come as part of the standard Python distribution.
 This means that you will have to use a *package manager* tool to install them on your system.
 Applications will also sometimes need a
@@ -302,7 +302,7 @@ by checking the path using the command `which`:
 {: .language-bash}
 
 ~~~
-/home/alex/python-intermediate-inflammation/venv/bin/python3
+/home/alex/python-intermediate-light-curve/venv/bin/python3
 ~~~
 {: .output}
 
@@ -345,7 +345,7 @@ we will see how to handle it using Git in one of the subsequent episodes.
 ### Installing External Packages Using `pip`
 
 We noticed earlier that our code depends on two *external packages/libraries* -
-`numpy` and `matplotlib`.
+`pandas` and `matplotlib`.
 In order for the code to run on your machine,
 you need to install these two dependencies into your virtual environment.
 
@@ -353,7 +353,7 @@ To install the latest version of a package with `pip`
 you use pip's `install` command and specify the package’s name, e.g.:
 
 ~~~
-(venv) $ pip3 install numpy
+(venv) $ pip3 install pandas
 (venv) $ pip3 install matplotlib
 ~~~
 {: .language-bash}
@@ -361,7 +361,7 @@ you use pip's `install` command and specify the package’s name, e.g.:
 or like this to install multiple packages at once for short:
 
 ~~~
-(venv) $ pip3 install numpy matplotlib
+(venv) $ pip3 install pandas matplotlib
 ~~~
 {: .language-bash}
 
@@ -386,30 +386,30 @@ If you run the `pip3 install` command on a package that is already installed,
 
 To install a specific version of a Python package
 give the package name followed by `==` and the version number,
-e.g. `pip3 install numpy==1.21.1`.
+e.g. `pip3 install pandas==2.1.2`.
 
 To specify a minimum version of a Python package,
-you can do `pip3 install numpy>=1.20`.
+you can do `pip3 install pandas>=2.1.0`.
 
-To upgrade a package to the latest version, e.g. `pip3 install --upgrade numpy`.
+To upgrade a package to the latest version, e.g. `pip3 install --upgrade pandas`.
 
 To display information about a particular installed package do:
 
 ~~~
-(venv) $ pip3 show numpy
+(venv) $ pip3 show pandas
 ~~~
 {: .language-bash}
 ~~~
-Name: numpy
-Version: 1.21.2
-Summary: NumPy is the fundamental package for array computing with Python.
-Home-page: https://www.numpy.org
-Author: Travis E. Oliphant et al.
-Author-email: None
-License: BSD
-Location: /Users/alex/work/SSI/Carpentries/python-intermediate-inflammation/inflammation/lib/python3.9/site-packages
-Requires:
-Required-by: matplotlib
+Name: pandas
+Version: 2.1.4
+Summary: Powerful data structures for data analysis, time series, and statistics
+Home-page: https://pandas.pydata.org
+Author: 
+Author-email: The Pandas Development Team <pandas-dev@python.org>
+License: BSD 3-Clause License
+...
+Requires: numpy, python-dateutil, pytz, tzdata
+Required-by: 
 ~~~
 {: .output}
 
@@ -422,20 +422,23 @@ To list all packages installed with `pip` (in your current virtual environment):
 ~~~
 Package         Version
 --------------- -------
-cycler          0.11.0
-fonttools       4.28.1
-kiwisolver      1.3.2
-matplotlib      3.5.0
-numpy           1.21.4
-packaging       21.2
-Pillow          8.4.0
-pip             21.1.3
-pyparsing       2.4.7
+contourpy       1.2.0
+cycler          0.12.1
+fonttools       4.47.2
+kiwisolver      1.4.5
+matplotlib      3.8.2
+numpy           1.26.3
+packaging       23.2
+pandas          2.1.4
+pillow          10.2.0
+pip             23.3.2
+pyparsing       3.1.1
 python-dateutil 2.8.2
-setuptools      57.0.0
-setuptools-scm  6.3.2
+pytz            2023.3.post1
+setuptools      65.5.0
 six             1.16.0
-tomli           1.2.2
+tzdata          2023.4
+
 ~~~
 {: .output}
 
@@ -460,18 +463,21 @@ A common convention is to put this list in a `requirements.txt` file:
 ~~~
 {: .language-bash}
 ~~~
-cycler==0.11.0
-fonttools==4.28.1
-kiwisolver==1.3.2
-matplotlib==3.5.0
-numpy==1.21.4
-packaging==21.2
-Pillow==8.4.0
-pyparsing==2.4.7
+contourpy==1.2.0
+cycler==0.12.1
+fonttools==4.47.2
+kiwisolver==1.4.5
+matplotlib==3.8.2
+numpy==1.26.3
+packaging==23.2
+pandas==2.1.4
+pillow==10.2.0
+pyparsing==3.1.1
 python-dateutil==2.8.2
-setuptools-scm==6.3.2
+pytz==2023.3.post1
 six==1.16.0
-tomli==1.2.2
+tzdata==2023.4
+
 ~~~
 {: .output}
 
