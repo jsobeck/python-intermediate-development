@@ -71,15 +71,21 @@ You will have to decide which one is the best for you -
 in this course, we will use [Jupyter Lab](https://jupyter.org/install) - a free open-source web-based IDE 
 familiar to most Python-coding astronomers.
 
-> ## (PyCharm OR VS Code OR Spyder) vs. (Jupyter Notebooks OR Jupyter lab)
-> Explanation of the differences between full-scale IDEs and Jupyter IDEs
+> ## Is Jupyter Lab an IDE?
+> In the astronomical community, Jupyter **Notebooks** is not an IDE, since they lack a lot of functionality
+> that is essential for the full cycle of software development. The most notable instrument that wasn't present in
+> Jupyter Notebooks was the debugger.
+>
+> However, modern versions of Jupyter **Lab**, an evolutionary development of Jupyter Notebooks, come with the built-in debugger, as well as
+> with all the rest of the basic IDE instruments. Formally, this makes Jupyter Lab a full-fledged IDE. At the same time,
+> Jupyter Lab and classic IDEs (such as PyCharm or Spyder) impose distinctly different coding routines.
+> Jupyter Lab (as Jupyter Notebooks before them) assumes an interactive cell-by-cell development and execution of the code,
+> which is well-suited for data exploration and analysis, as well as for small-scale software development. For larger projects
+> that do not require executing small parts of the code separately, 'classic' IDEs are more suitable. 
+>
 {: .callout}
 
-> ## Jupyter Notebooks vs. Jupyter lab
-> Explanation of the difference between Jupyter Notebooks and Jupyter Lab
-{: .callout}
-
-## Using the Jupyter Lab
+## Using Jupyter Lab
 
 Let's open our project in Jupyter Lab now and familiarise ourselves with some commonly used features.
 
