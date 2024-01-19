@@ -91,19 +91,19 @@ Let's open our project in Jupyter Lab now and familiarise ourselves with some co
 
 ### Jupyter Lab interface
 To launch Jupyter Lab, activate the `venv` environment created in the previous episode and type in the terminal:
-> ~~~
-> (venv) $ jupyter lab
-> ~~~
-> {: .language-bash}
+ ~~~
+ (venv) $ jupyter lab
+ ~~~
+ {: .language-bash}
 The output will look similar to this:
-> ~~~
-> To access the server, open this file in a browser:
->        file:///home/alex/.local/share/jupyter/runtime/jpserver-2946113-open.html
->    Or copy and paste one of these URLs:
->        http://localhost:8888/lab?token=e2aff7125e9917868a16b8b627f73995eb83effbcafeee05
->        http://127.0.0.1:8888/lab?token=e2aff7125e9917868a16b8b627f73995eb83effbcafeee05
-> ~~~
-> {: .output}
+ ~~~
+ To access the server, open this file in a browser:
+        file:///home/alex/.local/share/jupyter/runtime/jpserver-2946113-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:8888/lab?token=e2aff7125e9917868a16b8b627f73995eb83effbcafeee05
+        http://127.0.0.1:8888/lab?token=e2aff7125e9917868a16b8b627f73995eb83effbcafeee05
+ ~~~
+ {: .output}
 Now you can click on one of the URLs below and Jupyter Lab will open in your browser.
 
 ![Jupyter Lab starting interface](../fig/13_1_ides.png){: .image-with-shadow width="800px" }
