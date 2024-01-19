@@ -519,37 +519,17 @@ via your code sharing platform (e.g. GitHub).
 > ["Installing packages using `pip` and virtual environments"](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#installing-packages-using-pip-and-virtual-environments).
 {: .testimonial}
 
-## Running Python Scripts From Command Line
-Congratulations!
-Your environment is now activated and set up
-to run our `inflammation-analysis.py` script from the command line.
-
-You should already be located in the root of the `python-intermediate-inflammation` directory
-(if not, please navigate to it from the command line now).
-To run the script, type the following command:
+## Installing Jupyter Lab
+Jupyter Lab itself comes as a Python package. Therefore, we have to install it 
+in the environment as well.
 
 ~~~
-(venv) $ python3 inflammation-analysis.py
+(venv) $ pip3 install jupyterlab
 ~~~
 {: .language-bash}
 
-~~~
-usage: inflammation-analysis.py [-h] infiles [infiles ...]
-inflammation-analysis.py: error: the following arguments are required: infiles
-~~~
-{: .output}
-
-In the above command, we tell the command line two things:
-
-1. to find a Python interpreter
-   (in this case, the one that was configured via the virtual environment), and
-2. to use it to run our script `inflammation-analysis.py`,
-   which resides in the current directory.
-
-As we can see, the Python interpreter ran our script, which threw an error -
-`inflammation-analysis.py: error: the following arguments are required: infiles`.
-It looks like the script expects a list of input files to process,
-so this is expected behaviour since we don't supply any.
-We will fix this error in a moment.
+Do not forget to update the `requirements.txt` file after the installation is finished. 
+If you run `pip freeze`, you will see that Jupyter Lab installed a lot of dependencies libraries,
+so the list of requirements is now much larger.
 
 {% include links.md %}
