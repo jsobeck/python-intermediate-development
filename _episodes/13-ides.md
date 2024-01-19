@@ -106,6 +106,7 @@ The output will look similar to this:
 > {: .output}
 Now you can click on one of the URLs below and Jupyter Lab will open in your browser.
 
+![Jupyter Lab starting interface](../fig/13_1_ides.png){: .image-with-shadow width="800px" }
 
 ### Managing Jupyter Kernels
 
