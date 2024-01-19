@@ -108,7 +108,13 @@ Now you can click on one of the URLs below and Jupyter Lab will open in your bro
 
 ![Jupyter Lab starting interface](../fig/13_1_ides.png){: .image-with-shadow width="800px" }
 
-### Managing Jupyter Kernels
+The Jupyter Lab interface includes the following areas:
+1) Menu bar, from which you can access most common Jupyter Lab functions;
+2) A collapsible left sidebar, in which four tabs are present:
+   - File Manager. From here you can manage the files and directories in your repository folder.
+   - Running terminal and kernels. Here you can find the list of running Jupyter Notebook kernels and console sessions.
+   - Table of contents. Here Jupyter Lab will automatically generate a table of content of your notebooks and Python files, 
+   - Extension Manager.
 
 ### Opening a Software Project
 
