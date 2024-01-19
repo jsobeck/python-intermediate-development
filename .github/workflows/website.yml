@@ -27,6 +27,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install nokogiri gem
+        run: |
+          gem install nokogiri -v 1.15.5
+          
       - name: Install GitHub Pages, Bundler, and kramdown gems
         run: |
           gem install github-pages bundler kramdown kramdown-parser-gfm
