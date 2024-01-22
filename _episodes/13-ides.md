@@ -108,57 +108,105 @@ Now you can click on one of the URLs below and Jupyter Lab will open in your bro
 
 ![Jupyter Lab starting interface](../fig/13_1_ides.png){: .image-with-shadow width="800px" }
 
-The Jupyter Lab interface includes the following areas:
-1) Menu bar, from which you can access most common Jupyter Lab functions;
-2) A collapsible left sidebar, in which four tabs are present:
+The [Jupyter Lab interface](https://jupyterlab.readthedocs.io/en/stable/user/interface.html#) includes the following areas:
+1. Menu bar, from which you can access most common Jupyter Lab functions;
+2. A collapsible left sidebar, in which four tabs are present:
    - File Manager. From here you can manage the files and directories in your repository folder.
    - Running terminal and kernels. Here you can find the list of running Jupyter Notebook kernels and console sessions.
-   - Table of contents. Here Jupyter Lab will automatically generate a table of content of your notebooks and Python files, 
-   - Extension Manager.
+   - Table of contents. Here Jupyter Lab will automatically generate a table of contents of your notebooks (using headers and other
+     markdown cells) and Python files (using function and class definitions).
+   - Extension Manager. In this section, it is possible to install extensions that expand Jupyter Lab functionality, for example,
+     allowing integration with Git, adding CSS formatting, and so on.
+3. The main work area. When you just opened Jupyter Lab, you can see several options for starting your work, such as
+   creating a new Notebook, opening a new Python console session, or creating a new text or Python file. The list of these options
+   will vary depending on which kernels and programming languages you have installed. When you open a Notebook or a file, it will appear in a separate tab in this area.
+4. In the right collapsible sidebar you can access the notebooks' Properties Manager and Debugger, which can be used for inspecting the variables and managing Breakpoints.
 
 ### Opening a Software Project
+Open README.md. Some basic info about the project is here. Open requirements.txt. Here we can see the list of Python libraries installed
+within `venv` environment. Finally, click twice on the `light-curve-analysis.ipynb` Notebook. 
 
-### Syntax Highlighting
-The first thing you may notice is that code is displayed using different colours.
+The first thing to notice is that code is displayed using different colours. 
 Syntax highlighting is a feature that displays source code terms
 in different colours and fonts according to the syntax category the highlighted term belongs to.
 It also makes syntax errors visually distinct.
 Highlighting does not affect the meaning of the code itself -
-it's intended only for humans to make reading code and finding errors easier.
+it's intended only for humans to make reading code and finding errors easier. The code highlighting
+color scheme depends on the programming language, and in the Text Editor, you can pick the language yourself
+(otherwise it is inferred from the file extension, e.g. Python for `.py` files).
 
 ![Syntax Highlighting Functionality in Jupyter Lab](../fig/imgDummy.png){: .image-with-shadow width="800px" }
 
-### Code Completion
-As you start typing code,
-PyCharm will offer to complete some of the code for you in the form of an auto completion popup.
-This is a context-aware code completion feature
-that speeds up the process of coding
-(e.g. reducing typos and other common mistakes)
-by offering available variable names,
-functions from available packages,
-parameters of functions,
-hints related to syntax errors,
-etc.
+### Running Scripts in Jupyter Lab
+Execute the first few cells of the notebook.
 
-![Code Completion Functionality in Jupyter Lab](../fig/imgDummy.png){: .image-with-shadow width="600px" }
+### Code Completion & Documentation References
 
-### Code Definition & Documentation References
-Jupyter Lab tools: Tab, Shift+Tab, Ctrl+I
-![Code References Functionality in Jupyter Lab](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+![Context-aware code completion suggestions (`Tab`)](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+![Contextual help in a pop-up window (`Shift+Tab`)](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+![Setting up auto-completion](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+
+When you are typing code, you can use completion suggestions and contextual help tools, included in Jupyter Lab.
+You can use three hotkey combinations for using these tools:
+1. When you start typing a command, you can press `Tab`, and Jupyter Lab will offer you options of code
+   that can follow.
+2. You also can type `Shift+Tab` to open contextual help in a pop-up window.
+3. Another option is to use `Ctrl+I` for opening contextual help in the right sidebar.
+4. Finally, you can enable code auto-completion. For this, go to 'Settings > Settings Editor' and start typing
+   'auto-completion' in the Search box. Then select the 'Enable autocompletion' checkbox.
+
+Using context-aware code completion features speeds up the process of coding,
+and reduces typos and other common mistakes. Using contextual help also improves
+the quality of the code, as well as simplifies the process for the programmer. 
+
+> ## How does contextual help work?
+> Contextual help relies on the docstrings, written in the library's source files by the developers.
+> If you look at code definitions of well-maintained libraries, such as Pandas or Numpy,
+> you will see that the docstrings are very detailed: they contain input parameters, outputs,
+> algorithm descriptions, and even examples of usage. Later we will talk about how to write good docstrings,
+> but here you can see *why* they are so essential.
+>
+{: .callout}
+
+> ## Try completion and auto-completion as well as contextual help
+> Inspect contextual help of several functions, e.g. `pd.read_pickle`, `np.array`, and `os.path.join`.
+> Pay attention to which information is included in the contextual help and in which format.
+{: .challenge}
 
 ### Code Search
-You can search for a text string within a project,
-use different scopes to narrow your search process,
-use regular expressions for complex searches,
-include/exclude certain files from your search, find usages and occurrences.
-To find a search string in the whole project:
+Jupyter Lab offers you the possibility to search and replace text within the file, using case matching and regular expressions.
+You can perform the search within the whole document or only in a single cell, with or without cell outputs (the results of execution 
+of the code within the cell). To access the search tool, use `Ctrl+F` key combination, or `Edit > Find` in the main menu.
 
+### Jupyter Lab magic
+Jupyter magic commands or simply magics are special commands, provided by the default Jupyter kernel ('backend' that 
+executes the code) called IPython. Magics allow us to conveniently perform many useful operations since they can interact
+with operational system and Jupyter kernels.
+There are two types of magics: the ones that operate on a single line of the following code (the code has to be written on the same line 
+after a single space, without parenthesis or quotation marks), and the ones that act upon 
+the content of a whole single cell. The line magics are preceded by a single percentage symbol (`%`), while cell magics 
+use two percentage symbols (`%%`). Here is a short list of the most useful magics:
+- `%magic`: prints information about magics system
+- `%lsmagic`: lists all magic commands in a convenient form
+- `%quickref`: another helper function that shows references for the magic commands
+- `%timeit` and `%%timeit`: measure the execution time of the code
+- `%cd`, `%ls`, `%pwd` and other console commands: executes terminal commands
+- `%run`: executes another '.ipynb' or '.py' file from within the current notebook
+- `%who`: lists the defined variables. It is possible to list only variables of a certain type, e.g. `%who string`
 
-### Version Control
-Version control in Jupyter Lab: Git extension. **Maybe it's worth moving this part to another day, so that 
-people didn't have to install extensions mid-episode (it may take time and cause problems...)**
+> ## Try out different magics
+> Try `%timeit` and `%%timeit`, `%pwd`. Define several variables and see how `%who` command works.
+{: .challenge}
 
-### Running Scripts in Jupyter Lab
-
+> ## Installing packages from Jupyter notebook interface or Jupyter console session
+> There is a way to install Python packages right from the Jupyter interface. Jupyter Notebook interfaces
+> can execute standard console commands, if you put '!' before them (e.g. `%pwd` will print current directory, and `%ls`
+> will print the directory's content). So it is possible to run `%pip3 install astropy` in a Jupyter cell.
+> This is a standard way of installing packages in cloud Jupyter Notebook services, such as Google Colab or
+> the Notebook aspect of Rubin Science Platform.
+> Pay attention, though, that another common way of doing this, using `!` instead of `%` before the installation command,
+> is in general not safe and can lead to the dependencies issues due to the particularities of how OS and Jupyter kernels interact.
+> You can still see it often since magic command for `pip` appeared only in the later versions of IPython.
+{: .callout}
 
 {% include links.md %}
