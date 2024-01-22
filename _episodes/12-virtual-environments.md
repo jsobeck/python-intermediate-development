@@ -521,9 +521,11 @@ via your code sharing platform (e.g. GitHub).
 
 ## Installing Jupyter Lab
 Jupyter Lab itself comes as a Python package. Therefore, we have to install it 
-in the environment as well.
+in the environment as well. Another package that we will need for our project is `astropy`,
+which provides a lot of functions, useful for writing astronomical software and data processing.
 
 ~~~
+(venv) $ pip3 install astropy
 (venv) $ pip3 install jupyterlab
 ~~~
 {: .language-bash}
