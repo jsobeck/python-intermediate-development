@@ -200,10 +200,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python 3.9
+    - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
-        python-version: "3.9"
+        python-version: "3.11"
 
     - name: Install Python dependencies
       run: |
@@ -212,7 +212,7 @@ jobs:
 
     - name: Test with PyTest
       run: |
-        python -m pytest --cov=inflammation.models tests/test_models.py
+        python -m pytest --cov=lightcurves.models tests/test_models.py
 ~~~
 {: .language-yaml}
 
@@ -240,8 +240,8 @@ Each of these steps are:
 
 - **Checkout repository for the job:**
   `uses` indicates that want to use a GitHub Action called `checkout` that does this
-- **Set up Python 3.9:**
-  here we use the `setup-python` Action, indicating that we want Python version 3.9.
+- **Set up Python 3.11:**
+  here we use the `setup-python` Action, indicating that we want Python version 3.11.
   Note we specify the version within quotes,
   to ensure that this is interpreted as a complete string.
   Otherwise, if we wanted to test against for example Python 3.10,
@@ -249,8 +249,8 @@ Each of these steps are:
   it would be interpreted as the number `3.1` which -
   although it's the same number as `3.10` -
   would be interpreted as the wrong version!
-- **Install latest version of pip, dependencies, and our inflammation package:**
-  In order to locally install our `inflammation` package
+- **Install latest version of pip, dependencies, and our lightcurves package:**
+  In order to locally install our `lightcurves` package
   it's good practice to upgrade the version of pip that is present first,
   then we use pip to install our package dependencies.
   Once installed, we can use `pip3 install -e .` as before to install our own package.
