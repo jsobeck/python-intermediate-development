@@ -123,8 +123,9 @@ The [Jupyter Lab interface](https://jupyterlab.readthedocs.io/en/stable/user/int
 4. In the right collapsible sidebar you can access the notebooks' Properties Manager and Debugger, which can be used for inspecting the variables and managing Breakpoints.
 
 ### Opening a Software Project
-Open README.md. Some basic info about the project is here. Open requirements.txt. Here we can see the list of Python libraries installed
-within `venv` environment. Finally, click twice on the `light-curve-analysis.ipynb` Notebook. 
+In the left sidebar, open the `File Browser` and look through the files present here. You can inspect the `requirements.txt` file, where we saved the list 
+of packages installed in our virtual environment, and `README.md`, containing some basic information about the project. Later we will add more information to
+this file. For now, double click on the `light-curve-analysis.ipynb`. 
 
 The first thing to notice is that code is displayed using different colours. 
 Syntax highlighting is a feature that displays source code terms
@@ -132,13 +133,10 @@ in different colours and fonts according to the syntax category the highlighted 
 It also makes syntax errors visually distinct.
 Highlighting does not affect the meaning of the code itself -
 it's intended only for humans to make reading code and finding errors easier. The code highlighting
-color scheme depends on the programming language, and in the Text Editor, you can pick the language yourself
-(otherwise it is inferred from the file extension, e.g. Python for `.py` files).
-
-![Syntax Highlighting Functionality in Jupyter Lab](../fig/imgDummy.png){: .image-with-shadow width="800px" }
-
-### Running Scripts in Jupyter Lab
-Execute the first few cells of the notebook.
+color scheme depends on the programming language (or, to be more precise,
+on the kernel which is currently connected to your Notebook), and in the Text Editor, you can pick the language yourself
+in `View > Text Editor Syntax Highlighting` menu.
+By default it is inferred from the file extension, e.g. Python for `.py` files. 
 
 ### Code Completion & Documentation References
 
@@ -165,18 +163,36 @@ the quality of the code, as well as simplifies the process for the programmer.
 > you will see that the docstrings are very detailed: they contain input parameters, outputs,
 > algorithm descriptions, and even examples of usage. Later we will talk about how to write good docstrings,
 > but here you can see *why* they are so essential.
->
 {: .callout}
 
-> ## Try completion and auto-completion as well as contextual help
-> Inspect contextual help of several functions, e.g. `pd.read_pickle`, `np.array`, and `os.path.join`.
+> ## Try completion, auto-completion, and contextual help functions
+> Execute already existing cells of the notebook. There are several ways to do this:
+> 1. You can go through the cells, clicking `Shift+Enter` on each of them.
+> 2. You can use `Run > Run all cells` menu.
+> 3. You can use `Restart the kernel and run all cells` button on the tool panel on the top of
+>    your notebook tab. Be aware that when you restart the kernel, you lose all the data from
+>    already executed code, e.g. all the variables will be deleted.
+> After that, inspect contextual help of several functions, e.g. `pd.read_pickle`, `np.array`, and `os.path.join`.
 > Pay attention to which information is included in the contextual help and in which format.
+> Next, get the list of the columns in one of the opened datasets, using completion at every step.
+> > ## Solution
+> > To get the list of the columns you can use the following code: `lcDatasets['kepler'].columns`.
+> > By pressing `Tab` once you started typing 'lcDatasets', 'kepler' and 'columns', you will get suggestions
+> > for the available options of the following code.
+> After that, enable auto-completion and get the list of the columns of the second dataset.
+> Depending on what is more convenient for you, you can leave auto-completion function turned on, or turn it off.
 {: .challenge}
 
 ### Code Search
 Jupyter Lab offers you the possibility to search and replace text within the file, using case matching and regular expressions.
 You can perform the search within the whole document or only in a single cell, with or without cell outputs (the results of execution 
 of the code within the cell). To access the search tool, use `Ctrl+F` key combination, or `Edit > Find` in the main menu.
+
+> ## Searching across multiple notebooks
+> Jupyter Lab built-in search does not allow searching strings across multiple files.
+> However, such functionality is available with [jupyterlab-search-replace](https://github.com/jupyterlab-contrib/search-replace)
+> extension. 
+{: .callout}
 
 ### Jupyter Lab magic
 Jupyter magic commands or simply magics are special commands, provided by the default Jupyter kernel ('backend' that 
@@ -189,24 +205,41 @@ use two percentage symbols (`%%`). Here is a short list of the most useful magic
 - `%magic`: prints information about magics system
 - `%lsmagic`: lists all magic commands in a convenient form
 - `%quickref`: another helper function that shows references for the magic commands
-- `%timeit` and `%%timeit`: measure the execution time of the code
+- `%time`, `%timeit` and `%%timeit`: measure the execution time of the code. 
 - `%cd`, `%ls`, `%pwd` and other console commands: executes terminal commands
 - `%run`: executes another '.ipynb' or '.py' file from within the current notebook
 - `%who`: lists the defined variables. It is possible to list only variables of a certain type, e.g. `%who string`
 
+> ## `%time`, `%timeit` and `%%timeit`
+> The difference between `%time` and `%timeit` is
+> that first command executes your code only once, while the second runs it
+> several times and measures the average execution time, attempting to get a more precise
+> value.
+> However, the second command isn't always better! For example,
+> if you measure the execution time of a list sorting, after the first
+> execution the list will already be sorted, and executing the same code over already sorted list
+> will take much less time, meaning that the average execution time will be skewed towards
+> lesser numbers.
+> `%%timeit`, as follows from two '%' signs, measures the execution time for all code in a cell together. 
+{: .callout}
+
 > ## Try out different magics
-> Try `%timeit` and `%%timeit`, `%pwd`. Define several variables and see how `%who` command works.
+> Try several different magic commands, such as `%lsmagic`, `%pwd` and `%who`.
+> Use `%who` command to get the list of `dict` variables (pay attention, that if you use `%who` command
+> without specifying the type of the variable, it will also include the packages that you imported in the notebook).
 {: .challenge}
 
+Apart from the built-in magics, there are many more that you can install additionally. It is also possible to
+develop your own magic commands.
+
 > ## Installing packages from Jupyter notebook interface or Jupyter console session
-> There is a way to install Python packages right from the Jupyter interface. Jupyter Notebook interfaces
-> can execute standard console commands, if you put '!' before them (e.g. `%pwd` will print current directory, and `%ls`
-> will print the directory's content). So it is possible to run `%pip3 install astropy` in a Jupyter cell.
+> Since magics allow us to execute terminal commands, there is a way to install Python packages right
+> from the Jupyter interface. We can run `%pip3 install astropy` right in a Jupyter cell.
 > This is a standard way of installing packages in cloud Jupyter Notebook services, such as Google Colab or
 > the Notebook aspect of Rubin Science Platform.
 > Pay attention, though, that another common way of doing this, using `!` instead of `%` before the installation command,
 > is in general not safe and can lead to the dependencies issues due to the particularities of how OS and Jupyter kernels interact.
-> You can still see it often since magic command for `pip` appeared only in the later versions of IPython.
+> You can still see it often, since magic command for `pip` appeared only in the later versions of IPython.
 {: .callout}
 
 {% include links.md %}
