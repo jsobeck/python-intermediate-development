@@ -161,7 +161,7 @@ you can simply create it yourself.
 In our case, we want to tell Git to ignore the "venv" directory
 (and ".venv" as another naming convention for directories containing virtual environments)
 and stop notifying us about it.
-Edit your `.gitignore` file in Jupyter Lab or text editor
+Edit your `.gitignore` file in a text editor
 and add a line containing "venv/" and another one containing ".venv/".
 It does not matter much in this case where within the file you add these lines,
 so let's do it at the end.
@@ -171,6 +171,7 @@ Your `.gitignore` should look something like this:
 # IDEs
 .vscode/
 .idea/
+.ipynb_checkpoints/
 
 # Intermediate Coverage file
 .coverage
@@ -190,8 +191,10 @@ venv/
 {: .output}
 
 You may notice that we are already not tracking certain files and directories
-with useful comments about what exactly we are ignoring.
-You may also notice that each line in `.gitignore` is actually a pattern,
+with useful comments about what exactly we are ignoring. For example, we 
+have `.ipynb_checkpoints/`, which stores your notebooks' checkpoint files. When you
+create a new repository with .ipynb notebooks, you'll have to add this line in the
+`.gitignore` yourself. You may also notice that each line in `.gitignore` is actually a pattern,
 so you can ignore multiple files that match a pattern
 (e.g. "*.png" will ignore all PNG files in the current directory).
 
@@ -260,7 +263,7 @@ $ git pull
 
 Now we've ensured our repository is synchronised with the remote one,
 we can now push our changes.
-GitHub has recently
+Some time ago GitHub
 [strengthened authentication requirements for Git operations](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
 accessing GitHub from the command line over HTTPS.
 This means you cannot use passwords for authentication over HTTPS any more -
@@ -284,7 +287,7 @@ $ git push origin main
 > resetting the remote repository URL setting on your local repo:
 >
 > ~~~
-> $ git remote set-url origin git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-inflammation.git
+> $ git remote set-url origin git@github.com:<YOUR_GITHUB_USERNAME>/InterPython_Workshop_Example.git
 > ~~~
 > {: .language-bash}
 {: .caution}
@@ -439,12 +442,13 @@ Switched to branch 'develop'
 {: .callout}
 
 ### Updating Branches
+**FIX THE PARTS BELOW**
 If we start updating and committing files now,
 the commits will happen on the `develop` branch
 and will not affect the version of the code in `main`.
 We add and commit things to `develop` branch in the same way as we do to `main`.
 
-Let's make a small modification to `inflammation/models.py` in Jupyter Lab,
+Let's make a small modification to `LCAnalyzer/models.py` in Jupyter Lab,
 and, say, change the spelling of "2d" to "2D" in docstrings for functions
 `daily_mean()`,
 `daily_max()` and
