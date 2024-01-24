@@ -106,7 +106,7 @@ The output will look similar to this:
  {: .output}
 Now you can click on one of the URLs below and Jupyter Lab will open in your browser.
 
-![Jupyter Lab starting interface](../fig/13_1_ides.png){: .image-with-shadow width="800px" }
+![Jupyter Lab starting interface](../fig/13_ides_1_interface.png){: .image-with-shadow width="800px" }
 
 The [Jupyter Lab interface](https://jupyterlab.readthedocs.io/en/stable/user/interface.html#) includes the following areas:
 1. Menu bar, from which you can access most common Jupyter Lab functions;
@@ -140,9 +140,9 @@ By default it is inferred from the file extension, e.g. Python for `.py` files.
 
 ### Code Completion & Documentation References
 
-![Context-aware code completion suggestions (`Tab`)](../fig/imgDummy.png){: .image-with-shadow width="800px" }
-![Contextual help in a pop-up window (`Shift+Tab`)](../fig/imgDummy.png){: .image-with-shadow width="800px" }
-![Setting up auto-completion](../fig/imgDummy.png){: .image-with-shadow width="800px" }
+![Context-aware code completion suggestions (`Tab`)](../fig/13_ides_2_completion.png){: .image-with-shadow width="800px" }
+![Contextual help in a pop-up window (`Shift+Tab`)](../fig/13_ides_3_contexthelp.png){: .image-with-shadow width="800px" }
+![Setting up auto-completion](../fig/13_ides_4_autocompletion.png){: .image-with-shadow width="800px" }
 
 When you are typing code, you can use completion suggestions and contextual help tools, included in Jupyter Lab.
 You can use three hotkey combinations for using these tools:
