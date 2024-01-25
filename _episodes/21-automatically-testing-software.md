@@ -105,25 +105,22 @@ we'll merge our `test-suite` branch back into `develop`.
 
 ## Inflammation Data Analysis
 
-Let's go back to our [patient inflammation software project](/11-software-project/index.html#patient-inflammation-study-project).
-Recall that it is based on a clinical trial of inflammation
-in patients who have been given a new treatment for arthritis.
-There are a number of datasets in the `data` directory
-recording inflammation information in patients
-(each file representing a different trial),
-and are each stored in comma-separated values (CSV) format:
-each row holds information for a single patient,
-and the columns represent successive days when inflammation was measured in patients.
+Let's go back to our [lightcurve analysis software project](/11-software-project/index.html#patient-inflammation-study-project).
+Recall that it is based on observations of the star RR Lyrae, a type of pulsating variable star.
+There are two datasets in the `data` directory
+containing lightcurves of RR Lyrae, one from the Kepler Space Telescope and the other from LSST Data Preview 0, each stored in comma-separated values (CSV) format:
+each row holds information for a single observation of the star,
+and the columns represent different type of information, such as the observation time, flux, etc. 
 
 Let's take a quick look at the data now from within the Python command line console.
 Change directory to the repository root
-(which should be in your home directory `~/python-intermediate-inflammation`),
+(which should be in your home directory `~/python-intermediate-development`),
 ensure you have your virtual environment activated in your command line terminal
 (particularly if opening a new one),
 and then start the Python console by invoking the Python interpreter without any parameters, e.g.:
 
 ~~~
-$ cd ~/python-intermediate-inflammation
+$ cd ~/python-intermediate-development
 $ source venv/bin/activate
 $ python3
 ~~~
@@ -134,43 +131,37 @@ which enables us to execute Python commands interactively.
 Inside the console enter the following:
 
 ~~~
-import numpy as np
-data = np.loadtxt(fname='data/inflammation-01.csv', delimiter=',')
+import pandas as pd
+data = pd.read_csv('data/kepler_RRLyr.csv')
 data.shape
 ~~~
 {: .language-python}
 
 ~~~
-(60, 40)
+(93487, 25)
 ~~~
 {: .output}
 
 The data in this case is two-dimensional -
-it has 60 rows (one for each patient)
-and 40 columns (one for each day).
-Each cell in the data represents an inflammation reading on a given day for a patient.
+it has 93487 rows (one for each observation)
+and 25 columns (one for each type of data). The data is being stored in a pandas "dataframe", a dictionary-like data structure for two dimensional tabular data.
 
-Our patient inflammation application has a number of statistical functions
-held in `inflammation/models.py`: `daily_mean()`, `daily_max()` and `daily_min()`,
-for calculating the mean average, the maximum, and the minimum values
-for a given number of rows in our data.
-For example, the `daily_mean()` function looks like this:
+Our lightcurve application has a number of statistical functions
+held in `lightcurves/models.py`: `mean_mag()`, `max_mag()`, `min_mag()`, and `find_peak()`,
+for calculating the mean average, the maximum, and the minimum flux for a given number of rows in our data.
+For example, the `mean_mag()` function looks like this:
 
 ~~~
-def daily_mean(data):
-    """Calculate the daily mean of a 2D inflammation data array for each day.
-
-    :param data: A 2D data array with inflammation data (each row contains measurements for a single patient across all days).
-    :returns: An array of mean values of measurements for each day.
-    """
-    return np.mean(data, axis=0)
+def mean_mag(data,magCol):
+    """Calculate the mean magnitude of a lightcurve."""
+    return np.mean(data[magCol], axis=0)
 ~~~
 {: .language-python}
 
-Here, we use NumPy's `np.mean()` function to calculate the mean *vertically* across the data
+Note that `mean_mag` expects a dictionary as an input, and requires the user to specify which key in the dictionary represents the fluxes/magnitudes. Here, we use NumPy's `np.mean()` function to calculate the mean *vertically* across the data
 (denoted by `axis=0`),
 which is then returned from the function.
-So, if `data` was a NumPy array of three rows like...
+So, if `data[magCol]` was a NumPy array of three rows like...
 
 ~~~
 [[1, 2],
@@ -183,33 +174,27 @@ So, if `data` was a NumPy array of three rows like...
 each value representing the mean of each column
 (which are, coincidentally, the same values as the second row in the above data array).
 
-To show this working with our patient data,
+To show this working with our lightcurve data,
 we can use the function like this,
-passing the first four patient rows to the function in the Python console:
+passing the first four observations to the function in the Python console:
 
 ~~~
-from inflammation.models import daily_mean
+from lightcurves.models import mean_mag
 
-daily_mean(data[0:4])
+mean_mag(data[0:4], 'flux')
 ~~~
 {: .language-python}
 
 Note we use a different form of `import` here -
-only importing the `daily_mean` function from our `models` instead of everything.
+only importing the `mean_mag` function from our `models` instead of everything.
 This also has the effect that we can refer to the function using only its name,
 without needing to include the module name too
-(i.e. `inflammation.models.daily_mean()`).
+(i.e. `lightcurves.models.mean_mag()`).
 
-The above code will return the mean inflammation for each day column
-across the first four patients
-(as a 1D NumPy array of shape (40, 0)):
+The above code will return the mean flux across the first 4 observations in the dataset:
 
 ~~~
-array([ 0.  ,  0.5 ,  1.5 ,  1.75,  2.5 ,  1.75,  3.75,  3.  ,  5.25,
-        6.25,  7.  ,  7.  ,  7.  ,  8.  ,  5.75,  7.75,  8.5 , 11.  ,
-        9.75, 10.25, 15.  ,  8.75,  9.75, 10.  ,  8.  , 10.25,  8.  ,
-        5.5 ,  8.  ,  6.  ,  5.  ,  4.75,  4.75,  4.  ,  3.25,  4.  ,
-        1.75,  2.25,  0.75,  0.75])
+9942384.25
 ~~~
 {: .output}
 
@@ -231,16 +216,17 @@ to ensure they are functioning correctly.
 One way to test our functions would be to write a series of checks or tests,
 each executing a function we want to test with known inputs against known valid results,
 and throw an error if we encounter a result that is incorrect.
-So, referring back to our simple `daily_mean()` example above,
-we could use `[[1, 2], [3, 4], [5, 6]]` as an input to that function
-and check whether the result equals `[3, 4]`:
+So, referring back to our simple `mean_mag()` example above,
+we could use `{'a':np.array([0, 1, 2]), 'b':np.array([3, 4, 5])}` as an input to that function
+and check whether the result equals `1` when `magCol` = `'a'`:
 
 ~~~
 import numpy.testing as npt
 
-test_input = np.array([[1, 2], [3, 4], [5, 6]])
-test_result = np.array([3, 4])
-npt.assert_array_equal(daily_mean(test_input), test_result)
+test_input = {'a':np.array([0, 1, 2]), 'b':np.array([3, 4, 5])}
+test_result = 1
+
+npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
 ~~~
 {: .language-python}
 
@@ -256,17 +242,17 @@ We could then add to this with other tests that use and test against other value
 and end up with something like:
 
 ~~~
-test_input = np.array([[2, 0], [4, 0]])
-test_result = np.array([2, 0])
-npt.assert_array_equal(daily_mean(test_input), test_result)
+test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
+test_result = 1
+npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
 
-test_input = np.array([[0, 0], [0, 0], [0, 0]])
-test_result = np.array([0, 0])
-npt.assert_array_equal(daily_mean(test_input), test_result)
+test_input = {'a': np.array([0, 0, 0]), 'b': np.array([3, 4, 5])}
+test_result = 0
+npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
 
-test_input = np.array([[1, 2], [3, 4], [5, 6]])
-test_result = np.array([3, 4])
-npt.assert_array_equal(daily_mean(test_input), test_result)
+test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 3, 3])}
+test_result = 3
+npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
 ~~~
 {: .language-python}
 
@@ -274,14 +260,14 @@ However, if we were to enter these in this order, we'll find we get the followin
 
 ~~~
 ...
-AssertionError:
+AssertionError: 
 Arrays are not equal
 
-Mismatched elements: 1 / 2 (50%)
-Max absolute difference: 1.
-Max relative difference: 0.5
- x: array([3., 0.])
- y: array([2, 0])
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 3.
+Max relative difference: 3.
+ x: array(4.)
+ y: array(1)
 ~~~
 {: .output}
 
@@ -303,9 +289,9 @@ Going back to our failed first test, what was the issue?
 As it turns out, the test itself was incorrect, and should have read:
 
 ~~~
-test_input = np.array([[2, 0], [4, 0]])
-test_result = np.array([3, 0])
-npt.assert_array_equal(daily_mean(test_input), test_result)
+test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
+test_result = 4
+npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
 ~~~
 {: .language-python}
 
@@ -351,31 +337,21 @@ Look at `tests/test_models.py`:
 import numpy as np
 import numpy.testing as npt
 
+def test_mean_mag_zeros():
+    from lightcurves.models import mean_mag
 
-def test_daily_mean_zeros():
-    """Test that mean function works for an array of zeros."""
-    from inflammation.models import daily_mean
+    test_input = {'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}
+    test_result = 0
 
-    test_input = np.array([[0, 0],
-                           [0, 0],
-                           [0, 0]])
-    test_result = np.array([0, 0])
+    npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
 
-    # Need to use NumPy testing functions to compare arrays
-    npt.assert_array_equal(daily_mean(test_input), test_result)
+def test_mean_mag_integers():
+    from lightcurves.models import mean_mag
 
+    test_input = {'a': np.array([1, 2, 3]), 'b': np.array([4, 5, 6])}
+    test_result = 2
 
-def test_daily_mean_integers():
-    """Test that mean function works for an array of positive integers."""
-    from inflammation.models import daily_mean
-
-    test_input = np.array([[1, 2],
-                           [3, 4],
-                           [5, 6]])
-    test_result = np.array([3, 4])
-
-    # Need to use NumPy testing functions to compare arrays
-    npt.assert_array_equal(daily_mean(test_input), test_result)
+    npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
 ...
 ~~~
 {: .language-python}
@@ -388,10 +364,10 @@ these are a specification of:
 - Inputs, e.g. the `test_input` NumPy array
 - Execution conditions -
   what we need to do to set up the testing environment to run our test,
-  e.g. importing the `daily_mean()` function so we can use it.
+  e.g. importing the `mean_mag()` function so we can use it.
   Note that for clarity of testing environment,
   we only import the necessary library function we want to test within each test function
-- Testing procedure, e.g. running `daily_mean()` with our `test_input` array
+- Testing procedure, e.g. running `mean_mag()` with our `test_input` array
   and using `assert_array_equal()` to test its validity
 - Expected outputs, e.g. our `test_result` NumPy array that we test against
 
@@ -482,11 +458,11 @@ and specify the `tests/test_models.py` file to run the tests in that file explic
 >
 > Another way to run `pytest` is via its own command,
 > so we *could* try to use `pytest tests/test_models.py` on the command line instead,
-> but this would lead to a `ModuleNotFoundError: No module named 'inflammation'`.
+> but this would lead to a `ModuleNotFoundError: No module named 'lightcurves'`.
 > This is because using the `python -m pytest` method
 > adds the current directory to its list of directories to search for modules,
 > whilst using `pytest` does not -
-> the `inflammation` subdirectory's contents are not 'seen',
+> the `lightcurves` subdirectory's contents are not 'seen',
 > hence the `ModuleNotFoundError`.
 > There are ways to get around this with
 > [various methods](https://stackoverflow.com/questions/71297697/modulenotfounderror-when-running-a-simple-pytest),
@@ -494,15 +470,13 @@ and specify the `tests/test_models.py` file to run the tests in that file explic
 {: .callout}
 
 ~~~
-============================================== test session starts =====================================================
-platform darwin -- Python 3.9.6, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
-rootdir: /Users/alex/python-intermediate-inflammation
-plugins: anyio-3.3.4
-collected 2 items
+================================================= test session starts =================================================
+platform darwin -- Python 3.9.13, pytest-7.1.2, pluggy-1.0.0
+rootdir: /Users/riley/Desktop/InterPython_Workshop_Example
+plugins: remotedata-0.4.0, anyio-3.5.0, mock-3.10.0, filter-subpackage-0.1.2, xdist-3.2.1, astropy-header-0.2.2, doctestplus-0.12.1, astropy-0.10.0, cov-4.0.0, openfiles-0.5.0, hypothesis-6.75.2, arraydiff-0.5.0
+collected 6 items                                                                                                     
 
-tests/test_models.py ..                                                                                           [100%]
-
-=============================================== 2 passed in 0.79s ======================================================
+tests/test_models.py ..
 ~~~
 {: .output}
 
@@ -523,16 +497,16 @@ do we think these results are easy to understand?
 > ## Exercise: Write Some Unit Tests
 >
 > We already have a couple of test cases in `test/test_models.py`
-> that test the `daily_mean()` function.
-> Looking at `inflammation/models.py`,
-> write at least two new test cases that test the `daily_max()` and `daily_min()` functions,
+> that test the `mean_mag()` function.
+> Looking at `lightcurves/models.py`,
+> write at least two new test cases that test the `max_mag()` and `min_mag()` functions,
 > adding them to `test/test_models.py`. Here are some hints:
 >
-> - You could choose to format your functions very similarly to `daily_mean()`,
+> - You could choose to format your functions very similarly to `mean_mag()`,
 >   defining test input and expected result arrays followed by the equality assertion.
 > - Try to choose cases that are suitably different,
->   and remember that these functions take a 2D array and return a 1D array
->   with each element the result of analysing each *column* of the data.
+>   and remember that these functions take a dictionary and return a float
+>   corresponding to a chosen key
 >
 > Once added, run all the tests again with `python -m pytest tests/test_models.py`,
 > and you should also see your new tests pass.
@@ -540,30 +514,21 @@ do we think these results are easy to understand?
 > > ## Solution
 > >
 > > ~~~
-> > ...
-> > def test_daily_max():
-> >     """Test that max function works for an array of positive integers."""
-> >     from inflammation.models import daily_max
+> >def test_max_mag():
+> >    from lightcurves.models import max_mag
 > >
-> >     test_input = np.array([[4, 2, 5],
-> >                            [1, 6, 2],
-> >                            [4, 1, 9]])
-> >     test_result = np.array([4, 6, 9])
+> >    test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
+> >    test_result = 5
 > >
-> >     npt.assert_array_equal(daily_max(test_input), test_result)
+> >    npt.assert_array_equal(max_mag(test_input, 'b'), test_result)
 > >
+> > def test_min_mag():
+> >    from lightcurves.models import min_mag
 > >
-> > def test_daily_min():
-> >     """Test that min function works for an array of positive and negative integers."""
-> >     from inflammation.models import daily_min
+> >    test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
+> >    test_result = 3
 > >
-> >     test_input = np.array([[ 4, -2, 5],
-> >                            [ 1, -6, 2],
-> >                            [-4, -1, 9]])
-> >     test_result = np.array([-4, -6, 2])
-> >
-> >     npt.assert_array_equal(daily_min(test_input), test_result)
-> > ...
+> >    npt.assert_array_equal(min_mag(test_input, 'b'), test_result)
 > > ~~~
 > > {: .language-python}
 > {: .solution}
@@ -586,12 +551,12 @@ Add this test in `tests/test_models.py`:
 ~~~
 import pytest
 ...
-def test_daily_min_string():
+def test_min_mag_string():
     """Test for TypeError when passing strings"""
-    from inflammation.models import daily_min
+    from lightcurves.models import min_mag
 
     with pytest.raises(TypeError):
-        error_expected = daily_min([['Hello', 'there'], ['General', 'Kenobi']])
+        error_expected = mean_mag([['Hello', 'there'], ['General', 'Kenobi']])
 ~~~
 {: .language-python}
 
@@ -615,7 +580,7 @@ and push this new branch and all its commits to GitHub:
 
 ~~~
 $ git add requirements.txt tests/test_models.py
-$ git commit -m "Add initial test cases for daily_max() and daily_min()"
+$ git commit -m "Add initial test cases for max_mag() and min_mag()"
 $ git push -u origin test-suite
 ~~~
 {: .language-bash}
