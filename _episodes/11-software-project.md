@@ -185,7 +185,13 @@ total 24008
 Directory `tests` contains several tests that have been implemented already.
 We will be adding more tests during the course as our code grows.
 
-**TELL MORE ABOUT THE TESTS**
+~~~
+$ ls -l tests
+total 8
+-rw-rw-r-- 1 alex alex 941 Jan 10 20:29 test_models.py
+...
+~~~
+{: .language-bash}
 
 An important thing to note here is that the structure of the project is not arbitrary.
 One of the big differences between novice and intermediate software development is
@@ -346,9 +352,9 @@ For example, the diagram below depicts the use of MVC architecture for the
 #### Our Project's MVC Architecture
 
 Our software project uses the MVC architecture.
-The file `lightcurve-analysis.py` is the **Controller** module
+The file `light-curve-analysis.ipynb` is the **Controller** module
 that performs basic statistical analysis over light curve data
-and provides the main entry point into the application.
+and provides the main entry point of the code.
 The **View** and **Model** modules are contained in the files `views.py` and `models.py`, respectively,
 and are conveniently named.
 Data underlying the **Model** is contained within the directory `data` -
