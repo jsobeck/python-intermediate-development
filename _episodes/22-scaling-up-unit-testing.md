@@ -34,20 +34,20 @@ Test **parameterisation** gives us this.
 So instead of writing a separate function for each different test,
 we can **parameterise** the tests with multiple test inputs.
 For example, in `tests/test_models.py` let us rewrite
-the `test_daily_mean_zeros()` and `test_daily_mean_integers()`
+the `test_mean_mag_zeros()` and `test_mean_mag_integers()`
 into a single test function:
 
 ~~~
 @pytest.mark.parametrize(
     "test, expected",
     [
-        ([ [0, 0], [0, 0], [0, 0] ], [0, 0]),
-        ([ [1, 2], [3, 4], [5, 6] ], [3, 4]),
+        ({'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}, 0),
+        ({'a':np.array([1, 2, 3]), 'b':np.array([4, 5, 6])}, 2),
     ])
-def test_daily_mean(test, expected):
+def test_mean_mag(test, expected):
     """Test mean function works for array of zeroes and positive integers."""
-    from inflammation.models import daily_mean
-    npt.assert_array_equal(daily_mean(np.array(test)), np.array(expected))
+    from lightcurves.models import mean_mag
+    npt.assert_array_equal(mean_mag(np.array(test), 'a'), np.array(expected))
 ~~~
 {: .language-python}
 
@@ -66,12 +66,12 @@ passed to the function (`test`, `expected`),
 and secondly the actual arguments themselves that correspond to each of these names -
 the input data (the `test` argument),
 and the expected result (the `expected` argument).
-In this case, we are passing in two tests to `test_daily_mean()` which will be run sequentially.
+In this case, we are passing in two tests to `test_mean_mag()` which will be run sequentially.
 
-So our first test will run `daily_mean()` on `[ [0, 0], [0, 0], [0, 0] ]` (our `test` argument),
-and check to see if it equals `[0, 0]` (our `expected` argument).
-Similarly, our second test will run `daily_mean()`
-with `[ [1, 2], [3, 4], [5, 6] ]` and check it produces `[3, 4]`.
+So our first test will run `mean_mag()` on `{'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}` (our `test` argument),
+and check to see if it equals `0` with `magCol` set to `'a'` (our `expected` argument).
+Similarly, our second test will run `mean_mag()`
+with `{'a':np.array([1, 2, 3]), 'b':np.array([4, 5, 6])}` and check it produces `2` with `magCol` set to `'a'`.
 
 The big plus here is that we don't need to write separate functions for each of the tests -
 our test code can remain compact and readable as we write more tests
@@ -79,7 +79,7 @@ and adding more tests scales better as our code becomes more complex.
 
 > ## Exercise: Write Parameterised Unit Tests
 >
-> Rewrite your test functions for `daily_max()` and `daily_min()` to be parameterised,
+> Rewrite your test functions for `max_mag()` and `min_mag()` to be parameterised,
 > adding in new test cases for each of them.
 >
 > > ## Solution
@@ -88,27 +88,27 @@ and adding more tests scales better as our code becomes more complex.
 > > @pytest.mark.parametrize(
 > >     "test, expected",
 > >     [
-> >         ([ [0, 0, 0], [0, 0, 0], [0, 0, 0] ], [0, 0, 0]),
-> >         ([ [4, 2, 5], [1, 6, 2], [4, 1, 9] ], [4, 6, 9]),
-> >         ([ [4, -2, 5], [1, -6, 2], [-4, -1, 9] ], [4, -1, 9]),
+> >         ({'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}, 0),
+> >         ({'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}, 5),
+> >         ({'a': np.array([-3, 4, 6]), 'b': np.array([9, -4, 7])}, 9),
 > >     ])
-> > def test_daily_max(test, expected):
+> >def test_max_mag():
+> >    from lightcurves.models import max_mag
 > >     """Test max function works for zeroes, positive integers, mix of positive/negative integers."""
-> >     from inflammation.models import daily_max
-> >     npt.assert_array_equal(daily_max(np.array(test)), np.array(expected))
+> >    npt.assert_array_equal(max_mag(test, 'b'), expected)
 > >
 > >
 > > @pytest.mark.parametrize(
 > >     "test, expected",
 > >     [
-> >         ([ [0, 0, 0], [0, 0, 0], [0, 0, 0] ], [0, 0, 0]),
-> >         ([ [4, 2, 5], [1, 6, 2], [4, 1, 9] ], [1, 1, 2]),
-> >         ([ [4, -2, 5], [1, -6, 2], [-4, -1, 9] ], [-4, -6, 2]),
+> >         ({'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}, 0),
+> >         ({'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}, 3),
+> >         ({'a': np.array([-3, 4, 6]), 'b': np.array([9, -4, 7])}, -4),
 > >     ])
-> > def test_daily_min(test, expected):
+> > def test_min_mag(test, expected):
 > >     """Test min function works for zeroes, positive integers, mix of positive/negative integers."""
-> >     from inflammation.models import daily_min
-> >     npt.assert_array_equal(daily_min(np.array(test)), np.array(expected))
+> >     from lightcurves.models import min_mag
+> >     npt.assert_array_equal(min_mag(np.array(test)), np.array(expected))
 > > ...
 > > ~~~
 > > {: .language-python}
@@ -134,8 +134,8 @@ Pytest can't think of test cases for us.
 We still have to decide what to test and how many tests to run.
 Our best guide here is economics:
 we want the tests that are most likely to give us useful information that we don't already have.
-For example, if `daily_mean(np.array([[2, 0], [4, 0]])))` works,
-there's probably not much point testing `daily_mean(np.array([[3, 0], [4, 0]])))`,
+For example, if `mean_mag({'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}, 'a')` works,
+there's probably not much point testing `mean_mag({'a': np.array([1, 2, 3]), 'b': np.array([4, 5, 6])}, 'a')`,
 since it's hard to think of a bug that would show up in one case but not in the other.
 
 Now, we should try to choose tests that are as different from each other as possible,
@@ -149,7 +149,7 @@ that is used by Pytest and using that, we can find this out:
 
 ~~~
 $ pip3 install pytest-cov
-$ python -m pytest --cov=inflammation.models tests/test_models.py
+$ python -m pytest --cov=lightcurves.models tests/test_models.py
 ~~~
 {: .language-bash}
 
@@ -157,48 +157,60 @@ So here, we specify the additional named argument `--cov` to `pytest`
 specifying the code to analyse for test coverage.
 
 ~~~
-============================= test session starts ==============================
-platform darwin -- Python 3.9.6, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
-rootdir: /Users/alex/python-intermediate-inflammation
-plugins: anyio-3.3.4, cov-3.0.0
-collected 9 items
+====================================== test session starts ======================================
+platform darwin -- Python 3.9.13, pytest-7.1.2, pluggy-1.0.0
+rootdir: /Users/riley/Desktop/InterPython_Workshop_Example
+plugins: remotedata-0.4.0, anyio-3.5.0, mock-3.10.0, filter-subpackage-0.1.2, xdist-3.2.1, astropy-header-0.2.2, doctestplus-0.12.1, astropy-0.10.0, cov-4.0.0, openfiles-0.5.0, hypothesis-6.75.2, arraydiff-0.5.0
+collected 4 items                                                                               
 
-tests/test_models.py .........                                            [100%]
+tests/test_models.py ....                                                                 [100%]
 
----------- coverage: platform darwin, python 3.9.6-final-0 -----------
-Name                     Stmts   Miss  Cover
---------------------------------------------
-inflammation/models.py       9      1    89%
---------------------------------------------
-TOTAL                        9      1    89%
+---------- coverage: platform darwin, python 3.9.13-final-0 ----------
+Name                    Stmts   Miss  Cover
+-------------------------------------------
+lightcurves/models.py      12      1    92%
+-------------------------------------------
+TOTAL                      12      1    92%
 
-============================== 9 passed in 0.26s ===============================
+
+======================================= 4 passed in 0.88s =======================================
 ~~~
 {: .output}
 
-Here we can see that our tests are doing very well -
-89% of statements in `inflammation/models.py` have been executed.
+Here we can see that our tests are doing very well - 92% of statements in `inflammation/models.py` have been executed.
 But which statements are not being tested?
 The additional argument `--cov-report term-missing` can tell us:
 
 ~~~
-$ python -m pytest --cov=inflammation.models --cov-report term-missing tests/test_models.py
+$ python -m pytest --cov=lightcurves.models --cov-report term-missing tests/test_models.py
 ~~~
 {: .language-bash}
 
 ~~~
 ...
-Name                     Stmts   Miss  Cover   Missing
-------------------------------------------------------
-inflammation/models.py       9      1    89%   18
-------------------------------------------------------
-TOTAL                        9      1    89%
+====================================== test session starts ======================================
+platform darwin -- Python 3.9.13, pytest-7.1.2, pluggy-1.0.0
+rootdir: /Users/riley/Desktop/InterPython_Workshop_Example
+plugins: remotedata-0.4.0, anyio-3.5.0, mock-3.10.0, filter-subpackage-0.1.2, xdist-3.2.1, astropy-header-0.2.2, doctestplus-0.12.1, astropy-0.10.0, cov-4.0.0, openfiles-0.5.0, hypothesis-6.75.2, arraydiff-0.5.0
+collected 4 items                                                                               
+
+tests/test_models.py ....                                                                 [100%]
+
+---------- coverage: platform darwin, python 3.9.13-final-0 ----------
+Name                    Stmts   Miss  Cover   Missing
+-----------------------------------------------------
+lightcurves/models.py      12      1    92%   19
+-----------------------------------------------------
+TOTAL                      12      1    92%
+
+
+======================================= 4 passed in 0.87s =======================================
 ...
 ~~~
 {: .output}
 
-So there's still one statement not being tested at line 18,
-and it turns out it's in the function `load_csv()`.
+So there's still one statement not being tested at line 19,
+and it turns out it's in the function `load_dataset()`.
 Here we should consider whether or not to write a test for this function,
 and, in general, any other functions that may not be tested.
 Of course, if there are hundreds or thousands of lines that are not covered
