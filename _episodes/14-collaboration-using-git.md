@@ -442,7 +442,6 @@ Switched to branch 'develop'
 {: .callout}
 
 ### Updating Branches
-**FIX THE PARTS BELOW**
 If we start updating and committing files now,
 the commits will happen on the `develop` branch
 and will not affect the version of the code in `main`.
@@ -497,7 +496,7 @@ However, as we have just created this branch locally,
 it still does not exist in our remote repository.
 You can check that in GitHub by listing all branches.
 
-![Software project's main branch](../fig/imgDummy.png){: .image-with-shadow width="700px"}
+![Software project's main branch](../fig/14_Git_1_branches.png){: .image-with-shadow width="700px"}
 
 To push a new local branch remotely for the first time,
 you could use the `-u` switch and the name of the branch you are creating and pushing to:
