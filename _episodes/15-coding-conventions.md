@@ -102,11 +102,8 @@ be consistent and follow the style already used in the project.
 Jupyter Lab has built-in support for converting tab indentation to spaces
 "under the hood" for Python code in order to conform to PEP8.
 So, you can type a tab character and Jupyter Lab will automatically convert it to 4 spaces.
-You can control the amount of spaces that Jupyter Lab uses to replace one tab character
-or you can decide to keep the tab character altogether and prevent automatic conversion.
-You can modify these settings in Jupyter Lab's 
-`Settings`>`Text Editor Indentation`.
-**Explain the difference between Jupyter Notebook editor and Text editor. The setting above applies only to Text editor.**
+In the Text Editor, you can also control the amount of spaces that Jupyter Lab uses 
+to replace one tab character (`Settings`>`Text Editor Indentation`). 
 
 ![Python code indentation settings in Jupyter Lab](../fig/imgDummy.png){: .image-with-shadow width="800px"}
 
@@ -335,7 +332,7 @@ Some things to be wary of when naming things in the code:
 >
 > - Function and variable names should use lower_case_with_underscores
 > - Avoid single character names in almost all instances.
-> - Variable names should tell you what they store, and not just the type (e.g. `name_of_patient` is better than `string`)
+> - Variable names should tell you what they store, and not just the type (e.g. `sourceId` is better than `string`)
 > - Function names should tell you what the function does.
 > - Class names should use the CapitalisedWords convention.
 > - Modules should have short, all-lowercase names.
