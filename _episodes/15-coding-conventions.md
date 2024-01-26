@@ -100,12 +100,10 @@ be consistent and follow the style already used in the project.
 {: .callout}
 
 Jupyter Lab has built-in support for converting tab indentation to spaces
-"under the hood" for Python code in order to conform to PEP8.
+for Python code in order to conform to PEP8.
 So, you can type a tab character and Jupyter Lab will automatically convert it to 4 spaces.
-In the Text Editor, you can also control the amount of spaces that Jupyter Lab uses 
+For text files, in the Text Editor you can also control the amount of spaces that Jupyter Lab uses 
 to replace one tab character (`Settings`>`Text Editor Indentation`). 
-
-![Python code indentation settings in Jupyter Lab](../fig/imgDummy.png){: .image-with-shadow width="800px"}
 
 There are more complex rules on indenting single units of code that continue over several lines,
 e.g. function, list or dictionary definitions can all take more than one line.
@@ -332,7 +330,7 @@ Some things to be wary of when naming things in the code:
 >
 > - Function and variable names should use lower_case_with_underscores
 > - Avoid single character names in almost all instances.
-> - Variable names should tell you what they store, and not just the type (e.g. `sourceId` is better than `string`)
+> - Variable names should tell you what they store, and not just the type (e.g. `source_id` is better than `string`)
 > - Function names should tell you what the function does.
 > - Class names should use the CapitalisedWords convention.
 > - Modules should have short, all-lowercase names.
@@ -418,70 +416,68 @@ because an incorrect comment causes more confusion than no comment at all.
 > ~~~
 >  {: .language-bash}
 >
-> Next look at the `inflammation-analysis.py` file in Jupyter Lab
+> Next look at the `light-curve-analysis.ipynb` file 
 > and identify where the above guidelines have not been followed.
 > Fix the discovered inconsistencies and commit them to the feature branch.
-> **Unlike PyCharm, JupLab doesn't have a built-in code format hints. There are extensions,
-> but they are not official. I suggest we tell the participants about them, but don't install
-> them within the lesson, letting the participants to look for style inconsistencies manually...
-> The examples below should be re-written for our software project**
 >> ## Solution
->> Modify `inflammation-analysis.py` from Jupyter Lab,
->> which is helpfully marking inconsistencies with coding guidelines by underlying them.
->> There are a few things to fix in `inflammation-analysis.py`, for example:
+>> There are a few things to fix in `light-curve-analysis.ipynb`, for example:
 >>
->>  1. Line 24 in `inflammation-analysis.py` is too long and not very readable.
->>     A better style would be to use multiple lines and hanging indent,
->>     with the closing brace `}' aligned either with
->>     the first non-whitespace character of the last line of list
->>     or the first character of the line that starts the multiline construct
->>     or simply moved to the end of the previous line.
->>     All three acceptable modifications are shown below.
->>
->>      ~~~
->>      # Using hanging indent, with the closing '}' aligned with the first non-blank character of the previous line
->>      view_data = {
->>          'average': models.daily_mean(inflammation_data),
->>          'max': models.daily_max(inflammation_data),
->>          'min': models.daily_min(inflammation_data)
->>          }
->>      ~~~
->>      {: .language-python}
->>
->>      ~~~
->>      # Using hanging indent with the, closing '}' aligned with the start of the multiline contruct
->>      view_data = {
->>          'average': models.daily_mean(inflammation_data),
->>          'max': models.daily_max(inflammation_data),
->>          'min': models.daily_min(inflammation_data)
->>      }
->>      ~~~
->>      {: .language-python}
->>
->>      ~~~
->>      # Using hanging indent where all the lines of the multiline contruct are indented except the first one
->>      view_data = {
->>          'average': models.daily_mean(inflammation_data),
->>          'max': models.daily_max(inflammation_data),
->>          'min': models.daily_min(inflammation_data)}
->>      ~~~
->>      {: .language-python}
->>
->>  2. Variable 'InFiles' in `inflammation-analysis.py` uses CapitalisedWords naming convention
+>>  1. Variable 'LcDatasets' uses CapitalisedWords naming convention
 >>     which is recommended for class names but not variable names.
 >>     By convention, variable names should be in lowercase with optional underscores
->>     so you should rename the variable 'InFiles' to, e.g., 'infiles' or 'in_files'.
+>>     so you should rename the variable 'LcDatasets' to, 'lc_datasets'.
 >>
->>  3. There is an extra blank line on line 20 in `inflammation-analysis.py`.
+>>  2. There is an extra blank line in cell 7, between the definition of 'plot_filter_labels'
+>>     and 'plot_filter_colors'.
 >>     Normally, you should not use blank lines in the middle of the code
 >>     unless you want to separate logical units -
 >>     in which case only one blank line is used.
 >>
->>  4. Only one blank line after the end of definition of function `main`
->>     and the rest of the code on line 30 in `inflammation-analysis.py` -
->>     should be two blank lines.
+>>  3. Line 3 in cell 7 ('plot_filter_colors' variable definition) is too long.
+>>     A better style would be to use multiple lines and hanging indent,
+>>     with the closing brace `}’ aligned either with the first non-whitespace
+>>     character of the last line of list or the first character of the line that
+>>     starts the multiline construct or simply moved to the end of the previous line.
+>>     All three acceptable modifications are shown below.
+>>     ~~~
+>>      # Using hanging indent, with the closing '}' aligned with the first non-blank character of the previous line
+>>     plot_filter_colors = {
+>>         "u": "#56b4e9",
+>>         "g": "#008060",
+>>         "r": "#ff4000",
+>>         "i": "#850000",
+>>         "z": "#6600cc",
+>>         "y": "#000000",
+>>         }
+>>     ~~~
+>>     {: .language-python}
+>>     ~~~
+>>      # Using hanging indent with the, closing '}' aligned with the start of the multiline contruct
+>>     plot_filter_colors = {
+>>         "u": "#56b4e9",
+>>         "g": "#008060",
+>>         "r": "#ff4000",
+>>         "i": "#850000",
+>>         "z": "#6600cc",
+>>         "y": "#000000",
+>>     }  
+>>     ~~~
+>>     {: .language-python}
+>>     ~~~
+>>      # Using hanging indent where all the lines of the multiline contruct are indented except the first one
+>>     >>     plot_filter_colors = {
+>>         "u": "#56b4e9",
+>>         "g": "#008060",
+>>         "r": "#ff4000",
+>>         "i": "#850000",
+>>         "z": "#6600cc",
+>>         "y": "#000000",}  
+>>     ~~~
+>>     {: .language-python}
 >>
->> Finally, let's add and commit our changes to the feature branch.
+>> There are more style issues, but we will leave them for now to show how
+>> style fixes can be done automatically.
+>> Now, let's add and commit our changes to the feature branch.
 >> We will check the status of our working directory first.
 >>
 >> ~~~
@@ -494,18 +490,18 @@ because an incorrect comment causes more confusion than no comment at all.
 >> Changes not staged for commit:
 >> (use "git add <file>..." to update what will be committed)
 >> (use "git restore <file>..." to discard changes in working directory)
->> modified:   inflammation-analysis.py
+>> modified:   light-curve-analysis.ipynb
 >>
 >> no changes added to commit (use "git add" and/or "git commit -a")
 >> ~~~
 >> {: .output}
 >>
 >> Git tells us we are on branch `style-fixes`
->> and that we have unstaged and uncommited changes to `inflammation-analysis.py`.
+>> and that we have unstaged and uncommited changes to `light-curve-analysis.ipynb`.
 >> Let's commit them to the local repository.
 >>
 >> ~~~
->> $ git add inflammation-analysis.py
+>> $ git add light-curve-analysis.ipynb
 >> $ git commit -m "Code style fixes."
 >> ~~~
 >> {: .language-bash}
@@ -629,9 +625,7 @@ help(fibonacci)
 
 > ## Exercise: Fix the Docstrings
 > Look into `models.py` in Jupyter Lab and improve docstrings for functions
-> `daily_mean` ,
-> `daily_min`,
-> `daily_max`.
+> `mean_mag` and `max_mag`
 > Commit those changes to feature branch `style-fixes`.
 > > ## Solution
 > > For example,
@@ -639,37 +633,27 @@ help(fibonacci)
 > > for parameters and return values.
 > >
 > > ~~~
-> > def daily_mean(data):
-> >    """Calculate the daily mean of a 2D inflammation data array for each day.
-> >
-> >    :param data: A 2D data array with inflammation data (each row contains measurements for a single patient across all days).
-> >    :returns: An array of mean values of measurements for each day.
-> >    """
-> >    return np.mean(data, axis=0)
+> > def mean_mag(data,mag_col):
+> >     """Calculate the mean magnitude of a lightcurve
+> >     :param data: pd.DataFrame with observed magnitudes for a single source.
+> >     :param mag_col: a string with the name of the column for calculating the mean.
+> >     :returns: A float with mean value of the column
+> >     """
+> >     return np.mean(data[mag_col], axis=0)
 > >    ~~~
 > > {: .language-python}
 > >
 > > ~~~
-> > def daily_max(data):
-> >    """Calculate the daily maximum of a 2D inflammation data array for each day.
-> >
-> >    :param data: A 2D data array with inflammation data (each row contains measurements for a single patient across all days).
-> >    :returns: An array of max values of measurements for each day.
-> >    """
-> >    return np.max(data, axis=0)
+> > def max_mag(data,mag_col):
+> >     """Calculate the max magnitude of a lightcurve
+> >     :param data: pd.DataFrame with observed magnitudes for a single source.
+> >     :param mag_col: a string with the name of the column for calculating the max value.
+> >     :returns: The max value of the column.
+> >     """
+> >     return data[mag_col].max()
 > > ~~~
 > > {: .language-python}
 > >
-> > ~~~
-> > def daily_min(data):
-> >    """Calculate the daily minimum of a 2D inflammation data array for each day.
-> >
-> >    :param data: A 2D data array with inflammation data (each row contains measurements for a single patient across all days).
-> >    :returns: An array of minimum values of measurements for each day.
-> >    """
-> >    return np.min(data, axis=0)
-> > ~~~
-> > {: .language-python}
 > > Once we are happy with modifications,
 > > as usual before staging and commit our changes,
 > > we check the status of our working directory:
@@ -683,17 +667,17 @@ help(fibonacci)
 > > Changes not staged for commit:
 > > (use "git add <file>..." to update what will be committed)
 > > (use "git restore <file>..." to discard changes in working directory)
-> > modified:   inflammation/models.py
+> > modified:   lcanalyzer/models.py
 > >
 > > no changes added to commit (use "git add" and/or "git commit -a")
 > > ~~~
 > > {: .output}
 > >
 > > As expected, Git tells us we are on branch `style-fixes`
-> > and that we have unstaged and uncommited changes to `inflammation/models.py`.
+> > and that we have unstaged and uncommited changes to `lcanalyzer/models.py`.
 > > Let's commit them to the local repository.
 > > ~~~
-> > $ git add inflammation/models.py
+> > $ git add lcanalyzer/models.py
 > > $ git commit -m "Docstring improvements."
 > > ~~~
 > > {: .language-bash}
