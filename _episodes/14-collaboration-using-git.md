@@ -449,10 +449,10 @@ and will not affect the version of the code in `main`.
 We add and commit things to `develop` branch in the same way as we do to `main`.
 
 Let's make a small modification to `LCAnalyzer/models.py` in Jupyter Lab,
-and, say, change the spelling of "2d" to "2D" in docstrings for functions
-`daily_mean()`,
-`daily_max()` and
-`daily_min()`.
+and, say, add periods at the end of the docstrings for functions
+`mean_mag()`,
+`max_mag()` and
+`min_mag()`.
 
 If we do:
 
@@ -467,7 +467,7 @@ $ git status
      (use "git add <file>..." to update what will be committed)
      (use "git checkout -- <file>..." to discard changes in working directory)
 
-   	modified:   inflammation/models.py
+   	modified:   LCAnalyzer/models.py
 
    no changes added to commit (use "git add" and/or "git commit -a")
 ~~~
@@ -479,7 +479,7 @@ and which tracked files have been modified in our working directory.
 We can now `add` and `commit` the changes in the usual way.
 
 ~~~
-$ git add inflammation/models.py
+$ git add LCAnalyzer/models.py
 $ git commit -m "Spelling fix"
 ~~~
 {: .language-bash}
@@ -521,11 +521,7 @@ $ git push -u origin develop
 Let's confirm that the new branch `develop` now exist remotely on GitHub too.
 From the `< > Code` tab in your repository in GitHub,
 click the branch dropdown menu (currently showing the default branch `main`).
-You should see your `develop` branch in the list too.
-
-![Software project's develop branch](../fig/imgDummy.png){: .image-with-shadow width="700px"}
-
-Now the others can check out the `develop` branch too and continue to develop code on it.
+You should see your `develop` branch in the list too. Now the others can check out the `develop` branch too and continue to develop code on it.
 
 After the initial push of the new branch,
 each next time we push to it in the usual manner (i.e. without the `-u` switch):
@@ -585,7 +581,7 @@ $ git merge develop
 ~~~
 Updating 05e1ffb..be60389
 Fast-forward
- inflammation/models.py | 6 +++---
+ LCAnalyzer/models.py | 6 +++---
  1 files changed, 3 insertions(+), 3 deletions(-)
 ~~~
 {: .output}
