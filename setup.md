@@ -200,7 +200,7 @@ your access token.
 {: .callout}
 
 ## Python Distribution
-The material has been developed using the [standard Python distribution version 3.8](https://www.python.org/downloads/)
+The material has been developed using the [standard Python distribution version 3.11](https://www.python.org/downloads/)
 and is using `venv` for virtual environments and `pip` for package management.
 The material has not been extensively tested with other Python distributions and package managers,
 but most sections are expected to work with some modifications.
@@ -209,12 +209,12 @@ invocations should remain the same regardless of the Python distribution used.
 
 To download a Python distribution for your operating system,
 please head to [Python.org](https://www.python.org/downloads/).
-If you are on Linux,
+If you are on one of the last versions of Linux,
 it is likely that the system Python already installed will satisfy the requirements of this course.
 Check its version using the commands below.
 
 >## Recommended Python Version
-> We recommend using at least Python version 3.8+ but any [supported version](https://devguide.python.org/versions/#versions) should work (i.e. version 3.7 onward. 
+> We recommend using at least Python version 3.11+ but any [supported version](https://devguide.python.org/versions/#versions) should work (i.e. version 3.8 onward. 
 > Specifically, we recommend upgrading from Python 2.7 wherever possible; continuing to use it will likely result in difficulty finding supported dependencies or syntax errors).
 {: .callout}
 
@@ -227,7 +227,7 @@ $ python --version # on Windows — Windows installation comes with a python.exe
 {: .language-bash}
 If all is well with your installation, you should see something like:
 ~~~       
-Python 3.8.2
+Python 3.11.5
 ~~~
 {: .output}
 
@@ -239,7 +239,7 @@ type the following in your shell:
 {: .language-bash}
 This should enter you into a Python console and you should see something like:
  ~~~
-Python 3.8.2 (default, Jun  8 2021, 11:59:35) 
+Python 3.11.5 (default, Jan  8 2024, 11:59:35) 
 [Clang 12.0.5 (clang-1205.0.22.11)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 
@@ -252,7 +252,7 @@ If you are using a Python 3 distribution from [Python.org](https://www.python.or
 `venv` and `pip` will be automatically installed for you. If not, please make sure you have these
 two tools (that correspond to your Python distribution) installed on your machine.
 
-## PyCharm IDE
+## Jupyter Lab IDE
 We use [Jupyter Lab](https://jupyter.org/install) for the course. It can be installed using `pip`.
 
 {% include links.md %}
