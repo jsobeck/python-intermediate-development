@@ -9,19 +9,21 @@ questions:
 objectives:
 - "Use code linting tools to verify a program's adherence to a Python coding style convention."
 keypoints:
-- "Use linting tools on the command line (or via continuous integration) to automatically check your code style."
+- "Use linting tools in the IDE or on the command line (or via continuous integration) to automatically check your code style."
 ---
 
 ## Verifying Code Style Using Linters
 
-We've seen how we can use Jupyter Lab to help us format our Python code consistently.
-This aids reusability
-since consistent-looking code is easier to modify
-since it's easier to read and understand.
-We can also use tools,
-called [**code linters**](https://en.wikipedia.org/wiki/Lint_%28software%29),
-to identify consistency issues in a report-style.
+Knowing the rules of code formatting helps us avoid mistakes 
+during development, so it is always a good idea to dedicate
+some time to learn how to write PEP8-consistent code from the beginning.
+However, we also have tools that help us with formatting
+the already existing code. These tools are called 
+[**code linters**](https://en.wikipedia.org/wiki/Lint_%28software%29),
+and their main function is to identify consistency issues in a report-style.
 Linters analyse source code to identify and report on stylistic and even programming errors.
+For Jupyter Lab, a number of linters (as well as other tools for improving the quality of
+your code) are available as part of a package called [`nbQA`](https://github.com/nbQA-dev/nbQA).
 Let's look at a very well-used one of these called `pylint`.
 
 First, let's ensure we are on the `style-fixes` branch once again.
@@ -31,7 +33,13 @@ $ git checkout style-fixes
 ~~~
 {: .language-bash}
 
-**Instructions on how to install pylint (or rather `nbQA`) for Jupyter Lab**
+Make sure that you have activated your `venv` environment, and install the `nbQA` 
+package together with the supported tools:
+~~~
+$ python -m pip install -U nbqa
+$ python -m pip install -U "nbqa[toolchain]"
+~~~
+{: .language-bash}
 
 We should also update our `requirements.txt` with this new addition:
 
@@ -40,12 +48,13 @@ $ pip3 freeze > requirements.txt
 ~~~
 {: .language-bash}
 
-**Instructions on how to run Pylint with `nbQA`**
+**Using pylint on the notebooks**
+Now we can use pylint for checking the quality of our code.
 Pylint is a command-line tool that can help our code in many ways:
 
 - **Check PEP8 compliance:**
-  whilst in-IDE context-sensitive highlighting such as that provided via Jupyter Lab (**?**)
-  helps us stay consistent with PEP8 as we write code, this tool provides a full report
+  Pylint will provide a full list of places where your code does not
+  comply with PEP8 
 - **Perform basic error detection:** Pylint can look for certain Python type errors
 - **Check variable naming conventions**:
   Pylint often goes beyond PEP8 to include other common conventions,
@@ -77,28 +86,24 @@ Pylint can also identify **code smells**.
 
 Pylint recommendations are given as warnings or errors,
 and Pylint also scores the code with an overall mark.
-We can look at a specific file (e.g. `inflammation-analysis.py`),
-or a package (e.g. `inflammation`).
-Let's look at our `inflammation` package and code inside it (namely `models.py` and `views.py`).
-From the project root do:
-
+We can look at a specific file (e.g. `light-curve-analysis.ipynb`),
+or a package (e.g. `lcanalyzer`).
+First, let's look at our notebook:
 ~~~
-$ pylint inflammation
+$ nbqa pylint light-curve-analysis.ipynb --disable=C0114
 ~~~
 {: .language-bash}
 
-You should see an output similar to the following:
-
+The output will look somewhat similar to this:
 ~~~
-************* Module inflammation.models
-inflammation/models.py:5:82: C0303: Trailing whitespace (trailing-whitespace)
-inflammation/models.py:6:66: C0303: Trailing whitespace (trailing-whitespace)
-inflammation/models.py:34:0: C0305: Trailing newlines (trailing-newlines)
-************* Module inflammation.views
-inflammation/views.py:4:0: W0611: Unused numpy imported as np (unused-import)
+************* Module light-curve-analysis
+light-curve-analysis.ipynb:cell_7:3:0: C0301: Line too long (115/100) (line-too-long)
+light-curve-analysis.ipynb:cell_1:0:0: C0103: Module name "light-curve-analysis" doesn't conform to snake_case naming style (invalid-name)
+light-curve-analysis.ipynb:cell_6:1:0: W0104: Statement seems to have no effect (pointless-statement)
+light-curve-analysis.ipynb:cell_1:3:0: W0611: Unused numpy imported as np (unused-import)
 
-------------------------------------------------------------------
-Your code has been rated at 8.00/10 (previous run: 8.00/10, +0.00)
+-----------------------------------
+Your code has been rated at 6.92/10
 ~~~
 {: .output}
 
@@ -106,7 +111,7 @@ Your own outputs of the above commands may vary depending on
 how you have implemented and fixed the code in previous exercises
 and the coding style you have used.
 
-The five digit codes, such as `C0303`, are unique identifiers for warnings,
+The five digit codes, such as `C0103`, are unique identifiers for warnings,
 with the first character indicating the type of warning.
 There are five different types of warnings that Pylint looks for,
 and you can get a summary of them by doing:
@@ -135,6 +140,38 @@ Near the end you'll see:
 So for an example of a Pylint Python-specific `warning`,
 see the "W0611: Unused numpy imported as np (unused-import)" warning.
 
+Now we can use Pylint for checking our `.py` files. We can do it in one go, 
+checking the `lcanalyzer` package at once.
+
+From the project root do:
+~~~
+$ pylint lcanalyzer
+~~~
+{: .language-bash}
+
+Note that this time we use `pylint` as a standalone, without `nbqa`, since 
+we are analysing ordinary Python files, not notebooks.
+
+You should see an output similar to the following:
+~~~
+************* Module lcanalyzer
+lcanalyzer/__init__.py:1:0: C0304: Final newline missing (missing-final-newline)
+************* Module lcanalyzer.models
+lcanalyzer/models.py:6:0: C0301: Line too long (107/100) (line-too-long)
+lcanalyzer/models.py:41:0: W0105: String statement has no effect (pointless-string-statement)
+lcanalyzer/models.py:12:0: W0611: Unused LombScargle imported from astropy.timeseries (unused-import)
+************* Module lcanalyzer.views
+lcanalyzer/views.py:5:0: C0303: Trailing whitespace (trailing-whitespace)
+lcanalyzer/views.py:15:38: C0303: Trailing whitespace (trailing-whitespace)
+lcanalyzer/views.py:21:0: C0304: Final newline missing (missing-final-newline)
+lcanalyzer/views.py:6:0: C0103: Function name "plotUnfolded" doesn't conform to snake_case naming style (invalid-name)
+lcanalyzer/views.py:4:0: W0611: Unused pandas imported as pd (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 6.09/10 (previous run: 6.09/10, +0.00)
+~~~
+{: .output}
+
 It is important to note that while tools such as Pylint are great at giving you
 a starting point to consider how to improve your code,
 they won't find everything that may be wrong with it.
@@ -150,8 +187,6 @@ they won't find everything that may be wrong with it.
 > ~~~
 > {: .language-bash}
 >
-> For example, with a total of 31 statements of models.py and views.py,
-> with a count of the errors shown above, we get a score of 8.00.
 > Note whilst there is a maximum score of 10, given the formula,
 > there is no minimum score - it's quite possible to get a negative score!
 {: .callout}
@@ -178,6 +213,37 @@ $ git merge develop
 $ git push origin main
 ~~~
 {: .language-bash}
+
+**Auto-formatters for the notebooks**
+While Pylint provides us with a full report of all kinds of style inconsistencies,
+most of which have to be fixed manually, some style mistakes can be fixed automatically. 
+For this, we can use
+[`black`](https://black.readthedocs.io/en/stable/) package, also integrated in the
+`nbQA`. 
+Save and close your notebook, and then go back to the command line.
+After running the following command:
+~~~
+$ nbqa black light-curve-analysis.ipynb
+~~~
+{: .language-bash}
+Open the notebook again, you will see that `black` forced line wrap at a certain length of the
+line, fixed duplicated or missing spaces around parenthesis or commas, aligned elements 
+in the definitions of lists and dictionaries and so on. Using `black`, you can enforce the same
+style all over your code and make it much more readable.
+
+> ## Another way to use auto-formatter
+> You can use `black` not only from the command line but from within Jupyter Lab too.
+> For this you will need to install additional extensions, for example,
+> [Code Formatter extension](https://github.com/ryantam626/jupyterlab_code_formatter).
+> The installation, as usual, can be done using `pip`:
+> ~~~
+> $ python -m pip install jupyterlab-code-formatter
+> ~~~
+>{: .language-bash}
+> After that you need to refresh your Jupyter Lab page. In notebook tabs, a new button will appear
+> at the end of the top panel. By clicking this button, you will execute the `black` formatter over the
+> notebook.
+{: .callout}
 
 > ## Optional Exercise: Improve Code Style of Your Other Python Projects
 > If you have a Python project you are working on or you worked on in the past,
