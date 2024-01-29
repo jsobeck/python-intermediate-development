@@ -48,8 +48,8 @@ $ pip3 freeze > requirements.txt
 ~~~
 {: .language-bash}
 
-**Using pylint on the notebooks**
-Now we can use pylint for checking the quality of our code.
+## Using Pylint on the Notebooks
+Now we can use Pylint to check the quality of our code.
 Pylint is a command-line tool that can help our code in many ways:
 
 - **Check PEP8 compliance:**
@@ -214,7 +214,7 @@ $ git push origin main
 ~~~
 {: .language-bash}
 
-**Auto-formatters for the notebooks**
+## Auto-Formatters for the Notebooks
 While Pylint provides us with a full report of all kinds of style inconsistencies,
 most of which have to be fixed manually, some style mistakes can be fixed automatically. 
 For this, we can use
@@ -231,7 +231,7 @@ line, fixed duplicated or missing spaces around parenthesis or commas, aligned e
 in the definitions of lists and dictionaries and so on. Using `black`, you can enforce the same
 style all over your code and make it much more readable.
 
-> ## Another way to use auto-formatter
+> ## Another Way to Use Auto-Formatter
 > You can use `black` not only from the command line but from within Jupyter Lab too.
 > For this you will need to install additional extensions, for example,
 > [Code Formatter extension](https://github.com/ryantam626/jupyterlab_code_formatter).
