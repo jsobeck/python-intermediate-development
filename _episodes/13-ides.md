@@ -183,6 +183,7 @@ the quality of the code, as well as simplifies the process for the programmer.
 > > To get the list of the columns you can use the following code: `lcDatasets['kepler'].columns`.
 > > By pressing `Tab` once you started typing 'lcDatasets', 'kepler' and 'columns', you will get suggestions
 > > for the available options of the following code.
+> {: .solution}
 > After that, enable auto-completion and get the list of the columns of the second dataset.
 > Depending on what is more convenient for you, you can leave auto-completion function turned on, or turn it off.
 {: .challenge}
