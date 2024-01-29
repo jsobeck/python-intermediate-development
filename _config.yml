@@ -89,16 +89,14 @@ defaults:
 
 extras_order:
   - about
+  - git-intro
   - figures
   - guide
   - common-issues
   - discuss
   - protect-main-branch
-  - vscode
-  - functional-programming
   - persistence
   - databases
-  - verifying-code-style-linters
   - quiz
 # Files and directories that are not to be copied.
 exclude:
