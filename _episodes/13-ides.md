@@ -171,9 +171,9 @@ the quality of the code, as well as simplifies the process for the programmer.
 
 > ## Try completion, auto-completion, and contextual help functions
 > Execute already existing cells of the notebook. There are several ways to do this:
-> 1. You can go through the cells, clicking `Shift+Enter` on each of them.
-> 2. You can use `Run > Run all cells` menu.
-> 3. You can use `Restart the kernel and run all cells` button on the tool panel on the top of
+> - You can go through the cells, clicking `Shift+Enter` on each of them.
+> - You can use `Run > Run all cells` menu.
+> - You can use `Restart the kernel and run all cells` button on the tool panel on the top of
 >    your notebook tab. Be aware that when you restart the kernel, you lose all the data from
 >    already executed code, e.g. all the variables will be deleted.
 > After that, inspect contextual help of several functions, e.g. `pd.read_pickle`, `np.array`, and `os.path.join`.
