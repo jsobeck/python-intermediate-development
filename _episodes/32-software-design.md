@@ -10,7 +10,7 @@ objectives:
 - "Understand the components of multi-layer software architectures."
 keypoints:
 - "Planning software projects in advance can save a lot of effort and reduce 'technical debt' later - even a partial plan is better than no plan at all."
-- "By breaking down our software into components with a single responsibility, we avoid having to rewrite it all when requirements change.
+- "By making our software modular, i.e. introducing parts with a single responsibility, we avoid having to rewrite it all when requirements change.
 Such components can be as small as a single function, or be a software package in their own right."
 - "When writing software used for research, requirements will almost *always* change."
 - "*'Good code is written so that is readable, understandable, covered by automated tests, not over complicated and does well what is intended to do.'*"
@@ -28,11 +28,10 @@ What should be the overall structure of our software,
 how should all the pieces of functionality fit together,
 and how should we work towards fulfilling this overall design throughout development?
 
-It's not easy to come up with a complete definition for the term **software design**,
-but some of the common aspects are:
+**Software design**, covers some of the following aspects:
 
 - **Algorithm design** -
-  what method are we going to use to solve the core business problem?
+  what method are we going to use to solve the core business/science problem?
 - **Software architecture** -
   what components will the software have and how will they cooperate?
 - **System architecture** -
@@ -70,24 +69,16 @@ and refers to a template solution to a problem commonly encountered when buildin
 
 Design patterns are relatively small-scale templates
 which we can use to solve problems which affect a small part of our software.
-For example, the **[adapter pattern](https://en.wikipedia.org/wiki/Adapter_pattern)**
-(which allows a class that does not have the "right interface" to be reused)
-may be useful if part of our software needs to consume data
-from a number of different external data sources.
-Using this pattern,
-we can create a component whose responsibility is
-transforming the calls for data to the expected format,
-so the rest of our program doesn't have to worry about it.
-
-Architecture patterns are similar,
+One example is a strategy pattern that could handle multiple algorithms and handling them
+in a consistent way. Architecture patterns are similar,
 but larger scale templates which operate at the level of whole programs,
-or collections or programs.
-Model-View-Controller (which we chose for our project) is one of the best known architecture patterns.
+or collections or programs. Model-View-Controller (MVC which we chose for our project)
+is one of the best known architecture patterns. Web designers using the python
+module django need it all the time.
+
 Many patterns rely on concepts from Object Oriented Programming,
 so we'll come back to the MVC pattern shortly
-after we learn a bit more about Object Oriented Programming.
-
-There are many online sources of information about design and architecture patterns,
+after we learn a bit more about Object Oriented Programming. There are many online sources of information about design and architecture patterns,
 often giving concrete examples of cases where they may be useful.
 One particularly good source is [Refactoring Guru](https://refactoring.guru/design-patterns).
 
