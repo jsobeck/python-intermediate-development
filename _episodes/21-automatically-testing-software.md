@@ -103,7 +103,7 @@ Later on, once we've finished writing these tests and are convinced they work pr
 we'll merge our `test-suite` branch back into `develop`.
 
 
-## Inflammation Data Analysis
+## Lightcurve Data Analysis
 
 Let's go back to our [lightcurve analysis software project](/11-software-project/index.html#patient-inflammation-study-project).
 Recall that it is based on observations of the star RR Lyrae, a type of pulsating variable star.
@@ -122,13 +122,10 @@ and then start the Python console by invoking the Python interpreter without any
 ~~~
 $ cd ~/python-intermediate-development
 $ source venv/bin/activate
-$ python3
 ~~~
 {: .language-bash}
 
-The last command will start the Python console within your shell,
-which enables us to execute Python commands interactively.
-Inside the console enter the following:
+Then open the Jupyter notebook titled `test-development-nb.ipynb` in the project directory enter the following in the first cell, and run it. This notebook is convenient place to develop our testing suite, but later we'll migrate the tests to their own dedicated .py file
 
 ~~~
 import pandas as pd
@@ -147,7 +144,7 @@ it has 93487 rows (one for each observation)
 and 25 columns (one for each type of data). The data is being stored in a pandas "dataframe", a dictionary-like data structure for two dimensional tabular data.
 
 Our lightcurve application has a number of statistical functions
-held in `lightcurves/models.py`: `mean_mag()`, `max_mag()`, `min_mag()`, and `find_peak()`,
+held in `lcanalyzer/models.py`: `mean_mag()`, `max_mag()`, `min_mag()`,
 for calculating the mean average, the maximum, and the minimum flux for a given number of rows in our data.
 For example, the `mean_mag()` function looks like this:
 
@@ -176,10 +173,10 @@ each value representing the mean of each column
 
 To show this working with our lightcurve data,
 we can use the function like this,
-passing the first four observations to the function in the Python console:
+passing the first four observations to the function in the Jupyter notebook:
 
 ~~~
-from lightcurves.models import mean_mag
+from lcanalyzer.models import mean_mag
 
 mean_mag(data[0:4], 'flux')
 ~~~
@@ -189,7 +186,7 @@ Note we use a different form of `import` here -
 only importing the `mean_mag` function from our `models` instead of everything.
 This also has the effect that we can refer to the function using only its name,
 without needing to include the module name too
-(i.e. `lightcurves.models.mean_mag()`).
+(i.e. `lcanalyzer.models.mean_mag()`).
 
 The above code will return the mean flux across the first 4 observations in the dataset:
 
@@ -256,7 +253,7 @@ npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
 ~~~
 {: .language-python}
 
-However, if we were to enter these in this order, we'll find we get the following after the first test:
+However, if we were to enter these in this order all in the same cell, we'll find we get the following after the first test:
 
 ~~~
 ...
@@ -338,7 +335,7 @@ import numpy as np
 import numpy.testing as npt
 
 def test_mean_mag_zeros():
-    from lightcurves.models import mean_mag
+    from lcanalyzer.models import mean_mag
 
     test_input = {'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}
     test_result = 0
@@ -346,7 +343,7 @@ def test_mean_mag_zeros():
     npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
 
 def test_mean_mag_integers():
-    from lightcurves.models import mean_mag
+    from lcanalyzer.models import mean_mag
 
     test_input = {'a': np.array([1, 2, 3]), 'b': np.array([4, 5, 6])}
     test_result = 2
@@ -444,7 +441,7 @@ our virtual environment will now have the `pytest` package installed for use.
 
 ### Running Tests
 
-Now we can run these tests using `pytest`:
+Now we can run these tests in the command line using `pytest`:
 
 ~~~
 $ python -m pytest tests/test_models.py
@@ -458,11 +455,11 @@ and specify the `tests/test_models.py` file to run the tests in that file explic
 >
 > Another way to run `pytest` is via its own command,
 > so we *could* try to use `pytest tests/test_models.py` on the command line instead,
-> but this would lead to a `ModuleNotFoundError: No module named 'lightcurves'`.
+> but this would lead to a `ModuleNotFoundError: No module named 'lcanalyzer'`.
 > This is because using the `python -m pytest` method
 > adds the current directory to its list of directories to search for modules,
 > whilst using `pytest` does not -
-> the `lightcurves` subdirectory's contents are not 'seen',
+> the `lcanalyzer` subdirectory's contents are not 'seen',
 > hence the `ModuleNotFoundError`.
 > There are ways to get around this with
 > [various methods](https://stackoverflow.com/questions/71297697/modulenotfounderror-when-running-a-simple-pytest),
@@ -496,17 +493,18 @@ do we think these results are easy to understand?
 
 > ## Exercise: Write Some Unit Tests
 >
-> We already have a couple of test cases in `test/test_models.py`
+> We already have a couple of test cases in `tests/test_models.py`
 > that test the `mean_mag()` function.
-> Looking at `lightcurves/models.py`,
+> Looking at `lcanalyzer/models.py`,
 > write at least two new test cases that test the `max_mag()` and `min_mag()` functions,
-> adding them to `test/test_models.py`. Here are some hints:
+> adding them to `tests/test_models.py`. Here are some hints:
 >
 > - You could choose to format your functions very similarly to `mean_mag()`,
 >   defining test input and expected result arrays followed by the equality assertion.
 > - Try to choose cases that are suitably different,
 >   and remember that these functions take a dictionary and return a float
 >   corresponding to a chosen key
+> - Experiment with the functions in a notebook cell in `test-development.ipynb` to make sure your test result is what you expect the function to return for a given input. Don't forget to put your new test in `tests/test_models.py` once you think it's ready!
 >
 > Once added, run all the tests again with `python -m pytest tests/test_models.py`,
 > and you should also see your new tests pass.
@@ -515,7 +513,7 @@ do we think these results are easy to understand?
 > >
 > > ~~~
 > >def test_max_mag():
-> >    from lightcurves.models import max_mag
+> >    from lcanalyzer.models import max_mag
 > >
 > >    test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
 > >    test_result = 5
@@ -523,7 +521,7 @@ do we think these results are easy to understand?
 > >    npt.assert_array_equal(max_mag(test_input, 'b'), test_result)
 > >
 > > def test_min_mag():
-> >    from lightcurves.models import min_mag
+> >    from lcanalyzer.models import min_mag
 > >
 > >    test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
 > >    test_result = 3
@@ -553,7 +551,7 @@ import pytest
 ...
 def test_min_mag_string():
     """Test for TypeError when passing strings"""
-    from lightcurves.models import min_mag
+    from lcanalyzer.models import min_mag
 
     with pytest.raises(TypeError):
         error_expected = mean_mag([['Hello', 'there'], ['General', 'Kenobi']])
