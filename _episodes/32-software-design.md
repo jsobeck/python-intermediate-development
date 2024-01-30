@@ -132,25 +132,13 @@ Let's recall the solution requirements we discussed in the previous episode:
 
 Sometimes when we make changes to our code that we plan to test later,
 we find the way we've implemented that change doesn't lend itself well to how it should be tested.
-So what should we do?
+So what should we do? We could write unit tests.
 
-Consider requirement SR1.2.1 -
-we have (at least) two things we should test in some way,
-for which we could write unit tests.
-For the textual representation of statistics,
-in a unit test we could invoke our new view function directly
-with known inflammation data and test the text output as a string against what is expected.
-The second one, invoking this new view with an optional command line argument,
-is more problematic since the code isn't structured in a way where
-we can easily invoke the argument parsing portion to test it.
-To make this more amenable to unit testing we could
-move the command line parsing portion to a separate function,
-and use that in our unit tests.
 So in general, it's a good idea to make sure
 your software's features are modularised and accessible via logical functions.
 
-We could also consider writing unit tests for SR2.1.1,
-ensuring that the system meets our performance requirement, so should we?
+We could also consider writing unit tests ensuring that the system meets
+our performance requirement, so should we?
 We do need to verify it's being met with the modified implementation,
 however it's generally considered bad practice to use unit tests for this purpose.
 This is because unit tests test *if* a given aspect is behaving correctly,
@@ -166,37 +154,6 @@ as it is typically used by stakeholders.
 The key is to think about which kind of testing should be used
 to check if the code satisfies a requirement,
 but also what you can do to make that code amenable to that type of testing.
-
-> ## Exercise: Implementing Requirements
-> Pick one of the requirements SR1.1.1 or SR1.2.1 above to implement
-> and create an appropriate feature branch -
-> e.g. `add-std-dev` or `add-view` from your most up-to-date `develop` branch.
->
-> One aspect you should consider first is
-> whether the new requirement can be implemented within the existing design.
-> If not, how does the design need to be changed to accommodate the inclusion of this new feature?
-> Also try to ensure that the changes you make are amenable to unit testing:
-> is the code suitably modularised
-> such that the aspect under test can be easily invoked
-> with test input data and its output tested?
->
-> If you have time, feel free to implement the other requirement, or invent your own!
->
-> Also make sure you push changes to your new feature branch remotely
-> to your software repository on GitHub.
->
-> **Note: do not add the tests for the new feature just yet -
-> even though you would normally add the tests along with the new code,
-> we will do this in a later episode.
-> Equally, do not merge your changes to the `develop` branch just yet.**
->
-> **Note 2: we have intentionally left this exercise without a solution
-> to give you more freedom in implementing it how you see fit.
-> If you are struggling with adding a new view and command line parameter,
-> you may find the standard deviation requirement easier.
-> A later episode in this section will look at
-> how to handle command line parameters in a scalable way.**
-{: .challenge}
 
 ## Best Practices for 'Good' Software Design
 
@@ -216,25 +173,6 @@ This design should be based around the structure of the problem we're trying to 
 what are the concepts we need to represent
 and what are the relationships between them.
 And importantly, who will be using our software and how will they interact with it?
-
-Here's another way of looking at it.
-
-Not following good software design and development practices
-can lead to accumulated 'technical debt',
-which (according to [Wikipedia](https://en.wikipedia.org/wiki/Technical_debt)),
-is the "cost of additional rework caused by choosing an easy (limited) solution now
-instead of using a better approach that would take longer".
-So, the pressure to achieve project goals can sometimes lead to quick and easy solutions,
-which make the software become
-more messy, more complex, and more difficult to understand and maintain.
-The extra effort required to make changes in the future is the interest paid on the (technical) debt.
-It's natural for software to accrue some technical debt,
-but it's important to pay off that debt during a maintenance phase -
-simplifying, clarifying the code, making it easier to understand -
-to keep these interest payments on making changes manageable.
-If this isn't done, the software may accrue too much technical debt,
-and it can become too messy and prohibitive to maintain and develop,
-and then it cannot evolve.
 
 Importantly, there is only so much time available.
 How much effort should we spend on designing our code properly
