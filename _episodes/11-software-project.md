@@ -15,14 +15,14 @@ keypoints:
 how the application itself interacts with its users."
 - "MVC is a software design architecture which divides the application into three interconnected modules: Model (data),
 View (user interface), and Controller (input/output and data manipulation)."
-- "The software project we use throughout this course is an example of an MVC application that **DEFINE_THIS**."
+- "The software project we use throughout this course is an example of an MVC application that allows us to inspect and analyze astronomical light curves."
 ---
 
 ## Light Curve Analysis Project
 For this workshop, let's assume that you  have joined a software development team that has been working on the
 [light curve analysis project](https://github.com/ShrRa/InterPython_Workshop_Example)
 developed in Python and stored on GitHub. The purpose of this software is to analyze the variability of astronomical sources, 
-using observations that come from different instruments.
+using observations that come from different instruments. 
 
 ![Snapshot of the light curve dataset](../fig/imgDummy.png){: .image-with-shadow width="800px" }
 <p style="text-align: center;">Figure title</p>
@@ -131,7 +131,7 @@ $ ls -l
 total 284
 drwxrwxr-x 2 alex alex     52 Jan 10 20:29 data
 -rw-rw-r-- 1 alex alex 285218 Jan 10 20:29 light-curve-analysis.ipynb
-drwxrwxr-x 2 alex alex     58 Jan 10 20:29 lightcurves
+drwxrwxr-x 2 alex alex     58 Jan 10 20:29 lcanalyzer
 -rw-rw-r-- 1 alex alex   1171 Jan 10 20:29 README.md
 drwxrwxr-x 2 alex alex     51 Jan 10 20:29 tests
 ...
@@ -140,14 +140,14 @@ drwxrwxr-x 2 alex alex     51 Jan 10 20:29 tests
 
 As can be seen from the above, our software project contains the README file 
 (that typically describes the project, its usage, installation, authors and how to contribute), 
-Jupyter Notebook light-curve-analysis.ipynb, and three directories - lightcurves, data and tests.
+Jupyter Notebook `light-curve-analysis.ipynb`, and three directories - `lcanalyzer`, `data` and `tests`.
 
-The Jupyter Notebook light-curve-analysis.ipynb is where exploratory analysis is done, 
-and on closer inspection, we can see that the lightcurves directory contains two Python 
-scripts - views.py and models.py. We will have a more detailed look into these shortly.
+The Jupyter Notebook `light-curve-analysis.ipynb` is where exploratory analysis is done, 
+and on closer inspection, we can see that the `lcanalyzer` directory contains two Python 
+scripts - `views.py` and `models.py`. We will have a more detailed look into these shortly.
 
 ~~~
-$ cd ~/python-intermediate-light-curve/lightcurve
+$ cd ~/python-intermediate-light-curve/lcanalyzer
 $ ls -l
 total 12
 -rw-rw-r-- 1 alex alex 903 Jan 10 20:29 models.py
@@ -156,7 +156,7 @@ total 12
 ~~~
 {: .language-bash}
 
-Directory data contains two files with the lightcurves coming from two instruments, Kepler and LSST:
+Directory `data` contains two files with the lightcurves coming from two instruments, Kepler and LSST:
 ~~~
 $ cd ~/python-intermediate-light-curve/data
 $ ls -l
