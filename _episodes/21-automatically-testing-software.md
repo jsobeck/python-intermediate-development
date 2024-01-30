@@ -125,7 +125,7 @@ $ source venv/bin/activate
 ~~~
 {: .language-bash}
 
-Then open the Jupyter notebook titled `test-development-nb.ipynb` in the project directory enter the following in the first cell, and run it. This notebook is convenient place to develop our testing suite, but later we'll migrate the tests to their own dedicated .py file
+Then open the Jupyter notebook titled `test-development.ipynb` in the project directory enter the following in the first cell, and run it. This notebook is convenient place to develop our testing suite, but later we'll migrate the tests to their own dedicated .py file
 
 ~~~
 import pandas as pd
