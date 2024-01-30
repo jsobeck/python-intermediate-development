@@ -83,33 +83,7 @@ often giving concrete examples of cases where they may be useful.
 One particularly good source is [Refactoring Guru](https://refactoring.guru/design-patterns).
 
 
-### Multilayer Architecture
 
-One common architectural pattern for larger software projects is **Multilayer Architecture**.
-Software designed using this architecture pattern is split into layers,
-each of which is responsible for a different part of the process of manipulating data.
-
-Often, the software is split into three layers:
-
-- **Presentation Layer**
-  - This layer is responsible for managing the interaction between
-    our software and the people using it
-  - May include the **View** components if also using the MVC pattern
-- **Application Layer / Business Logic Layer**
-  - This layer performs most of the data processing required by the presentation layer
-  - Likely to include the **Controller** components if also using an MVC pattern
-  - May also include the **Model** components
-- **Persistence Layer / Data Access Layer**
-  - This layer handles data storage and provides data to the rest of the system
-  - May include the **Model** components of an MVC pattern
-    if they're not in the application layer
-
-Although we've drawn similarities here between the layers of a system and the components of MVC,
-they're actually solutions to different scales of problem.
-In a small application, a multilayer architecture is unlikely to be necessary,
-whereas in a very large application,
-the MVC pattern may be used just within the presentation layer,
-to handle getting data to and from the people using the software.
 
 ## Addressing New Requirements
 
@@ -132,15 +106,12 @@ Let's recall the solution requirements we discussed in the previous episode:
 
 Sometimes when we make changes to our code that we plan to test later,
 we find the way we've implemented that change doesn't lend itself well to how it should be tested.
-So what should we do? We could write unit tests.
-
-So in general, it's a good idea to make sure
-your software's features are modularised and accessible via logical functions.
+So what should we do? We could write unit tests. As we have seen before, it is therefore
+a good idea to make sure that your software's features are modularised
+and accessible via logical functions. 
 
 We could also consider writing unit tests ensuring that the system meets
-our performance requirement, so should we?
-We do need to verify it's being met with the modified implementation,
-however it's generally considered bad practice to use unit tests for this purpose.
+our performance requirement, so should we? In short, it's generally considered bad practice to use unit tests for this purpose.
 This is because unit tests test *if* a given aspect is behaving correctly,
 whereas performance tests test *how efficiently* it does it.
 Performance testing produces measurements of performance which require a different kind of analysis
