@@ -7,34 +7,67 @@ questions:
 - "How to avoid chaos when writing code in Notebooks?"
 - "What is the workflow when using Jupyter Lab for software development?"
 objectives:
-- "Apply 'best practice' rules to ensure that your Notebook is well-organized and reusable."
+- "Follow best practice to ensure that your Notebook is well-organized and reusable."
 keypoints:
 - "The interactivity of Notebooks, while convenient, enables chaotic style of software development."
 - "We must follow best practices for Jupyter Lab to avoid chaos in the Notebooks."
 ---
 
-## Jupyter Lab best practices
-Jupyter Notebooks are very convenient since they allow executing pieces of code
+## Pros and Cons of Interactivity
+Jupyter notebooks are very convenient since they allow executing pieces of code
 in an arbitrary order, giving the developer a high level of interactivity. 
-The other side of the coin is that Notebooks enable the development of the code
-without a clear structure, and that the result of code execution differs depending
-on which cells were executed prior to that. Without following certain best practices,
-Notebooks have poor reproducibility.
+The other side of the coin is that notebooks enable the development of the code
+without a clear structure, and that the result of the executed code differs depending
+on which cells were executed prior to that. Taking care of keeping the code in order
+falls on the developer's shoulders even more than when a classic IDE is used.
+
+![Inattention to cell execution order can mess your data](../fig/13_jupBestPractice_1_cellOrder.png){: .image-with-shadow width="500px" }
+<p style="text-align: center;">Inattention to cell execution order can mess your data</p>
+
+As a result, Jupyter Lab is not recommended for large-scale software development, 
+and even for smaller projects the final code should always be extracted into executable
+'.py' files and converted into Python package. At the same time, notebooks are well-suited for 
+data inverstigation, visualization and presentations, and it is the best when `.ipynb` files
+contain only the code related to those tasks. Even then, without following certain 
+best practices, notebooks have poor reproducibility. 
+
+## Jupyter Lab best practices
 
 Fortunately, Jupyter Lab provides us with a number of tools that allow us
-to keep the Notebook files clean, and the developed code reliable. Let's consider
-the most important rules of keeping your Notebooks in a good condition:
+to keep the notebook files clean, and the developed code reliable. Let's consider
+the most important rules of keeping your notebooks in a good condition:
 
-1. One Notebook - one task. It is better to separate e.g. data preprocessing and visualization.
-2. Define the objective of the Notebook from the start.
-3. Use Table of Content. Start each section of the Notebook with a header in a markdown cell.
-4. The structure of the Notebook should group functionally similar cells together.
-   It means that package imports should all be in the beginning of the Notebook, the functions
-   in a separate section next, the data upload and preprocessing next, the parameters next. Avoid situations
-   when some of the parameters that are used in several places across your Notebook (e.g. the size of the sample
-   or time range for searching variability period) are defined out of the parameter section.
-6. Use Markdown cells for detailed explanations of what is done in the following code cells.
-7. Use 'Restart and Run All' often, and always before finishing your work, to make sure that
+1. One Notebook should correspond to only one task or stage of your investigation.
+   E.g. it is better to separate data preprocessing and visualization, or analysis of the spectra
+   and analysis of the light curves. There are two possible exceptions to this rule: if your notebook
+   is really small (e.g. you just need to make a couple of plots for a single dataset), or if this is a 
+   demonstration or presentation notebook.
+2. Keep your notebooks short. There is no hard rule, but constraining a notebook to a hundred of cells is 
+   a good idea.
+3. Define the objective of the notebook from the start and write it on the top of the notebook. 
+   Do not stray from this objective; you definitely will get new ideas while working on your analysis,
+   but if they are outside of the scope of this particular notebook, they should be extracted to a new file.
+4. Utilize Markdown cells for detailed explanations of what is done in the following code cells. Markdown cells
+   allow you to use headers, common types of text formatting, such as bold, italics and strikethrough formatting,
+   create lists, separators and tables, insert latex equations and use HTML formatting and so on. Here is a 
+   [cheat sheet](https://www.kaggle.com/code/cuecacuela/the-ultimate-markdown-cheat-sheet) for the 
+   common types of formatting.
+5. Think about the structure of the notebook before you start working, and write the headers of the sections
+   in advance. For most astronomical projects, you will need at least four sections: imports, loading the data,
+   pre-processing the data and analysis itself. Remember, that you can create subsections using secondary headers!
+   It is also a good idea to put parameters, that later will be used across the code (e.g. sizes of samples, time ranges for
+   period search, magnitude limits) into a separate section before the analysis, and create temporary sections for classes and functions
+   (which ultimately should be extracted into `.py` files).
+
+> ## Jupyter Lab Table of Contents
+> The benefit of using multi-level headers for sections and subsections is that Jupyter Lab uses them for creating
+> the Table of Contents, which can be accesses from the collapsible left side-bar. With this panel, you can quickly evaluate the
+> structure of your notebook, go to any subsection or execute all the cells under the selected header.
+> ![Using the Table of Contents to execute cells in a selected section](../fig/13_jupBestPractice_2_ToC.png){: .image-with-shadow width="500px" }
+> <p style="text-align: center;">Using the Table of Contents to execute cells in a selected section</p>
+{: .callout}
+
+6. Use 'Restart and Run All' often, and always before finishing your work, to make sure that
    your results are reproducible.
 8. If your Notebook contains pieces of code that are computationally
    extensive, it is better to work on a small representative sample of the data,
@@ -49,6 +82,12 @@ the most important rules of keeping your Notebooks in a good condition:
 9. Convert the code you use more than once into functions.
 10. Classes and functions have to be taken out of the Notebooks and put in `.py` files. This allows you
    to use them again across multiple Notebooks and then package them to release as a standalone tool.
+
+> ## Jupyter Notebook, Rubin Science Platform and Google Colab
+> While RSP and Google Colab have Jupyter Notebook installed and not Jupyter Lab, all of the
+> best practices above are still applicable on these platworms, with the only exception that
+> you will have to create the Table of Contents manually.
+{: .callout}
 
 > ## Exercises
 > Fix `light-curve-analysis.ipynb` structure
