@@ -447,7 +447,7 @@ the commits will happen on the `develop` branch
 and will not affect the version of the code in `main`.
 We add and commit things to `develop` branch in the same way as we do to `main`.
 
-Let's make a small modification to `LCAnalyzer/models.py` in Jupyter Lab,
+Let's make a small modification to `lcanalyzer/models.py` in Jupyter Lab,
 and, say, add periods at the end of the docstrings for functions
 `mean_mag()`,
 `max_mag()` and
@@ -466,7 +466,7 @@ $ git status
      (use "git add <file>..." to update what will be committed)
      (use "git checkout -- <file>..." to discard changes in working directory)
 
-   	modified:   LCAnalyzer/models.py
+   	modified:   lcanalyzer/models.py
 
    no changes added to commit (use "git add" and/or "git commit -a")
 ~~~
@@ -478,7 +478,7 @@ and which tracked files have been modified in our working directory.
 We can now `add` and `commit` the changes in the usual way.
 
 ~~~
-$ git add LCAnalyzer/models.py
+$ git add lcanalyzer/models.py
 $ git commit -m "Spelling fix"
 ~~~
 {: .language-bash}
@@ -580,7 +580,7 @@ $ git merge develop
 ~~~
 Updating 05e1ffb..be60389
 Fast-forward
- LCAnalyzer/models.py | 6 +++---
+ lcanalyzer/models.py | 6 +++---
  1 files changed, 3 insertions(+), 3 deletions(-)
 ~~~
 {: .output}
