@@ -24,7 +24,7 @@ For this workshop, let's assume that you  have joined a software development tea
 developed in Python and stored on GitHub. The purpose of this software is to analyze the variability of astronomical sources, 
 using observations that come from different instruments. 
 
-![Snapshot of the light curve dataset](../fig/11_project_1.png){: .image-with-shadow width="800px" }
+![Snapshot of the light curve dataset](../fig/11_project_1.svg){: .image-with-shadow width="800px" }
 
 > ## What Does Light Curve Dataset Contain?
 >
