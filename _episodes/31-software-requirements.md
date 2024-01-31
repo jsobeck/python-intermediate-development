@@ -9,20 +9,21 @@ objectives:
 - "Describe the different types of software requirements."
 - "Explain the difference between functional and non-functional requirements."
 - "Describe some of the different kinds of software and explain how the environment in which software is used constrains its design."
-- "Derive new user and solution requirements from business requirements."
 keypoints:
 - "When writing software used for research, requirements will almost *always* change."
 - "Consider non-functional requirements (*how* the software will behave) as well as functional requirements (*what* the software is supposed to do)."
 - "The environment in which users run our software has an effect on many design choices we might make."
 - "Consider the expected longevity of any code before you write it."
-- "The perspective and language of a particular requirement stakeholder group should be reflected in requirements for that group."
 ---
 
 The requirements of our software are the basis on which the whole project rests -
 if we get the requirements wrong, we'll build the wrong software.
 However, it's unlikely that we'll be able to determine all of the requirements upfront.
 Especially when working in a research context,
-requirements are flexible and may change as we develop our software.
+requirements are flexible and change as we develop our software. There are 
+guidelines for preparing and carrying out a requirements analysis. A
+comprehensive overview how to prepare and report requirements can be
+in the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.ieee.org/document/278253).
 
 ## Types of Requirements
 
@@ -37,32 +38,14 @@ Let's take a look at these now.
 
 Business requirements describe what is needed from the perspective of the organisation,
 and define the strategic path of the project,
-e.g. to increase profit margin or market share,
-or embark on a new research area or collaborative partnership.
-These are captured in something like a Business Requirements Specification.
+e.g. to embark on a new research area or collaborative partnership.
+These are captured in a Business Requirements Specification.
 
-For adapting our inflammation software project, example business requirements could include:
+For adapting our research light curve project, example business requirements could include:
 
-- BR1: improving the statistical quality of clinical trial reporting
-  to meet the needs of external audits
-- BR2: increasing the throughput of trial analyses
-  to meet higher demand during peak periods
+- BR1: Analyzing transient light curves, such as a Supernova Ia light curve,
+requires a new type of analysis to be implemented.
 
-> ## Exercise: New Business Requirements
-> Think of a new hypothetical business-level requirements for this software.
-> This can be anything you like, but be sure to keep it at the high-level of the business itself.
->
->> ## Solution
->> One hypothetical new business requirement (BR3) could be
->> extending our clinical trial system to keep track of doctors who are being involved in the project.
->>
->> Another hypothetical new business requirement (BR4) may be
->> adding a new parameter to the treatment
->> and checking if it improves the effect of the drug being tested -
->> e.g. taking it in conjunction with omega-3 fatty acids and/or
->> increasing physical activity while taking the drug therapy.
-> {: .solution}
-{: .challenge}
 
 ### User (or Stakeholder) Requirements
 
@@ -71,64 +54,32 @@ essentially acting as a bridge between the higher-level business requirements
 and specific solution requirements.
 These are typically captured in a User Requirements Specification.
 
-For our inflammation project,
-they could include things for trial managers such as (building on the business requirements):
+For our light curve project,
+they could include:
 
 - UR1.1 (from BR1):
-  add support for statistical measures in generated trial reports
-  as required by revised auditing standards (standard deviation, ...)
-- UR1.2 (from BR1): add support for producing textual representations of statistics in trial reports
-  as required by revised auditing standards
-- UR2.1 (from BR2): ability to have an individual trial report processed and generated
-  in under 30 seconds (if we assume it usually takes longer than that)
-
-> ## Exercise: New User Requirements
->
-> Break down your new business requirements from the
-> [previous exercise](../31-software-requirements/index.html#exercise-new-business-requirements)
-> into a number of logical user requirements,
-> ensuring they stay above the level and detail of implementation.
->> ## Solution
->> For our business requirement BR3 from the previous exercise,
->> the new user/stakeholder requirements may be the ability to
->> see all the patients a doctor is being responsible for (UR3.1),
->> and to find out a doctor looking after any individual patient (UR3.2).
->>
->> For our business requirement BR4 from the previous exercise,
->> the new user/stakeholder requirements may be the ability to
->> see the effect of the drug with and without the additional parameters
->> in all reports and graphs (UR4.1).
-> {: .solution}
-{: .challenge}
-
+support for statistical measures in the analysis of light curves
+    (report the position of the peaks, peaks, etc. )
+  
 ### Solution Requirements
 
 Solution (or product) requirements describe characteristics that software must have to
-satisfy the stakeholder requirements.
-They fall into two key categories:
+satisfy the stakeholder requirements. They fall into two key categories:
 
-- *Functional requirements* focus on functions and features of a solution.
+- *Functional requirements* focus on functionalities and features of a solution.
   For our software, building on our user requirements, e.g.:
     - SR1.1.1 (from UR1.1):
-      add standard deviation to data model and include a graph visualisation view
-    - SR1.2.1 (from UR1.2):
-      add a new view to generate a textual representation of statistics,
-      which is invoked by an optional command line argument
+      reading light curves in different formats such as .csv, .json, .dat
+    - SR1.2.1 (from UR1.1):
+      filtering out rows with NaN entries
 - *Non-functional requirements* focus on
   *how* the behaviour of a solution is expressed or constrained,
   e.g. performance, security, usability, or portability.
   These are also known as *quality of service* requirements.
   For our project, e.g.:
-    - SR2.1.1 (from UR2.1):
-      generate graphical statistics report on clinical workstation configuration
-      in under 30 seconds
-
-> ## Labelling Requirements
-> Note that the naming scheme we used for labelling our requirements is quite arbitrary -
-> you should reference them in a way that is consistent
-> and makes sense within your project and team.
-{: .callout}
-
+    - SR2.1.1 (from UR1.1):
+      provide an initial estimate when a light curve will peak 
+      in under 10 seconds
 
 #### The Importance of Non-functional Requirements
 
@@ -138,95 +89,13 @@ However, many design choices in a software project quite rightly depend on
 the users themselves and the environment in which the software is expected to run,
 and these aspects should be considered as part of the software's non-functional requirements.
 
-> ## Exercise: Types of Software
->
-> Think about some software you are familiar with
-> (could be software you have written yourself or by someone else)
-> and how the environment it is used in have affected its design or development.
-> Here are some examples of questions you can use to get started:
->
-> - What environment does the software run in?
-> - How do people interact with it?
-> - Why do people use it?
-> - What features of the software have been affected by these factors?
-> - If the software needed to be used in a different environment,
->   what difficulties might there be?
->
-> Some examples of design / development choices constrained by environment might be:
->
-> - Mobile Apps
->   - Must have graphical interface suitable for a touch display
->   - Usually distributed via a controlled app store
->   - Users will not (usually) modify / compile the software themselves
->   - Should work on a range of hardware specifications
->     with a range of Operating System (OS) versions
->     - But OS is unlikely to be anything other than Android or iOS
->   - Documentation probably in the software itself or on a Web page
->   - Typically written in one of the platform preferred languages
->     (e.g. Java, Kotlin, Swift)
-> - Embedded Software
->   - May have no user interface - user interface may be physical buttons
->   - Usually distributed pre-installed on a physical device
->   - Often runs on low power device with limited memory and CPU performance -
->     must take care to use these resources efficiently
->   - Exact specification of hardware is known -
->     often not necessary to support multiple devices
->   - Documentation probably in a technical manual with a separate user manual
->   - May need to run continuously for the lifetime of the device
->   - Typically written in a lower-level language (e.g. C) for better control of resources
->
-> > ## Some More Examples
-> >
-> > - Desktop Application
-> >   - Has a graphical interface for use with mouse and keyboard
-> >   - May need to work on multiple, very different operating systems
-> >   - May be intended for users to modify / compile themselves
-> >   - Should work on a wide range of hardware configurations
-> >   - Documentation probably either in a manual or in the software itself
-> > - Command-line Application - UNIX Tool
-> >   - User interface is text based, probably via command-line arguments
-> >   - Intended to be modified / compiled by users - though most will choose not to
-> >   - Documentation has standard formats - also accessible from the command line
-> >   - Should be usable as part of a pipeline
-> > - Command-line Application - High Performance Computing
-> >   - Similar to a UNIX Tool
-> >   - Usually supports running across multiple networked machines simultaneously
-> >   - Usually operated via a scheduler - interface should be scriptable
-> >   - May need to run on a wide range of hardware
-> >     (e.g. different CPU architectures)
-> >   - May need to process large amounts of data
-> >   - Often entirely or partially written in a lower-level language for performance
-> >     (e.g. C, C++, Fortran)
-> > - Web Application
-> >   - Usually has components which run on server and components which run on the user's device
-> >   - Graphical interface should usually support both Desktop and Mobile devices
-> >   - Client-side component should run on a range of browsers and operating systems
-> >   - Documentation probably part of the software itself
-> >   - Client-side component typically written in JavaScript
-> {: .solution}
-{: .challenge}
-
-> ## Exercise: New Solution Requirements
-> Now break down your new user requirements from the
-> [earlier exercise](../31-software-requirements/index.html#exercise-new-user-requirements)
-> into a number of logical solution requirements (functional and non-functional),
-> that address the detail required to be able to implement them in the software.
->> ## Solution
->> For our new hypothetical business requirement BR3,
->> new functional solution requirements could be extending
->> the clinical trial system to keep track of:
->> - the names of all patients (SR3.1.1) and doctors (SR3.1.2) involved in the trial
->> - the name of the doctor for a particular patient (SR3.1.3)
->> - a group of patients being administered by a particular doctor (SR3.2.1).
-> {: .solution}
-{: .challenge}
 
 > ## Optional Exercise: Requirements for Your Software Project
 >
 > Think back to a piece of code or software (either small or large) you've written,
 > or which you have experience using.
-> First, try to formulate a few of its key business requirements,
-> then derive these into user and then solution requirements
+> First, try to formulate one key business requirement,
+> then derive these into one user and then one solution requirement
 > (in a similar fashion to the ones above in *Types of Requirements*).
 {: .challenge}
 
@@ -246,9 +115,8 @@ The intended longevity and post-project role of software should be reflected in 
 particularly within its non-functional requirements -
 so be sure to consider these aspects.
 
-On the other hand, you might want to knock together some code to prove a concept
-or to perform a quick calculation
-and then just discard it.
+On the other hand, you may want to quickly create some code
+to demonstrate a concept or perform a brief calculation before discarding it.
 But can you be sure you'll never want to use it again?
 Maybe a few months from now you'll realise you need it after all,
 or you'll have a colleague say "I wish I had a..."

@@ -10,7 +10,7 @@ objectives:
 - "Understand the components of multi-layer software architectures."
 keypoints:
 - "Planning software projects in advance can save a lot of effort and reduce 'technical debt' later - even a partial plan is better than no plan at all."
-- "By breaking down our software into components with a single responsibility, we avoid having to rewrite it all when requirements change.
+- "By making our software modular, i.e. introducing parts with a single responsibility, we avoid having to rewrite it all when requirements change.
 Such components can be as small as a single function, or be a software package in their own right."
 - "When writing software used for research, requirements will almost *always* change."
 - "*'Good code is written so that is readable, understandable, covered by automated tests, not over complicated and does well what is intended to do.'*"
@@ -21,18 +21,21 @@ Such components can be as small as a single function, or be a software package i
 In this episode, we'll be looking at how we can design our software
 to ensure it meets the requirements,
 but also retains the other qualities of good software.
+
 As a piece of software grows,
 it will reach a point where there's too much code for us to keep in mind at once.
 At this point, it becomes particularly important that the software be designed sensibly.
 What should be the overall structure of our software,
 how should all the pieces of functionality fit together,
 and how should we work towards fulfilling this overall design throughout development?
+ Similar to the software requirements, the actual implementation and timeline https://ieeexplore.ieee.org/document/278258
+of the development process should be documented. One example are the
+[IEEE software design descriptions](https://ieeexplore.ieee.org/document/278258). 
 
-It's not easy to come up with a complete definition for the term **software design**,
-but some of the common aspects are:
+**Software design**, covers some of the following aspects:
 
 - **Algorithm design** -
-  what method are we going to use to solve the core business problem?
+  what method are we going to use to solve the core business/science problem?
 - **Software architecture** -
   what components will the software have and how will they cooperate?
 - **System architecture** -
@@ -40,11 +43,11 @@ but some of the common aspects are:
 - **UI/UX** (User Interface / User Experience) -
   how will users interact with the software?
 
-As usual, the sooner you adopt a practice in the lifecycle of your project, the easier it will be.
+As usual, the sooner you adopt a practice in the lifecycle of your project,
+the easier it will be.
 So we should think about the design of our software from the very beginning,
 ideally even before we start writing code -
 but if you didn't, it's never too late to start.
-
 
 The answers to these questions will provide us with some **design constraints**
 which any software we write must satisfy.
@@ -70,142 +73,57 @@ and refers to a template solution to a problem commonly encountered when buildin
 
 Design patterns are relatively small-scale templates
 which we can use to solve problems which affect a small part of our software.
-For example, the **[adapter pattern](https://en.wikipedia.org/wiki/Adapter_pattern)**
-(which allows a class that does not have the "right interface" to be reused)
-may be useful if part of our software needs to consume data
-from a number of different external data sources.
-Using this pattern,
-we can create a component whose responsibility is
-transforming the calls for data to the expected format,
-so the rest of our program doesn't have to worry about it.
-
-Architecture patterns are similar,
+One example is a strategy pattern that could handle multiple algorithms and handling them
+in a consistent way. Architecture patterns are similar,
 but larger scale templates which operate at the level of whole programs,
-or collections or programs.
-Model-View-Controller (which we chose for our project) is one of the best known architecture patterns.
-Many patterns rely on concepts from Object Oriented Programming,
-so we'll come back to the MVC pattern shortly
-after we learn a bit more about Object Oriented Programming.
+or collections or programs. Model-View-Controller 
+is one of the best known architecture patterns. During the development process, 
+programmers using the Python web framework Django will encounter it frequently.
 
-There are many online sources of information about design and architecture patterns,
+Many patterns rely on concepts from Object Oriented Programming and 
+there are many online sources of information about design and architecture patterns,
 often giving concrete examples of cases where they may be useful.
 One particularly good source is [Refactoring Guru](https://refactoring.guru/design-patterns).
 
-
-### Multilayer Architecture
-
-One common architectural pattern for larger software projects is **Multilayer Architecture**.
-Software designed using this architecture pattern is split into layers,
-each of which is responsible for a different part of the process of manipulating data.
-
-Often, the software is split into three layers:
-
-- **Presentation Layer**
-  - This layer is responsible for managing the interaction between
-    our software and the people using it
-  - May include the **View** components if also using the MVC pattern
-- **Application Layer / Business Logic Layer**
-  - This layer performs most of the data processing required by the presentation layer
-  - Likely to include the **Controller** components if also using an MVC pattern
-  - May also include the **Model** components
-- **Persistence Layer / Data Access Layer**
-  - This layer handles data storage and provides data to the rest of the system
-  - May include the **Model** components of an MVC pattern
-    if they're not in the application layer
-
-Although we've drawn similarities here between the layers of a system and the components of MVC,
-they're actually solutions to different scales of problem.
-In a small application, a multilayer architecture is unlikely to be necessary,
-whereas in a very large application,
-the MVC pattern may be used just within the presentation layer,
-to handle getting data to and from the people using the software.
-
 ## Addressing New Requirements
 
-So, let's assume we now want to extend our application -
-designed around an MVC architecture - with some new functionalities
-(more statistical processing and a new view to see a patient's data).
+So, let's assume we now want to extend our application 
+with some new functionalities (more statistical processing, a new view, etc.).
 Let's recall the solution requirements we discussed in the previous episode:
 
 - *Functional Requirements*:
   - SR1.1.1 (from UR1.1):
-    add standard deviation to data model and include in graph visualisation view
-  - SR1.2.1 (from UR1.2):
-    add a new view to generate a textual representation of statistics,
-    which is invoked by an optional command line argument
+   reading light curves in different formats such as .csv, .json, .dat
+  - SR1.2.1 (from UR1.1):
+    filtering out rows with NaN entries
 - *Non-functional Requirements*:
   - SR2.1.1 (from UR2.1):
-    generate graphical statistics report on clinical workstation configuration in under 30 seconds
-
+     provide an initial estimate when the light curve will peak in under 10 second
+  - 
 ### How Should We Test These Requirements?
 
 Sometimes when we make changes to our code that we plan to test later,
 we find the way we've implemented that change doesn't lend itself well to how it should be tested.
-So what should we do?
+So what should we do? We could write unit tests. As we have seen before, it is therefore
+a good idea to make sure that your software's features are modularised
+and accessible via logical functions. 
 
-Consider requirement SR1.2.1 -
-we have (at least) two things we should test in some way,
-for which we could write unit tests.
-For the textual representation of statistics,
-in a unit test we could invoke our new view function directly
-with known inflammation data and test the text output as a string against what is expected.
-The second one, invoking this new view with an optional command line argument,
-is more problematic since the code isn't structured in a way where
-we can easily invoke the argument parsing portion to test it.
-To make this more amenable to unit testing we could
-move the command line parsing portion to a separate function,
-and use that in our unit tests.
-So in general, it's a good idea to make sure
-your software's features are modularised and accessible via logical functions.
-
-We could also consider writing unit tests for SR2.1.1,
-ensuring that the system meets our performance requirement, so should we?
-We do need to verify it's being met with the modified implementation,
-however it's generally considered bad practice to use unit tests for this purpose.
+We could also consider writing unit tests ensuring that the system meets
+our performance requirement, so should we? In short, it's generally considered
+bad practice to use unit tests for this purpose.
 This is because unit tests test *if* a given aspect is behaving correctly,
 whereas performance tests test *how efficiently* it does it.
 Performance testing produces measurements of performance which require a different kind of analysis
 (using techniques such as [*code profiling*](https://towardsdatascience.com/how-to-assess-your-code-performance-in-python-346a17880c9f)),
 and require careful and specific configurations of operating environments to ensure fair testing.
-In addition, unit testing frameworks are not typically designed for conducting such measurements,
-and only test units of a system,
-which doesn't give you an idea of performance of the system
-as it is typically used by stakeholders.
+Furthermore, it is important to note that unit testing frameworks are not intended
+for measuring system performance as a whole, as they only test individual units.
+This limitation prevents stakeholders from gaining a comprehensive understanding of
+the system's performance in real-world scenarios.
 
 The key is to think about which kind of testing should be used
 to check if the code satisfies a requirement,
 but also what you can do to make that code amenable to that type of testing.
-
-> ## Exercise: Implementing Requirements
-> Pick one of the requirements SR1.1.1 or SR1.2.1 above to implement
-> and create an appropriate feature branch -
-> e.g. `add-std-dev` or `add-view` from your most up-to-date `develop` branch.
->
-> One aspect you should consider first is
-> whether the new requirement can be implemented within the existing design.
-> If not, how does the design need to be changed to accommodate the inclusion of this new feature?
-> Also try to ensure that the changes you make are amenable to unit testing:
-> is the code suitably modularised
-> such that the aspect under test can be easily invoked
-> with test input data and its output tested?
->
-> If you have time, feel free to implement the other requirement, or invent your own!
->
-> Also make sure you push changes to your new feature branch remotely
-> to your software repository on GitHub.
->
-> **Note: do not add the tests for the new feature just yet -
-> even though you would normally add the tests along with the new code,
-> we will do this in a later episode.
-> Equally, do not merge your changes to the `develop` branch just yet.**
->
-> **Note 2: we have intentionally left this exercise without a solution
-> to give you more freedom in implementing it how you see fit.
-> If you are struggling with adding a new view and command line parameter,
-> you may find the standard deviation requirement easier.
-> A later episode in this section will look at
-> how to handle command line parameters in a scalable way.**
-{: .challenge}
 
 ## Best Practices for 'Good' Software Design
 
@@ -225,25 +143,6 @@ This design should be based around the structure of the problem we're trying to 
 what are the concepts we need to represent
 and what are the relationships between them.
 And importantly, who will be using our software and how will they interact with it?
-
-Here's another way of looking at it.
-
-Not following good software design and development practices
-can lead to accumulated 'technical debt',
-which (according to [Wikipedia](https://en.wikipedia.org/wiki/Technical_debt)),
-is the "cost of additional rework caused by choosing an easy (limited) solution now
-instead of using a better approach that would take longer".
-So, the pressure to achieve project goals can sometimes lead to quick and easy solutions,
-which make the software become
-more messy, more complex, and more difficult to understand and maintain.
-The extra effort required to make changes in the future is the interest paid on the (technical) debt.
-It's natural for software to accrue some technical debt,
-but it's important to pay off that debt during a maintenance phase -
-simplifying, clarifying the code, making it easier to understand -
-to keep these interest payments on making changes manageable.
-If this isn't done, the software may accrue too much technical debt,
-and it can become too messy and prohibitive to maintain and develop,
-and then it cannot evolve.
 
 Importantly, there is only so much time available.
 How much effort should we spend on designing our code properly
