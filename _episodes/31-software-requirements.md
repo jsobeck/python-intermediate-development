@@ -20,7 +20,10 @@ The requirements of our software are the basis on which the whole project rests 
 if we get the requirements wrong, we'll build the wrong software.
 However, it's unlikely that we'll be able to determine all of the requirements upfront.
 Especially when working in a research context,
-requirements are flexible and change as we develop our software.
+requirements are flexible and change as we develop our software. There are 
+guidelines for preparing and carrying out a requirements analysis. A
+comprehensive resource can be found on the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.ieee.org/document/278253) 
+to prepare a Software Requirements Specification (SRS) document. 
 
 ## Types of Requirements
 
@@ -40,8 +43,8 @@ These are captured in a Business Requirements Specification.
 
 For adapting our research light curve project, example business requirements could include:
 
-- BR1: Implementing a new type of analysis, i.e. analyzing transient light curves such 
-as a Supernova Ia light curve.  
+- BR1: Analyzing transient light curves, such as a Supernova Ia light curve,
+requires a new type of analysis to be implemented.
 
 
 ### User (or Stakeholder) Requirements
@@ -55,9 +58,9 @@ For our light curve project,
 they could include:
 
 - UR1.1 (from BR1):
-  add support for statistical measures in the analysis of light curves
-  (report median, standard deviation, ...)
-
+support for statistical measures in the analysis of light curves
+    (report the position of the peaks, peaks, etc. )
+  
 ### Solution Requirements
 
 Solution (or product) requirements describe characteristics that software must have to
@@ -67,15 +70,16 @@ satisfy the stakeholder requirements. They fall into two key categories:
   For our software, building on our user requirements, e.g.:
     - SR1.1.1 (from UR1.1):
       reading light curves in different formats such as .csv, .json, .dat
-    - SR1.2.1 (from UR1.2):
-      filtering out not a number entries
+    - SR1.2.1 (from UR1.1):
+      filtering out rows with NaN entries
 - *Non-functional requirements* focus on
   *how* the behaviour of a solution is expressed or constrained,
   e.g. performance, security, usability, or portability.
   These are also known as *quality of service* requirements.
   For our project, e.g.:
-    - SR2.1.1 (from UR2.1):
-      provide an initial estimate of the period in under 10 seconds
+    - SR2.1.1 (from UR1.1):
+      provide an initial estimate when a light curve will peak 
+      in under 10 seconds
 
 #### The Importance of Non-functional Requirements
 
@@ -90,8 +94,8 @@ and these aspects should be considered as part of the software's non-functional 
 >
 > Think back to a piece of code or software (either small or large) you've written,
 > or which you have experience using.
-> First, try to formulate a few of its key business requirements,
-> then derive these into user and then solution requirements
+> First, try to formulate one key business requirement,
+> then derive these into one user and then one solution requirement
 > (in a similar fashion to the ones above in *Types of Requirements*).
 {: .challenge}
 
@@ -111,9 +115,8 @@ The intended longevity and post-project role of software should be reflected in 
 particularly within its non-functional requirements -
 so be sure to consider these aspects.
 
-On the other hand, you might want to knock together some code to prove a concept
-or to perform a quick calculation
-and then just discard it.
+On the other hand, you may want to quickly create some code
+to demonstrate a concept or perform a brief calculation before discarding it.
 But can you be sure you'll never want to use it again?
 Maybe a few months from now you'll realise you need it after all,
 or you'll have a colleague say "I wish I had a..."
