@@ -22,8 +22,8 @@ However, it's unlikely that we'll be able to determine all of the requirements u
 Especially when working in a research context,
 requirements are flexible and change as we develop our software. There are 
 guidelines for preparing and carrying out a requirements analysis. A
-comprehensive resource can be found on the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.ieee.org/document/278253) 
-to prepare a Software Requirements Specification (SRS) document. 
+comprehensive overview how to prepare and report requirements can be
+in the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.ieee.org/document/278253).
 
 ## Types of Requirements
 
