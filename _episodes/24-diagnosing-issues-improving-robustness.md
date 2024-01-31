@@ -1,5 +1,5 @@
 ---
-title: "Diagnosing Issues and Improving Robustness"
+title: "Using Debugger for Diagnosing the Issues"
 teaching: 30
 exercises: 20
 questions:
@@ -29,7 +29,8 @@ But it does not tell us exactly where the problem is (i.e. what line of code),
 or how it came about.
 To give us a better idea of what is going on, we can:
 
- - output program state at various points,
+- split the code into smaller cells to locate the source of error,
+- output program state at various points,
    e.g. by using print statements to output the contents of variables,
 - use a logging capability to output
   the state of everything as the program progresses, or
@@ -74,14 +75,12 @@ as `data` is a 2D array (of shape `(60, 40)`)
 and `max` is a 1D array (of shape `(60, )`),
 which means that their shapes are not compatible.
 
-![NumPy arrays of incompatible shapes](../fig/numpy-incompatible-shapes.png){: .image-with-shadow width="800px"}
+![NumPy arrays of incompatible shapes](../fig/imgDummy.png){: .image-with-shadow width="800px"}
 
 Hence, to make sure that we can perform this division and get the expected result,
 we need to convert `max` to be a 2D array
 by using the `newaxis` index operator to insert a new axis into `max`,
 making it a 2D array of shape `(60, 1)`.
-
-![NumPy arrays' shapes after adding a new_axis](../fig/numpy-shapes-after-new-axis.png){: .image-with-shadow width="800px"}
 
 Now the division will give us the expected result.
 Even though the shapes are not identical,
@@ -90,7 +89,6 @@ the shape of the 2D `max` array is now "stretched" ("broadcast")
 to match that of `data` - i.e. `(60, 40)`,
 and element-wise division can be performed.
 
-![NumPy arrays' shapes after broadcasting](../fig/numpy-shapes-after-broadcasting.png){: .image-with-shadow width="800px"}
 
 > ## Broadcasting
 >
@@ -158,185 +156,12 @@ tests/test_models.py:53: AssertionError
 
 Let us use a debugger at this point to see what is going on and why the function failed.
 
-## Debugging in PyCharm
+## Debugging in Jupyter Lab
 
 Think of debugging like performing exploratory surgery - on code!
 Debuggers allow us to peer at the internal workings of a program,
 such as variables and other state,
 as it performs its functions.
-
-### Running Tests Within PyCharm
-
-Firstly, to make it easier to track what's going on,
-we can set up PyCharm to run and debug our tests
-instead of running them from the command line.
-If you have not done so already,
-you will first need to enable the Pytest framework in PyCharm.
-You can do this by:
-
-1. Select either `PyCharm` > `Preferences` (Mac) or `File` > `Settings` (Linux, Windows).
-2. Then, in the preferences window that appears,
-   select `Tools` -> `Python integrated tools` > from the left.
-3. Under `Testing`, for `Default test runner` select `pytest`.
-4. Select `OK`.
-
-![Setting up test framework in PyCharm](../fig/pycharm-test-framework.png){: .image-with-shadow width="1000px"}
-
-We can now run `pytest` over our tests in PyCharm,
-similarly to how we ran our `inflammation-analysis.py` script before.
-Right-click the `test_models.py` file
-under the `tests` directory in the file navigation window on the left,
-and select `Run 'pytest in test_model...'`.
-You'll see the results of the tests appear in PyCharm in a bottom panel.
-If you scroll down in that panel you should see
-the failed `test_patient_normalise()` test result
-looking something like the following:
-
-![Running pytest in PyCharm](../fig/pytest-pycharm-run-tests.png){: .image-with-shadow width="1000px"}
-
-We can also run our test functions individually.
-First, let's check that our PyCharm running and testing configurations are correct.
-Select `Run` > `Edit Configurations...` from the PyCharm menu,
-and you should see something like the following:
-
-![Ensuring testing configurations in PyCharm are correct](../fig/pytest-pycharm-check-config.png){: .image-with-shadow width="800px"}
-
-PyCharm allows us to configure multiple ways of running our code.
-Looking at the figure above,
-the first of these -
-`inflammation-analysis` under `Python` -
-was configured when we set up how to run our script from within PyCharm.
-The second -
-`pytest in test_models.py` under `Python tests` -
-is our recent test configuration.
-If you see just these, you're good to go.
-We don't need any others,
-so select any others you see and click the `-` button at the top to remove them.
-This will avoid any confusion when running our tests separately.
-Click `OK` when done.
-
-> ## Buffered Output
->
-> Whenever a Python program prints text to the terminal or to a file,
-> it first stores this text in an **output buffer**.
-> When the buffer becomes full or is **flushed**,
-> the contents of the buffer are written to
-> the terminal / file in one go and the buffer is cleared.
-> This is usually done to increase performance
-> by effectively converting multiple output operations into just one.
-> Printing text to the terminal is a relatively slow operation,
-> so in some cases this can make quite a big difference
-> to the total execution time of a program.
->
-> However, using buffered output can make debugging more difficult,
-> as we can no longer be quite sure when a log message will be displayed.
-> In order to make debugging simpler,
-> PyCharm automatically adds the environment variable `PYTHONUNBUFFERED`
-> we see in the screenshot above,
-> which disables output buffering.
-{: .callout}
-
-Now, if you select the green arrow next to a test function
-in our `test_models.py` script in PyCharm,
-and select `Run 'pytest in test_model...'`,
-we can run just that test:
-
-![Running a single test in PyCharm](../fig/pytest-pycharm-run-single-test.png){: .image-with-shadow width="800px"}
-
-Click on the "run" button next to `test_patient_normalise`,
-and you will be able to see that PyCharm runs just that test function,
-and we see the same `AssertionError` that we saw before.
-
-### Running the Debugger
-
-Now we want to use the debugger to investigate
-what is happening inside the `patient_normalise` function.
-To do this we will add a *breakpoint* in the code.
-A breakpoint will pause execution at that point allowing us to explore the state of the program.
-
-To set a breakpoint, navigate to the `models.py` file
-and move your mouse to the `return` statement of the `patient_normalise` function.
-Click to just to the right of the line number for that line
-and a small red dot will appear,
-indicating that you have placed a breakpoint on that line.
-
-![Setting a breakpoint in PyCharm](../fig/pytest-pycharm-set-breakpoint.png){: .image-with-shadow width="600px"}
-
-Now if you select the green arrow next to the `test_patient_normalise` function
-and instead select `Debug 'pytest in test_model...'`,
-you will notice that execution will be paused
-at the `return` statement of `patient_normalise`.
-In the debug panel that appears below,
-we can now investigate the exact state of the program
-prior to it executing this line of code.
-
-In the debug panel below,
-in the `Debugger` tab you will be able to see
-two sections that looks something like the following:
-
-![Debugging in PyCharm](../fig/pytest-pycharm-debug.png){: .image-with-shadow width="1000px"}
-
-- The `Frames` section on the left,
-  which shows the **call stack**
-  (the chain of functions that have been executed to lead to this point).
-  We can traverse this chain of functions if we wish,
-  to observe the state of each function.
-- The `Variables` section on the right,
-  which displays the local and global variables currently in memory.
-  You will be able to see the `data` array
-  that is input to the `patient_normalise` function,
-  as well as the `max` local array
-  that was created to hold the maximum inflammation values for each patient.
-
-We also have the ability run any Python code we wish at this point
-to explore the state of the program even further!
-This is useful if you want to view a particular combination of variables,
-or perhaps a single element or slice of an array to see what went wrong.
-Select the `Console` tab in the panel (next to the `Debugger` tab),
-and you'll be presented with a Python prompt.
-Try putting in the expression `max[:, np.newaxis]` into the console,
-and you will be able to see the column vector that we are dividing `data` by
-in the return line of the function.
-
-![Debugging in PyCharm](../fig/pytest-pycharm-console.png){: .image-with-shadow width="1000px"}
-
-Now, looking at the `max` variable,
-we can see that something looks wrong,
-as the maximum values for each patient do not correspond to the `data` array.
-Recall that the input `data` array we are using for the function is
-
-~~~
-  [[1, 2, 3],
-   [4, 5, 6],
-   [7, 8, 9]]
-~~~
-{: .language-python}
-
-So the maximum inflammation for each patient should be `[3, 6, 9]`,
-whereas the debugger shows `[7, 8, 9]`.
-You can see that the latter corresponds exactly to the last column of `data`,
-and we can immediately conclude that
-we took the maximum along the wrong axis of `data`.
-Now we have our answer,
-stop the debugging process by selecting
-the red square at the top right of the main PyCharm window.
-
-So to fix the `patient_normalise` function in `models.py`,
-change `axis=0` in the first line of the function to `axis=1`.
-With this fix in place,
-running all the tests again should result in all tests passing.
-Navigate back to `test_models.py` in PyCharm,
-right click `test_models.py`
-and select `Run 'pytest in test_model...'`.
-You should be rewarded with:
-
-![All tests in PyCharm are successful](../fig/pytest-pycharm-all-tests-pass.png){: .image-with-shadow width="1000px"}
-
-> ## NumPy Axis
-> Getting the axes right in NumPy is not trivial -
-> the [following tutorial](https://www.sharpsightlabs.com/blog/numpy-axes-explained/#:~:text=NumPy%20axes%20are%20the%20directions,along%20the%20rows%20and%20columns)
-> offers a good explanation on how axes work when applying NumPy functions to arrays.
-{: .callout}
 
 ## Corner or Edge Cases
 
