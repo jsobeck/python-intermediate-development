@@ -293,7 +293,7 @@ and then modifies the **View** by displaying the updated profile back to the use
 MVC architecture can be applied in scientific applications in the following manner.
 Model comprises those parts of the application that deal with
 some type of scientific processing or manipulation of the data,
-e.g. numerical algorithm, simulation, DNA.
+e.g. numerical algorithm, simulation, statistical analysis.
 View is a visualisation, or format, of the output,
 e.g. graphical plot, diagram, chart, data table, file.
 Controller is the part that ties the scientific processing and output parts together,
@@ -361,8 +361,8 @@ Data underlying the **Model** is contained within the directory `data` -
 as we have seen already it contains several files with light curves.
 
 We will revisit the software architecture and MVC topics once again in later episodes
-when we talk in more detail about software's
-[business/user/solution requirements](../31-software-requirements/index.html)
+when we talk in more detail about 
+[software's requirements](../31-software-requirements/index.html)
 and [software design](../32-software-design/index.html).
 We now proceed to set up our virtual development environment
 and start working with the code using a more convenient graphical tool -
