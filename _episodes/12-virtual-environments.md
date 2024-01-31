@@ -33,7 +33,7 @@ and it is possible to use Git with a Jupyter Lab extension (and many other IDEs 
 typing commands in the command line allows you to familiarise yourself and learn it well. Running Git from the command line does not depend on the IDE and for the most part, uses the same commands in different OS, so it is the most universal way of using it.
 
 If you have a little peek into our code
-(e.g. run `cat lightcurves/views.py` from the project root),
+(e.g. run `cat lcanalyzer/views.py` from the project root),
 you will see the following two lines somewhere at the top.
 
 ~~~
