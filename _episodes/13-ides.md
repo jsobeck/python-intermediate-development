@@ -204,23 +204,9 @@ the quality of the code, as well as simplifies the process for the programmer.
 > Next, get the list of the columns in one of the opened datasets, using completion at every step.
 > 
 > > ## Solution
-> > To get the list of the columns you can use the following code: `lcDatasets['kepler'].columns`.
-> > By pressing `Tab` once you started typing 'lcDatasets', 'kepler' and 'columns', you will get suggestions
+> > To get the list of the columns you can use the following code: `LcDatasets['kepler'].columns`.
+> > By pressing `Tab` once you started typing 'LcDatasets', 'kepler' and 'columns', you will get suggestions
 > > for the available options of the following code.
-> {: .solution}
-> After that, enable auto-completion and get the list of the columns of the second dataset.
-> Depending on what is more convenient for you, you can leave auto-completion function turned on, or turn it off.
-{: .challenge}
-
-> ## Try completion, auto-completion, and contextual help functions
-> Execute already existing cells of the notebook. There are several ways to do this:
->    
-> After that, inspect contextual help of several functions, e.g. `pd.read_pickle`, `np.array`, and `os.path.join`.
-> Pay attention to which information is included in the contextual help and in which format.
-> Next, get the list of the columns in one of the opened datasets, using completion at every step.
-> 
-> > ## Solution
-> > Something wiers
 > {: .solution}
 > After that, enable auto-completion and get the list of the columns of the second dataset.
 > Depending on what is more convenient for you, you can leave auto-completion function turned on, or turn it off.
