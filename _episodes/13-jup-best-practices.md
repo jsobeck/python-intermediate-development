@@ -67,7 +67,7 @@ the most important rules of keeping your notebooks in a good condition:
 > The benefit of using multi-level headers for sections and subsections is that Jupyter Lab uses them for creating
 > the Table of Contents, which can be accesses from the collapsible left side-bar. With this panel, you can quickly evaluate the
 > structure of your notebook, go to any subsection or execute all the cells under the selected header.
-> ![Using the Table of Contents to execute cells in a selected section](../fig/13_jupBestPractice_2_ToC.png){: .image-with-shadow width="500px" }
+> ![Using the Table of Contents to execute cells in a selected section](../fig/13_jupBestPractice_2_ToC.png){: .image-with-shadow width="700px" }
 > <p style="text-align: center;">Using the Table of Contents to execute cells in a selected section</p>
 {: .callout}
 > ## Fix the structure of the 'light-curve-analysis.ipynb' notebook
@@ -104,7 +104,7 @@ the most important rules of keeping your notebooks in a good condition:
 > to use boolean flags to indicate which steps have to be executed, and which
 > should be skipped. By storing these flags in the 'Parameters' section you can quickly see the current state of your work,
 > and turn on and off different steps of the data processing as needed.
-> ![Using boolean flags to indicate parts of the code that has to be skipped](../fig/13_jupBestPractice_3_flags.png){: .image-with-shadow width="500px" }
+> ![Using boolean flags to indicate parts of the code that has to be skipped](../fig/13_jupBestPractice_3_flags.png){: .image-with-shadow width="700px" }
 > <p style="text-align: center;">Using boolean flags to indicate parts of the code that has to be skipped</p>
 {: .callout}    
    
