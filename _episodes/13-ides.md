@@ -72,15 +72,16 @@ in this course, we will use [Jupyter Lab](https://jupyter.org/install) - a free 
 familiar to most Python-coding astronomers.
 
 > ## Is Jupyter Lab an IDE?
-> In the astronomical community, Jupyter **Notebooks** is not an IDE, since they lack a lot of functionality
+> For a long time, **Jupyter Notebook** was not considered as a full-fledged IDE. The main argument against
+> considering Jupyter Notebooks an IDE was that it lacked a lot of functionality
 > that is essential for the full cycle of software development. The most notable instrument that wasn't present in
-> Jupyter Notebooks was the debugger.
+> Jupyter Notebook was the debugger.
 >
-> However, modern versions of Jupyter **Lab**, an evolutionary development of Jupyter Notebooks, come with the built-in debugger, as well as
-> with all the rest of the basic IDE instruments. Formally, this makes Jupyter Lab a full-fledged IDE. At the same time,
+> However, modern versions of **Jupyter Lab**, an evolutionary development of Jupyter Notebook, come with the built-in debugger, as well as
+> with all the rest of the basic IDE instruments. Formally, this makes Jupyter Lab a 'real' IDE. At the same time,
 > Jupyter Lab and classic IDEs (such as PyCharm or Spyder) impose distinctly different coding routines.
-> Jupyter Lab (as Jupyter Notebooks before them) assumes an interactive cell-by-cell development and execution of the code,
-> which is well-suited for data exploration and analysis, as well as for small-scale software development. For larger projects
+> Jupyter Lab (as Jupyter Notebook before) assumes an interactive cell-by-cell development and execution of the code,
+> which is well-suited for data exploration and analysis and for small-scale software development. At the same time, for larger projects
 > that do not require executing small parts of the code separately, 'classic' IDEs are more suitable. 
 >
 {: .callout}
@@ -128,7 +129,28 @@ In the left sidebar, open the `File Browser` and look through the files present 
 of packages installed in our virtual environment, and `README.md`, containing some basic information about the project. Later we will add more information to
 this file. For now, double click on the `light-curve-analysis.ipynb`. 
 
-The first thing to notice is that code is displayed using different colours. 
+In the opened tab we can see a number of **cells**. Some of them contain Python code, while others display formatted text ('Markdown'). 
+You can change the type of the cell in the drop-down menu in the instrumental panel on the top of the tab. You can execute cells
+one by one by pressing `Shift+Enter`, or run them all by choosing `Run > Run All` in the main menu or by pressing a corresponding
+button in the tab instrumental panel. Code cells produce **outputs**, which may contain text, tables and static or interactive plots.
+
+![Interface elements of a notebook tab](../fig/13_ides_2_notebook.png){: .image-with-shadow width=800px" }
+<p style="text-align: center;">Interface elements of a notebook tab</p>
+
+By default the notebooks are opened in tabs that take the full screen, however, you can align them vertially
+or horizontally by dragging them in the preferred place. You can also place an output of any cell into a separate tab. 
+For this, make a right-click on 
+the output content and choose `Create New View for Cell Output`. You can open multiple tabs for the cell outputs and 
+reorder them in the same way as the notebook tabs.
+
+![Creating cell output view](../fig/13_ides_5_cellOutView.png){: .image-with-shadow width=800px" }
+<p style="text-align: center;">Creating cell output view</p>
+
+![You can order the notebook tabs and cell output views any way you like](../fig/13_ides_6_tabsAlign.png){: .image-with-shadow width=800px" }
+<p style="text-align: center;">You can order the notebook tabs and cell output views any way you like</p>
+
+The code in the notebook is displayed using different colours, following the rules set up for
+the **syntax highlighting**. 
 Syntax highlighting is a feature that displays source code terms
 in different colours and fonts according to the syntax category the highlighted term belongs to.
 It also makes syntax errors visually distinct.
