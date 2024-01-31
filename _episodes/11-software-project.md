@@ -24,12 +24,11 @@ For this workshop, let's assume that you  have joined a software development tea
 developed in Python and stored on GitHub. The purpose of this software is to analyze the variability of astronomical sources, 
 using observations that come from different instruments. 
 
-![Snapshot of the light curve dataset](../fig/imgDummy.png){: .image-with-shadow width="800px" }
-<p style="text-align: center;">Figure title</p>
+![Snapshot of the light curve dataset](../fig/11_project_1.png){: .image-with-shadow width="800px" }
 
 > ## What Does Light Curve Dataset Contain?
 >
-> For developing and testing our software project, we will use two RR Lyrae variability datasets.
+> For developing and testing our software project, we will use two RR Lyrae candidates variability datasets.
 >
 > The first dataset contains observations coming from the Kepler space telescope. In this dataset, all observations are related to the same source,
 > i.e. the whole table represents a single light curve. The second dataset contains observations of 25 astronomical sources. Considering that the datasets
