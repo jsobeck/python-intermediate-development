@@ -84,26 +84,43 @@ the most important rules of keeping your notebooks in a good condition:
 > >    (in our case we can `plot_filter_labels`, `plot_filter_colors` and `plot_filter_symbols`) into a separate section. 
 > > 4. **Keep it short**. Since our notebook has less than a hundred cells, for now we don't have this problem.
 > > 5. **Utilize Markdown cells**. Give a brief description for each section (you can put it in the same cell as the headers).
-> >    Use some formatting, e.g. in the 'Dataset inspection' section create a simple table listing the number of objects in current versions of
+> >    Use some formatting, e.g. in the 'Dataset inspection' section create a table listing the number of objects in current versions of
 > >    each of the datasets.
 > {: .solution}
 {: .challenge}
 
-6.If your Notebook contains pieces of code that are computationally
-   extensive, work on a small representative sample of the data,
-   and then put the code in an executable `.py` file to launch it from terminal. It will help you
-   to avoid situations when the results are lost due to IDE crash, and also will make it possible
-   to launch your analysis on the machines where Jupyter Lab is not available, e.g. on your institution servers.
-   Regardless of whether you're launching such code from the terminal or from the Notebook, the result
-   of this computation should be stored and then uploaded from disk. The
-   cell with the code for this computation should have a boolean flag that will determine whether it
-   should execute. It is not recommended to use commenting instead, since it does not inform the user
-   of the condition when the code has to be executed. 
-7. Use 'Restart and Run All' often, and always before finishing your work, to make sure that
-   your results are reproducible.
-9. Convert the code you use more than once into functions.
-10. Classes and functions have to be taken out of the Notebooks and put in `.py` files. This allows you
-   to use them again across multiple Notebooks and then package them to release as a standalone tool.
+6. **Keep an eye on performance**. If your notebook contains pieces of code that are computationally
+   expensive, work on a small representative sample of the data instead. When the code is ready, convert it into 
+   an executable `.py` file and launch it from terminal. It will help you
+   to avoid situations when the result of a long computation is lost due to the IDE crash, and also it will make it possible
+   to launch your analysis on the machines where Jupyter Lab is not available, e.g. on a remote server.
+
+> ## What about the code that has to be executed only once, and then skipped?
+> Let's say you have some code that has to be executed only once, and in the next executions of the notebook
+> it has to be skipped. Such situations often arise during data pre-processing, when some data has to be downloaded
+> or cleaned from NaNs only once, and in the subsequent executions of the notebook loaded from the saved copy.
+> Taking these pieces of code into a separate notebook is not always convenient, and using comments to make this code inactive
+> makes your notebook hard to understand in the future. A good way to handle such situations is
+> to use boolean flags to indicate which steps have to be executed, and which
+> should be skipped. By storing these flags in the 'Parameters' section you can quickly see the current state of your work,
+> and turn on and off different steps of the data processing as needed.
+> ![Using boolean flags to indicate parts of the code that has to be skipped](../fig/13_jupBestPractice_3_flags.png){: .image-with-shadow width="500px" }
+> <p style="text-align: center;">Using boolean flags to indicate parts of the code that has to be skipped</p>
+{: .callout}    
+   
+7. **Reuse your code wisely**. The code that you use more than once has to be turned into functions.
+   This recommendation is applicable in all situations, not only when you use notebooks.
+8. **Package your code**. It is convenient to use Jupyter Lab for developing your code, however, once it is
+   ready and tested, you should extract your classes and functions into `.py` files and then turn it into a
+   Python package. This allows you to use this code again across multiple notebooks, in other IDEs
+   or from command line. In the next few days we will talk more about how to package your code.
+9. **Use 'Restart and Run All' often**. Executing cells out of order is one of the main source of errors when developing code
+   in Jupyter Lab. For this reason, make a habit of regularly using the 'Restart and Run All' button, that will restart your kernel,
+   delete all stored variables and execute all cells in the top-down order. Always do it before
+   saving the notebook and pushing it into a Git repository. This habit greatly improves the reproducibility of your notebooks.
+
+> !['Restart and Run All' button](../fig/13_jupBestPractice_4_restart.png){: .image-with-shadow width="500px" }
+> <p style="text-align: center;">'Restart and Run All' button helps you to ensure that your notebook is executed in the right order</p>
 
 > ## Jupyter Notebook, Rubin Science Platform and Google Colab
 > While RSP and Google Colab have Jupyter Notebook installed and not Jupyter Lab, all of the
@@ -111,8 +128,9 @@ the most important rules of keeping your notebooks in a good condition:
 > you will have to create the Table of Contents manually.
 {: .callout}
 
-> ## Exercises
-> Fix `light-curve-analysis.ipynb` structure
+> ## Additional exercise
+> Open one of your recent notebooks and apply the best practices listed above to improve its structure.
+> Do you need to reorder your code a lot? Is there some code that can be extracted into `.py` files?
 {: .challenge}
 
 {% include links.md %}
