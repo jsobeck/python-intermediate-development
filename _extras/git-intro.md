@@ -30,7 +30,7 @@ the changed parts. This approach is computationally efficient and flexible, howe
 your side. Git does not work as an auto-backup; in order to be useful, you have to explicitly state,
 what are the changes that you want to save.
 
-![Version control before Git](../fig/phd101212s){: .image-with-shadow width="500px" }
+![Version control before Git](../fig/phd101212s.png){: .image-with-shadow width="500px" }
 {% comment %}Version control before Git. “notFinal.doc” by Jorge Cham, [https://www.phdcomics.com](https://www.phdcomics.com){% endcomment %}
 
 **GitHub** is a cloud-based hosting platform for storing Git repositories. Apart from storing the repositories,
