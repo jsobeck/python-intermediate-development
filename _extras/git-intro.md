@@ -277,11 +277,11 @@ Let's go to GitHub website and do this.
 
 ## Creating a remote repository
 Open your account page on GitHub, go to `Repositories` tab and click on a green `New` button on the right side of the screen.
-![GitHub new repo](../fig/00_gitInit_1_new.svg){: .image-with-shadow width="800px" }
+![GitHub new repo](../fig/00_gitIntro_1_new.svg){: .image-with-shadow width="800px" }
 
 In the opened window you need to specify the name of your repository, add a short description, choose if you want your repo to
 be public or private and hit the `Create repository` button in the bottom.
-![Settings of a new repo](../fig/00_gitInit_2_settings.svg){: .image-with-shadow width="800px" }
+![Settings of a new repo](../fig/00_gitIntro_2_settings.svg){: .image-with-shadow width="800px" }
 
 You may notice that there is an option to create a `.gitignore` and `README.md` files at this step too, 
 as well as add a license for your project. Is it a good idea to do so? Absolutely! In fact, in most cases it is much more convenient than to
@@ -350,7 +350,7 @@ $ rm -rf hello_world
 
 Now go to the page of your repository on GitHub and click on the green `Code` button.
 In the drop-down widget you can copy the address of your repo.
-![Git clone](../fig/00_gitInit_3_clone.svg){: .image-with-shadow width="800px" }
+![Git clone](../fig/00_gitIntro_3_clone.svg){: .image-with-shadow width="800px" }
 
 In the command line of your PC you can now run the `git clone` command:
 ~~~
