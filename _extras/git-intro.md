@@ -126,8 +126,10 @@ $ ls -a
 `ls -a` command tells your terminal to list all the directories and files in
 the folder, including the hidden ones, and indeed, we have a new hidden directory `.git`. 
 This directory contains everything needed for tracking the changes in your work folder.
+Pay attention, that it is `.git` directory that is called `repository`, and therefore, it
+is different from your 'working' or 'project' directory (which is in our case called 'hello_world').
 
-> ## Can I put an already existing project in a repo?
+> ## Can I make a repo out of already existing project?
 > Sure you can! You can run `git init` in a folder with already existing files and proceed
 > without any changes.
 {: .callout}
@@ -156,10 +158,10 @@ Now you're ready to make your first commit!
 
 #### First commit
 Within a repository, each file can be in one of three states:
-- modified (but **unstaged**): the files in your working directory are changed, but 
+- **modified** (but **unstaged**): the files in your working directory are changed, but 
   you didn't put these changes into the repository;
-- staged: you added the changed files in the **staging area** by using `git add name_of_the_file` command;
-- and committed: you put the staged files in the repo by using `git commit -m "Commit message"`.
+- **staged**: you added the changed files in the **staging area** by using `git add name_of_the_file` command;
+- and **committed**: you put the staged files in the repo by using `git commit -m "Commit message"`.
 
 There are several technical reasons for separating staging area from the repository itself, but in general 
 this separation makes Git system more flexible, allowing you to create finer and more specific commits.
@@ -196,10 +198,10 @@ The output informs us about several things:
 > In very simple terms, Git branch is an independent copy of the record of
 > changes of your work. When you create and switch to a new branch, it creates an impression that
 > you have an exact copy of your working directory. You can make whatever changes you like
-> in this copy, and it won't affect the original branch (until you **merge** this new branch)
-> into an old one. This is a great tool for situation when you need to develop a new feature without being afraid to
+> in this copy, and it won't affect the original branch (until you **merge** this new branch
+> into an old one). This is a great tool for situations when you need to develop a new feature without being afraid to
 > break something that already exists, or for collaborative work, when several people are introducing changes
-> simultaneously. We will cover this topic in a more extent in the upcoming workshop.
+> simultaneously. We will cover this topic in a more detail in the upcoming workshop.
 {: .callout}
 
 Now we can add our new files in the staging area by typing:
@@ -240,7 +242,8 @@ $ git commit -m "Create .gitignore and README.md"
 ~~~
 {: .output}
 
-`git status` reveals that there is nothing to commit anymore. We informed our repository of all the changes.
+`git status` reveals that there is nothing to commit anymore. Our local repository now contains 
+the relevant version of our files.
 
 > ## The rules of a great commit message
 > 1. Separate subject from body with a blank line
@@ -250,6 +253,7 @@ $ git commit -m "Create .gitignore and README.md"
 > 5. Use the imperative mood in the subject line
 > 6. Wrap lines at 72 characters
 > 7. Use the body to explain what and why vs. how
+> 
 > To add a commit message with both subject and a body you can use
 > the following command: `git commit -m "message subject" -m "message body"`.
 {: .callout}
@@ -277,11 +281,11 @@ Let's go to GitHub website and do this.
 
 ## Creating a remote repository
 Open your account page on GitHub, go to `Repositories` tab and click on a green `New` button on the right side of the screen.
-![GitHub new repo](../fig/00_gitIntro_1_new.svg){: .image-with-shadow width="500px" }
+![GitHub new repo](../fig/00_gitIntro_1_new.svg){: .image-with-shadow width="800px" }
 
 In the opened window you need to specify the name of your repository, add a short description, choose if you want your repo to
 be public or private and hit the `Create repository` button in the bottom.
-![Settings of a new repo](../fig/00_gitIntro_2_settings.svg){: .image-with-shadow width="800px" }
+![Settings of a new repo](../fig/00_gitIntro_2_settings.svg){: .image-with-shadow width="500px" }
 
 You may notice that there is an option to create a `.gitignore` and `README.md` files at this step too, 
 as well as add a license for your project. Is it a good idea to do so? Absolutely! In fact, in most cases it is much more convenient than to
@@ -333,8 +337,8 @@ the same. Well done!
 > ## Never forget to use 'git pull' before starting your work
 > When there are several collaborators in your repo, it is possible that
 > between your previous commit and the start of your work next day someone else already made changes
-> in the repo. These situations do not arise when the repo has clear and well-followed branch policies,
-> but nevertheless, it is always the right thing to execute `git pull` before starting your work,
+> in the repo. These situations rarely arise when the repo has clear and well-followed branch policies,
+> but nevertheless, make a habit of executing `git pull` before starting your work,
 > as it ensures that you are working on the up-to-date version of the code.
 {: .callout}
 
