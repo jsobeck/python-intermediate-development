@@ -242,6 +242,18 @@ $ git commit -m "Create .gitignore and README.md"
 
 `git status` reveals that there is nothing to commit anymore. We informed our repository of all the changes.
 
+> ## The rules of a great commit message
+> 1. Separate subject from body with a blank line
+> 2. Limit the subject line to 50 characters
+> 3. Do not end the subject line with a period
+> 4. Capitalize the subject line and each paragraph
+> 5. Use the imperative mood in the subject line
+> 6. Wrap lines at 72 characters
+> 7. Use the body to explain what and why vs. how
+> To add a commit message with both subject and a body you can use
+> the following command: `git commit -m "message subject" -m "message body"`.
+{: .callout}
+
 Now we can use `git push` command to send these changes into GitHub for safekeeping...
 ~~~
 $ git push
@@ -263,16 +275,110 @@ and then push using the remote name
 That's because we need to create a remote repository for synchronizing it with our local repository.
 Let's go to GitHub website and do this.
 
-## Creating a remore repository
+## Creating a remote repository
+Open your account page on GitHub, go to `Repositories` tab and click on a green `New` button on the right side of the screen.
 
-   
-**Adding changes**
-1. Git pull (explain why)
-2. Make a `.txt` file
-3. Add 'Hello world'
-4. Git add, commit, push
-5. Writing good Git commit messages
-6. Delete your local repo
-7. Git clone
+In the opened window you need to specify the name of your repository, add a short description, choose if you want your repo to
+be public or private and hit the `Create repository` button in the bottom.
 
+You may notice that there is an option to create a `.gitignore` and `README.md` files at this step too, 
+as well as add a license for your project. Is it a good idea to do so? Absolutely! In fact, in most cases it is much more convenient than to
+do it manually in your local repo, since you can choose one of the `.gitignore` templates (e.g. one for Python projects)
+and edit the `README.md` using Markdown rendering right away. However, since our local copy of the repository already has these files,
+we will opt out of it.
+
+Finally, in the next screen GitHub offers us a list of options of how to connect this new remote repository
+with a local one on our PC. Since we want to push an already existing repo, we are choosing option 2:
+
+~~~
+$ git remote add origin git@github.com:User_Name/hello_world.git
+$ git branch -M main
+$ git push -u origin main
+~~~
+{: .language-bash}
+
+Depending on your security settings, you may need to enter your password, and then
+a message similar to this will appear:
+~~~
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 64 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 445 bytes | 445.00 KiB/s, done.
+Total 6 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), done.
+To github.com:User_Name/hello_world.git
+ * [new branch]      main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
+~~~
+{: .output}
+
+Now we can make sure that all the changes are indeed pushed into the remote
+repository. We can do this by 'pulling' information from the remote:
+
+~~~
+$ git pull
+~~~
+{: .language-bash}
+
+~~~
+Already up to date.
+~~~
+{: .output}
+Getting a message `Already up to date.` means that your local and remote repositories are 
+the same. Well done!
+
+> ## Never forget to use 'git pull' before starting your work
+> When there are several collaborators in your repo, it is possible that
+> between your previous commit and the start of your work next day someone else already made changes
+> in the repo. These situations do not arise when the repo has clear and well-followed branch policies,
+> but nevertheless, it is always the right thing to execute `git pull` before starting your work,
+> as it ensures that you are working on the up-to-date version of the code.
+{: .callout}
+
+## Cloning an already existing repo
+In this last section, let's cover the subject of how you can create a local repository
+out of already existing remote one. For this we'll delete our `hello_world` folder.
+From the command line, you can do it by using this command:
+
+~~~
+$ rm -rf hello_world
+~~~
+{: .language-bash}
+
+Now go to the page of your repository on GitHub and click on the green `Code` button.
+In the drop-down widget you can copy the address of your repo.
+
+In the command line of your PC you can now run the `git clone` command:
+~~~
+$ git clone git@github.com:ShrRa/hello_world.git
+~~~
+{: .language-bash}
+~~~
+Cloning into 'hello_world'...
+Enter passphrase for key '/home/alex/.ssh/id_ed25519': 
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 7 (delta 2), reused 5 (delta 1), pack-reused 0
+Receiving objects: 100% (7/7), done.
+Resolving deltas: 100% (2/2), done.
+~~~
+{: .output}
+
+And you can start working in this local repository in the same way as before.
+
+## The recap
+Let's recall all the basic git commands and elements that we covered in this episode:
+* `git init`: execute in your project directory; initializes the repository.
+* `.gitignore`: a text file stating which kinds of files won't be tracked by Git.
+* `README.md`: a Markdown file with project description and information.
+* `git status`: shows the current state of your git repo.
+* `git add file_name`: adds modified files into staging area.
+* `git commit -m "Commit message"`: commit your staged changes into the repository.
+* `git push`: pushes the changes into remote repo.
+* `git pull`: pulls the latest changes from remote repo into the local one.
+* `git clone`: clones a remote repository.
+
+That's it! 
 {% include links.md %}
