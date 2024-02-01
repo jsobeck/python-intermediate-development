@@ -143,7 +143,7 @@ Next step is to create two important files:
 You can create these two files in any text editor. In the first file you 
 can put specific file names, file extensions or whole directories that you 
 don't want to track. For example, for a Python project you may want to add
-'\__pycache\__', which is a service directory, and for a data science project
+'\_\_pycache\_\_', which is a service directory, and for a data science project
 that creates some plots that you don't want to be tracked you will add '*.png' line. 
 For now, put a `*.csv` in the file and 
 save it in your `hello_world` directory under the name `.gitignore`. Then, in a new file
