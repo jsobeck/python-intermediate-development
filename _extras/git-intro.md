@@ -24,7 +24,8 @@ these features are all that you'll ever need!
 
 **Git** is a free, collaborative, open-source version control system - a tool for recording the changes made to your
 working files, and giving you an opportunity to recover any previous version of these files. 
-Git does not upload all of the tracked files every time when you **make a commit**; instead it records only 
+Git does not upload all of the tracked files every time when you **make a commit** into a **repository** (or 'repo' for short); 
+instead it records only 
 the changed parts. This approach is computationally efficient and flexible, however, it requires some input from
 your side. Git does not work as an auto-backup; in order to be useful, you have to explicitly state,
 what are the changes that you want to save.
@@ -86,9 +87,185 @@ That's it! Now you can start using GitHub.
 
 ## Basic Git usage workflow
 
-**Git init**
-Local git init, Github git init, creating .gitignore and README.md
+### Creating a repository
+#### git init
+Let's assume that you are starting a new software project called 'Hello_world' and you want to use
+GitHub for keeping track of your work. In this case, you should start with creating a new directory
+for this project:
+~~~
+$ cd location/of/your/project
+$ mkdir hello_world
+$ cd hello_world
+~~~
+{: .language-bash}
 
+Now we are inside your project directory, and it's time to inform Git that its content
+should be tracked. We do it by **creating a repository** with the following command:
+
+~~~
+$ git init
+~~~
+{: .language-bash}
+~~~
+Initialized empty Git repository in /home/alex/hello_world/.git/
+~~~
+{: .output}
+
+Let's check if there is anything new in our project directory:
+
+~~~
+$ ls -a
+~~~
+{: .language-bash}
+
+~~~
+.  ..  .git
+~~~
+{: .output}
+
+`ls -a` command tells your terminal to list all the directories and files in
+the folder, including the hidden ones, and indeed, we have a new hidden directory `.git`. 
+This directory contains everything needed for tracking the changes in your work folder.
+
+> ## Can I put an already existing project in a repo?
+> Sure you can! You can run `git init` in a folder with already existing files and proceed
+> without any changes.
+{: .callout}
+
+#### .gitignore and README.md
+Next step is to create two important files:
+1. `.gitignore` - a text file that contains information about files that
+   you don't want to track. Git will ignore these files in the future;
+2. `README.md` - a markdown file that contains a description of your project.
+   GitHub will show this information to those who visit the repository
+   on your account page.
+
+You can create these two files in any text editor. In the first file you 
+can put specific file names, file extensions or whole directories that you 
+don't want to track. For example, for a Python project you may want to add
+'\__pycache\__', which is a service directory, and for a data science project
+that creates some plots that you don't want to be tracked you will add '*.png' line. 
+For now, put a `*.csv` in the file and 
+save it in your `hello_world` directory under the name `.gitignore`. Then, in a new file
+type any text and save it under the name `test.csv`.
+
+Next, in a new file in the text editor write a description of your project, for example,
+'This is a test project for GitHub'. Save this file under the name `README.md`.
+
+Now you're ready to make your first commit!
+
+#### First commit
+Within a repository, each file can be in one of three states:
+- modified (but **unstaged**): the files in your working directory are changed, but 
+  you didn't put these changes into the repository;
+- staged: you added the changed files in the **staging area** by using `git add name_of_the_file` command;
+- and committed: you put the staged files in the repo by using `git commit -m "Commit message"`.
+
+There are several technical reasons for separating staging area from the repository itself, but in general 
+this separation makes Git system more flexible, allowing you to create finer and more specific commits.
+
+Let's start with checking the current state of the repository: 
+~~~
+$ git status
+~~~
+{: .language-bash}
+
+~~~
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	.gitignore
+	README.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+~~~
+{: .output}
+
+The output informs us about several things:
+1. We are on git **branch** called `main`;
+2. There no commits yet;
+3. And we have two modified, but unstaged files: `.gitignore` and `README.md`.
+   Pay attention, that `test.csv` does not appear on this list. Git ignores it,
+   just as we specified in the `.gitignore`.
+
+> ## Git branch? What's Git branch?
+> In very simple terms, Git branch is an independent copy of the record of
+> changes of your work. When you create and switch to a new branch, it creates an impression that
+> you have an exact copy of your working directory. You can make whatever changes you like
+> in this copy, and it won't affect the original branch (until you **merge** this new branch)
+> into an old one. This is a great tool for situation when you need to develop a new feature without being afraid to
+> break something that already exists, or for collaborative work, when several people are introducing changes
+> simultaneously. We will cover this topic in a more extent in the upcoming workshop.
+{: .callout}
+
+Now we can add our new files in the staging area by typing:
+~~~
+$ git add .gitignore README.md
+~~~
+{: .language-bash}
+or, in case we are sure that we want to add all changes at once, just
+~~~
+$ git add --all
+~~~
+{: .language-bash}
+
+If we type `git status` once again, we will see the following message:
+~~~
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+	new file:   .gitignore
+	new file:   README.md
+~~~
+{: .output}
+
+And now we can make the commit:
+~~~
+$ git commit -m "Create .gitignore and README.md"
+~~~
+{: .language-bash}
+~~~
+[main (root-commit) 610211e] Add files
+ 2 files changed, 2 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 README.md
+~~~
+{: .output}
+
+`git status` reveals that there is nothing to commit anymore. We informed our repository of all the changes.
+
+Now we can use `git push` command to send these changes into GitHub for safekeeping...
+~~~
+$ git push
+~~~
+{: .language-bash}
+...and receive an error message:
+~~~
+fatal: No configured push destination.
+Either specify the URL from the command-line or configure a remote repository using
+
+    git remote add <name> <url>
+
+and then push using the remote name
+
+    git push <name>
+~~~
+{: .output}
+
+That's because we need to create a remote repository for synchronizing it with our local repository.
+Let's go to GitHub website and do this.
+
+## Creating a remore repository
+
+   
 **Adding changes**
 1. Git pull (explain why)
 2. Make a `.txt` file
