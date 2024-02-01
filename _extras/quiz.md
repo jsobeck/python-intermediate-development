@@ -20,7 +20,7 @@ to determine where you fit on the skills spectrum and if this course is for you.
     ~~~
 
     > > ## Solution
-    > > `git init` is the command to initialise a Git repository
+    > > Choice **C**. `git init` is the command to initialise a Git repository
     > > and tell Git to start tracking files in it.
     > > `git bash`, `git start` and `git install` are not Git commands and will return an error.
     > {: .solution}
@@ -37,7 +37,7 @@ to determine where you fit on the skills spectrum and if this course is for you.
     ~~~
 
     > > ## Solution
-    > > `git commit -m "Licence file added"` won't work
+    > > Choice **D**. `git commit -m "Licence file added"` won't work
     > > because you need to add the file to Git's staging area first
     > > before you can commit.
     > {: .solution}
@@ -73,7 +73,7 @@ to determine where you fit on the skills spectrum and if this course is for you.
     ~~~
 
     > > ## Solution
-    > > `pwd` (which stands for 'print working directory') is the correct command.
+    > > Choice **D**. `pwd` (which stands for 'print working directory') is the correct command.
     > {: .solution}
 
 2. Which command do you use to go to the parent directory of the directory you are currently in?
