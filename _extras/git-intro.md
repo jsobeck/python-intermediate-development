@@ -277,7 +277,7 @@ Let's go to GitHub website and do this.
 
 ## Creating a remote repository
 Open your account page on GitHub, go to `Repositories` tab and click on a green `New` button on the right side of the screen.
-![GitHub new repo](../fig/00_gitIntro_1_new.svg){: .image-with-shadow width="800px" }
+![GitHub new repo](../fig/00_gitIntro_1_new.svg){: .image-with-shadow width="500px" }
 
 In the opened window you need to specify the name of your repository, add a short description, choose if you want your repo to
 be public or private and hit the `Create repository` button in the bottom.
