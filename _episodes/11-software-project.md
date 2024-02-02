@@ -62,7 +62,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 
    _Note: each participant is creating their own fork of the project to work on._
 5. Make sure to select your personal account
-   and set the name of the project to `python-intermediate-light-curve`
+   and set the name of the project to `InterPython_Workshop_Example`
    (you can call it anything you like,
    but it may be easier for future group exercises if everyone uses the same name).
    Also set the new repository's visibility to 'Public' -
