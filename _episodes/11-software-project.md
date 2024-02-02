@@ -56,26 +56,26 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 
    ![Software project template repository in GitHub](../fig/11_2_soft_proj_repo.png){: .image-with-shadow width="800px" }
 
-4. Click the `Use this template` button
-   towards the top right of the template repository's GitHub page to create
-   a **copy** of the repository under your GitHub account
-   (you will need to be signed into GitHub to see the `Use this template` button).
-   Note that each participant is creating their own copy to work on.
-   Also, we are not forking the directory but creating a copy
-   (remember - you can have only one *fork* but can have multiple *copies* of a repository in GitHub).
+4. Click the `Fork` button towards the top right of the repository’s GitHub page to
+   create a fork of the repository under your GitHub account.
+   Remember, you will need to be signed into GitHub for the `Fork` button to work.
+
+   _Note: each participant is creating their own fork of the project to work on._
 5. Make sure to select your personal account
    and set the name of the project to `python-intermediate-light-curve`
    (you can call it anything you like,
    but it may be easier for future group exercises if everyone uses the same name).
    Also set the new repository's visibility to 'Public' -
    so it can be seen by others and by third-party Continuous Integration (CI) services
-   (to be covered later on in the course).
+   (to be covered later on in the course) and select the `Copy the main branch only` checkbox.
 
    ![Making a copy of the software project template repository in GitHub](../fig/11_3_soft_proj_repo.png){: .image-with-shadow width="600px" }
 
-6. Click the `Create repository from template` button
+6. Click the `Create fork` button
    and wait for GitHub to import the copy of the repository under your account.
-7. Locate the copied repository under your own GitHub account.
+7. Locate the forked repository under your own GitHub account. GitHub should redirect you there
+   automatically after creating the fork. If this does not happen, click your user icon in the top
+   right corner and select Your Repositories from the drop-down menu, then locate your newly created fork.
 
    ![View of the own copy of the software template repository in GitHub](../fig/11_4_soft_proj_repo.png){: .image-with-shadow width="800px" }
 
