@@ -204,7 +204,7 @@ One way to test our functions would be to write a series of checks or tests,
 each executing a function we want to test with known inputs against known valid results,
 and throw an error if we encounter a result that is incorrect.
 
-Simple test: compare mag_mag output with a given one
+Simple test: compare mag_mag output with a given one. **Assert**
 
 Let's make the task more realistic. Imagine you want to write a function
 for getting max values for observations in all bands for a single object.
@@ -240,75 +240,84 @@ Otherwise, our tests hold little value.
 
 That said, manually constructing even this simple test for a fairly simple function
 can be tedious and produce new errors instead of fixing the old ones. Besides, 
-we would like to test many functions against different scenarios, and have a comprehensive
-report on which of the tests were passed and which failed. For a complex
+we would like to test many functions against different scenarios, and for a complex
 function or a library, a **test suite** can include 
-dozens of tests, so we definitely should automatize it.
+dozens of tests. Obviously, running these tests one by one in a Jupyter Notebook is not a good
+idea, so we need some tool to automatize this process and to obtain a comprehensive
+report on which of the tests were passed and which failed. It is also a good idea
+to run the tests every time when we make some changes in our code, to make sure that by adding 
+a new feature or fixing a bug we didn't break the previous functionality.
 
 ### Using a Testing Framework
 
-A tool for automatizing tests is called **unit testing framework**.
+A solution for these tasks are called **unit testing frameworks**.
 In such a framework we define the tests we want to run as functions,
 and the framework automatically runs each of these functions in turn,
-summarising the outputs. 
-And unlike our previous approach,
-it will run every test regardless of any encountered test failures.
-
-Most people don't enjoy writing tests,
-so if we want them to actually do it,
-it must be easy to:
+summarising the outputs. Since most people don't enjoy writing tests,
+the unit testing fraimworks aim to make it simple to:
 
 - Add or change tests,
 - Understand the tests that have already been written,
 - Run those tests, and
-- Understand those tests' results
+- Understand those tests' results.
 
 Test results must also be reliable.
 If a testing tool says that code is working when it's not,
 or reports problems when there actually aren't any,
 people will lose faith in it and stop using it.
 
-Look at `tests/test_models.py`:
+We will use a testing framework called `pytest`. It is a Python
+package that can be installed, as usual, using `pip`:
+
+~~~
+$ python -m pip3 install pytest
+~~~
+{: .language-bash}
+
+> ## Why Use pytest over unittest?
+>
+> We could alternatively use another Python unit test framework, [unittest](https://docs.python.org/3/library/unittest.html),
+> which has the advantage of being installed by default as part of Python. This is certainly a solid and established 
+> option, however [pytest has many distinct advantages](https://realpython.com/pytest-python-testing/#what-makes-pytest-so-useful), 
+> particularly for learning, including:
+>
+> - unittest requires additional knowledge of object-oriented frameworks (covered later in the course) 
+> to write unit tests, whereas in pytest these are written in simpler functions so is easier to learn
+> - Being written using simpler functions, pytest's scripts are more concise and contain less boilerplate, and thus are
+> easier to read
+> - pytest output, particularly in regard to test failure output, is generally considered more helpful and readable
+> - pytest has a vast ecosystem of plugins available if ever you need additional testing functionality
+> - unittest-style unit tests can be run from pytest out of the box!
+>
+> A common challenge, particularly at the intermediate level, is the selection of a suitable tool from many alternatives
+> for a given task. Once you've become accustomed to object-oriented programming you may find unittest a better fit
+> for a particular project or team, so you may want to revisit it at a later date!
+>
+{: .callout}
+
+`pytest` requires that we put our tests into a separate `.py` file.
+Let's look at `tests/test_models.py`:
 
 ~~~
 """Tests for statistics functions within the Model layer."""
 
-import numpy as np
-import numpy.testing as npt
-
-def test_mean_mag_zeros():
-    from lcanalyzer.models import mean_mag
-
-    test_input = {'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}
-    test_result = 0
-
-    npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
-
-def test_mean_mag_integers():
-    from lcanalyzer.models import mean_mag
-
-    test_input = {'a': np.array([1, 2, 3]), 'b': np.array([4, 5, 6])}
-    test_result = 2
-
-    npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
-...
 ~~~
 {: .language-python}
 
 Here, although we have specified two of our previous manual tests as separate functions,
 they run the same assertions.
-Each of these test functions, in a general sense, are called **test cases** -
-these are a specification of:
+Each of these test functions, in a general sense, are called **test cases**.
+They specify:
 
-- Inputs, e.g. the `test_input` NumPy array
+- Inputs, e.g. the `test_input` DataFrame
 - Execution conditions -
   what we need to do to set up the testing environment to run our test,
-  e.g. importing the `mean_mag()` function so we can use it.
+  e.g. importing the `max_mag()` function so we can use it.
   Note that for clarity of testing environment,
   we only import the necessary library function we want to test within each test function
-- Testing procedure, e.g. running `mean_mag()` with our `test_input` array
-  and using `assert_array_equal()` to test its validity
-- Expected outputs, e.g. our `test_result` NumPy array that we test against
+- Testing procedure, e.g. running `max_mag()` with our `test_input` array
+  and using `assert` to test its validity
+- Expected outputs, e.g. our `test_result` number that we test against
 
 Also, we're defining each of these things for a test case we can run independently
 that requires no manual intervention.
@@ -332,53 +341,6 @@ but what you learn can scale to more complex functional testing for applications
 > JUnit for Java (the original unit testing framework),
 > Catch or gtest for C++, etc.
 {: .callout}
-
-> ## Why Use pytest over unittest?
->
-> We could alternatively use another Python unit test framework, [unittest](https://docs.python.org/3/library/unittest.html),
-> which has the advantage of being installed by default as part of Python. This is certainly a solid and established 
-> option, however [pytest has many distinct advantages](https://realpython.com/pytest-python-testing/#what-makes-pytest-so-useful), 
-> particularly for learning, including:
-> 
-> - unittest requires additional knowledge of object-oriented frameworks (covered later in the course) 
-> to write unit tests, whereas in pytest these are written in simpler functions so is easier to learn
-> - Being written using simpler functions, pytest's scripts are more concise and contain less boilerplate, and thus are
-> easier to read
-> - pytest output, particularly in regard to test failure output, is generally considered more helpful and readable
-> - pytest has a vast ecosystem of plugins available if ever you need additional testing functionality
-> - unittest-style unit tests can be run from pytest out of the box!
->
-> A common challenge, particularly at the intermediate level, is the selection of a suitable tool from many alternatives
-> for a given task. Once you've become accustomed to object-oriented programming you may find unittest a better fit
-> for a particular project or team, so you may want to revisit it at a later date!
-{: .callout}
-
-
-### Installing Pytest
-
-If you have already installed `pytest` package in your virtual environment,
-you can skip this step.
-Otherwise, as we have seen, we have a couple of options for installing external libraries:
-1. via PyCharm
-   (see ["Adding an External Library"](../13-ides/index.html#adding-an-external-library) section
-   in ["Integrated Software Development Environments"](../13-ides/index.html) episode),
-   or
-2. via the command line
-   (see ["Installing External Libraries in an Environment With `pip`"](../12-virtual-environments/index.html#installing-packages-in-an-environment-with-pip) section
-   in ["Virtual Environments For Software Development"](../12-virtual-environments/index.html) episode).
-
-To do it via the command line -
-exit the Python console first (either with `Ctrl-D` or by typing `exit()`),
-then do:
-
-~~~
-$ pip3 install pytest
-~~~
-{: .language-bash}
-
-Whether we do this via PyCharm or the command line,
-the results are exactly the same:
-our virtual environment will now have the `pytest` package installed for use.
 
 
 ### Running Tests
@@ -429,9 +391,6 @@ Notice the `..` after our test script:
   The error is included in the output so we can see what went wrong.
 
 So if we have many tests, we essentially get a report indicating which tests succeeded or failed.
-Going back to our list of requirements (the bullets under [Using a Testing
-Framework](#using-a-testing-framework)),
-do we think these results are easy to understand?
 
 > ## Exercise: Write Some Unit Tests
 >
@@ -446,7 +405,9 @@ do we think these results are easy to understand?
 > - Try to choose cases that are suitably different,
 >   and remember that these functions take a dictionary and return a float
 >   corresponding to a chosen key
-> - Experiment with the functions in a notebook cell in `test-development.ipynb` to make sure your test result is what you expect the function to return for a given input. Don't forget to put your new test in `tests/test_models.py` once you think it's ready!
+> - Experiment with the functions in a notebook cell in `test-development.ipynb` to make sure your test result
+>   is what you expect the function to return for a given input. Don't forget to put your
+>   new test in `tests/test_models.py` once you think it's ready!
 >
 > Once added, run all the tests again with `python -m pytest tests/test_models.py`,
 > and you should also see your new tests pass.
@@ -454,21 +415,7 @@ do we think these results are easy to understand?
 > > ## Solution
 > >
 > > ~~~
-> >def test_max_mag():
-> >    from lcanalyzer.models import max_mag
 > >
-> >    test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
-> >    test_result = 5
-> >
-> >    npt.assert_array_equal(max_mag(test_input, 'b'), test_result)
-> >
-> > def test_min_mag():
-> >    from lcanalyzer.models import min_mag
-> >
-> >    test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
-> >    test_result = 3
-> >
-> >    npt.assert_array_equal(min_mag(test_input, 'b'), test_result)
 > > ~~~
 > > {: .language-python}
 > {: .solution}
