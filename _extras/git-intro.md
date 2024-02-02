@@ -254,7 +254,7 @@ the relevant version of our files.
 > 6. Wrap lines at 72 characters
 > 7. Use the body to explain what and why vs. how
 > 
-> To add a commit message with both subject and a body you can use
+> To add a commit message with both a subject and a body you can use
 > the following command: `git commit -m "message subject" -m "message body"`.
 {: .callout}
 
