@@ -99,20 +99,20 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 > >     {: .language-bash}
 > > 3. From your home directory in the command line, do:
 > >     ~~~
-> >     $ git clone git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-light-curve.git
+> >     $ git clone git@github.com:<YOUR_GITHUB_USERNAME>/InterPython_Workshop_Example.git
 > >     ~~~
 > >     {: .language-bash}
 > >    Make sure you are cloning your copy of the software project and not the template repository.
 > >
 > > 4. Navigate into the cloned repository folder in your command line with:
 > >     ~~~
-> >     $ cd python-intermediate-light-curve
+> >     $ cd InterPython_Workshop_Example
 > >     ~~~
 > >     {: .language-bash}
 > > Note: If you have accidentally copied the **HTTPS** URL of your repository instead of the SSH one,
 > > you can easily fix that from your project folder in the command line with:
 > >     ~~~
-> >     $ git remote set-url origin git@github.com:<YOUR_GITHUB_USERNAME>/python-intermediate-light-curve.git
+> >     $ git remote set-url origin git@github.com:<YOUR_GITHUB_USERNAME>/InterPython_Workshop_Example.git
 > >     ~~~
 > >     {: .language-bash}
 > {: .solution}
@@ -125,7 +125,7 @@ you can use the command `ls -l` to get a more detailed list of the contents.
 You should see something similar to the following.
 
 ~~~
-$ cd ~/python-intermediate-light-curve
+$ cd ~/InterPython_Workshop_Example
 $ ls -l
 total 284
 drwxrwxr-x 2 alex alex     52 Jan 10 20:29 data
@@ -146,7 +146,7 @@ and on closer inspection, we can see that the `lcanalyzer` directory contains tw
 scripts - `views.py` and `models.py`. We will have a more detailed look into these shortly.
 
 ~~~
-$ cd ~/python-intermediate-light-curve/lcanalyzer
+$ cd ~/InterPython_Workshop_Example/lcanalyzer
 $ ls -l
 total 12
 -rw-rw-r-- 1 alex alex 903 Jan 10 20:29 models.py
@@ -157,7 +157,7 @@ total 12
 
 Directory `data` contains two files with the lightcurves coming from two instruments, Kepler and LSST:
 ~~~
-$ cd ~/python-intermediate-light-curve/data
+$ cd ~/InterPython_Workshop_Example/data
 $ ls -l
 total 24008
 -rw-rw-r-- 1 alex alex 23686283 Jan 10 20:29 kepler_RRLyr.csv
