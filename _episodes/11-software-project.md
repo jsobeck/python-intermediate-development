@@ -54,7 +54,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
 3. Go to the [software project template repository](https://github.com/ShrRa/InterPython_Workshop_Example)
    in GitHub.
 
-   ![Software project template repository in GitHub](../fig/11_2_soft_proj_repo.png){: .image-with-shadow width="800px" }
+   ![Software project template repository in GitHub](../fig/11_soft_proj_2_repo.svg){: .image-with-shadow width="800px" }
 
 4. Click the `Fork` button towards the top right of the repository’s GitHub page to
    create a fork of the repository under your GitHub account.
@@ -69,7 +69,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
    so it can be seen by others and by third-party Continuous Integration (CI) services
    (to be covered later on in the course) and select the `Copy the main branch only` checkbox.
 
-   ![Making a copy of the software project template repository in GitHub](../fig/11_3_soft_proj_repo.png){: .image-with-shadow width="600px" }
+   ![Making a copy of the software project template repository in GitHub](../fig/11_soft_proj_3_repo.svg){: .image-with-shadow width="600px" }
 
 6. Click the `Create fork` button
    and wait for GitHub to import the copy of the repository under your account.
