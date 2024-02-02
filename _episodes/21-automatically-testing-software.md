@@ -102,98 +102,89 @@ and use of branches for even small bits of work is encouraged.
 Later on, once we've finished writing these tests and are convinced they work properly,
 we'll merge our `test-suite` branch back into `develop`.
 
+Don't forget to activate our `venv` environment, launch Jupyter Notebook and let's see 
+how we can test our software for light curve analysis.
 
 ## Lightcurve Data Analysis
 
-Let's go back to our [lightcurve analysis software project](/11-software-project/index.html#patient-inflammation-study-project).
-Recall that it is based on observations of the star RR Lyrae, a type of pulsating variable star.
-There are two datasets in the `data` directory
-containing lightcurves of RR Lyrae, one from the Kepler Space Telescope and the other from LSST Data Preview 0, each stored in comma-separated values (CSV) format:
-each row holds information for a single observation of the star,
-and the columns represent different type of information, such as the observation time, flux, etc. 
+Let's go back to our [lightcurve analysis software project](/11-software-project/index.html#light-curve-analysis-project).
+Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
+from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
-Let's take a quick look at the data now from within the Python command line console.
-Change directory to the repository root
-(which should be in your home directory `~/python-intermediate-development`),
-ensure you have your virtual environment activated in your command line terminal
-(particularly if opening a new one),
-and then start the Python console by invoking the Python interpreter without any parameters, e.g.:
+> ## Don't forget about the best practices
+>
+> Following the best practices from [the corresponding section](/13-jup-best-practices/index.html#jupyter-lab-best-practices),
+> let's start with drafting the structure of our notebook.
+> Using headers in the markdown cells, determine the sections of your notebook.
+> > ## Solution
+> > We can start with the following sections:
+> > 1. Imports
+> > 2. Params
+> > 3. Data loading
+> > 4. Data inspection
+> > 5. Selecting light curves for a single object
+> > 6. Trying the model.py functions
+> > 7. Test development
+> > If we need something else, we can always add it later.
+> {: .colution}
+{: .challenge}
 
+Looking at the data in Jupyter Lab. Data is 2d, mag column is 'psdMag'.
 ~~~
-$ cd ~/python-intermediate-development
-$ source venv/bin/activate
-~~~
-{: .language-bash}
-
-Then open the Jupyter notebook titled `test-development.ipynb` in the project directory enter the following in the first cell, and run it. This notebook is convenient place to develop our testing suite, but later we'll migrate the tests to their own dedicated .py file
-
-~~~
-import pandas as pd
-data = pd.read_csv('data/kepler_RRLyr.csv')
-data.shape
+looking at the data
 ~~~
 {: .language-python}
 
 ~~~
-(93487, 25)
+data info
 ~~~
 {: .output}
 
-The data in this case is two-dimensional -
-it has 93487 rows (one for each observation)
-and 25 columns (one for each type of data). The data is being stored in a pandas "dataframe", a dictionary-like data structure for two dimensional tabular data.
-
-Our lightcurve application has a number of statistical functions
-held in `lcanalyzer/models.py`: `mean_mag()`, `max_mag()`, `min_mag()`,
-for calculating the mean average, the maximum, and the minimum flux for a given number of rows in our data.
-For example, the `mean_mag()` function looks like this:
+Let's pick lightcurves for a single object. Now we get the first parameter that we are likely
+to need further - list of bands. We'll put them in 'Params' section under the name 'bands'.
 
 ~~~
-def mean_mag(data,magCol):
-    """Calculate the mean magnitude of a lightcurve."""
-    return np.mean(data[magCol], axis=0)
+Selecting LCs for a single object
 ~~~
 {: .language-python}
 
-Note that `mean_mag` expects a dictionary as an input, and requires the user to specify which key in the dictionary represents the fluxes/magnitudes. Here, we use NumPy's `np.mean()` function to calculate the mean *vertically* across the data
-(denoted by `axis=0`),
-which is then returned from the function.
-So, if `data[magCol]` was a NumPy array of three rows like...
+Now we need to import the functions from the `models.py` file.
+We should do it in the 'Imports' section. 
 
 ~~~
-[[1, 2],
- [3, 4],
- [5, 6]]
+import lcanalyzer.models as models
 ~~~
 {: .language-python}
 
-...the function would return a 1D NumPy array of `[3, 4]` -
-each value representing the mean of each column
-(which are, coincidentally, the same values as the second row in the above data array).
+Note that we can import the module as a whole or only some functions.
 
-To show this working with our lightcurve data,
-we can use the function like this,
-passing the first four observations to the function in the Jupyter notebook:
+Now let's apply one of the functions, let's say `max_mag` to one of the light
+curves.
 
 ~~~
-from lcanalyzer.models import mean_mag
-
-mean_mag(data[0:4], 'flux')
+models.max_mag(lc['g'],'psfMag')
 ~~~
 {: .language-python}
 
-Note we use a different form of `import` here -
-only importing the `mean_mag` function from our `models` instead of everything.
-This also has the effect that we can refer to the function using only its name,
-without needing to include the module name too
-(i.e. `lcanalyzer.models.mean_mag()`).
-
-The above code will return the mean flux across the first 4 observations in the dataset:
-
 ~~~
-9942384.25
+31.86361543696225
 ~~~
 {: .output}
+
+> ## Don't forget about the best practices
+> Do you see anything in the code we just typed that can be put in the 'Parameters'?
+> > ## Solution
+> > 
+> > It is better to put
+> > the magnitude column name, 'psfMag', in a variable (let's call it
+> > `colname_mag`) and declare it in the 'Parameters' section. Why? Because in the future
+> > we will want to apply this analysis to another dataset with different column names,
+> > and if we continue using 'psfMag' across the notebook, later on we'll have to replace it
+> > either manually, or using 'Search' functionality. In a large notebook both actions are likely
+> > to produce errors.
+> {: .solution}
+>
+{: .challenge}
 
 The other statistical functions are similar.
 Note that in real situations
@@ -202,9 +193,8 @@ but simplicity here allows us to reason about what's happening -
 and what we need to test -
 more easily.
 
-Let's now look into how we can test each of our application's statistical functions
+Let's now look into how we can test our application's statistical functions
 to ensure they are functioning correctly.
-
 
 ## Writing Tests to Verify Correct Behaviour
 
@@ -213,86 +203,33 @@ to ensure they are functioning correctly.
 One way to test our functions would be to write a series of checks or tests,
 each executing a function we want to test with known inputs against known valid results,
 and throw an error if we encounter a result that is incorrect.
-So, referring back to our simple `mean_mag()` example above,
-we could use `{'a':np.array([0, 1, 2]), 'b':np.array([3, 4, 5])}` as an input to that function
-and check whether the result equals `1` when `magCol` = `'a'`:
+
+Simple test: compare mag_mag output with a given one
+
+Let's make the task more realistic. Imagine you want to write a function
+for getting max values for observations in all bands for a single object.
 
 ~~~
-import numpy.testing as npt
-
-test_input = {'a':np.array([0, 1, 2]), 'b':np.array([3, 4, 5])}
-test_result = 1
-
-npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
+All bands max func
 ~~~
 {: .language-python}
-
-So we use the `assert_array_equal()` function -
-part of NumPy's testing library -
-to test that our calculated result is the same as our expected result.
-This function explicitly checks the array's shape and elements are the same,
-and throws an `AssertionError` if they are not.
-In particular, note that we can't just use `==` or other Python equality methods,
-since these won't work properly with NumPy arrays in all cases.
-
-We could then add to this with other tests that use and test against other values,
-and end up with something like:
-
 ~~~
-test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
-test_result = 1
-npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
-
-test_input = {'a': np.array([0, 0, 0]), 'b': np.array([3, 4, 5])}
-test_result = 0
-npt.assert_array_equal(mean_mag(test_input, 'a'), test_result)
-
-test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 3, 3])}
-test_result = 3
-npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
-~~~
-{: .language-python}
-
-However, if we were to enter these in this order all in the same cell, we'll find we get the following after the first test:
-
-~~~
-...
-AssertionError: 
-Arrays are not equal
-
-Mismatched elements: 1 / 1 (100%)
-Max absolute difference: 3.
-Max relative difference: 3.
- x: array(4.)
- y: array(1)
+dict
 ~~~
 {: .output}
 
-This tells us that one element between our generated and expected arrays doesn't match,
-and shows us the different arrays.
-
-We could put these tests in a separate script to automate the running of these tests.
-But a Python script halts at the first failed assertion,
-so the second and third tests aren't run at all.
-It would be more helpful if we could get data from all of our tests every time they're run,
-since the more information we have,
-the faster we're likely to be able to track down bugs.
-It would also be helpful to have some kind of summary report:
-if our set of tests - known as a **test suite** - includes thirty or forty tests
-(as it well might for a complex function or library that's widely used),
-we'd like to know how many passed or failed.
-
-Going back to our failed first test, what was the issue?
-As it turns out, the test itself was incorrect, and should have read:
-
+How do we test a function like that?
+Well, obviously, we once again need a known input and known output. Let's construct those:
 ~~~
-test_input = {'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}
-test_result = 4
-npt.assert_array_equal(mean_mag(test_input, 'b'), test_result)
+Dict test input and output
 ~~~
 {: .language-python}
+If you just copied and pasted this code in your notebook, you got an error. 
+However, the notebook does not inform us what is wrong. Does our function 
+create wrong keys of the dictionary? Or does it calculate minimum value instead of maximum?
 
-Which highlights an important point:
+If you spend some time looking at this example, you'll realize that the issue is with the
+test output. Which highlights an important point:
 as well as making sure our code is returning correct answers,
 we also need to ensure the tests themselves are also correct.
 Otherwise, we may go on to fix our code only to return
@@ -301,14 +238,19 @@ So a good rule is to make tests simple enough to understand
 so we can reason about both the correctness of our tests as well as our code.
 Otherwise, our tests hold little value.
 
+That said, manually constructing even this simple test for a fairly simple function
+can be tedious and produce new errors instead of fixing the old ones. Besides, 
+we would like to test many functions against different scenarios, and have a comprehensive
+report on which of the tests were passed and which failed. For a complex
+function or a library, a **test suite** can include 
+dozens of tests, so we definitely should automatize it.
+
 ### Using a Testing Framework
 
-Keeping these things in mind,
-here's a different approach that builds on the ideas we've seen so far
-but uses a **unit testing framework**.
-In such a framework we define our tests we want to run as functions,
+A tool for automatizing tests is called **unit testing framework**.
+In such a framework we define the tests we want to run as functions,
 and the framework automatically runs each of these functions in turn,
-summarising the outputs.
+summarising the outputs. 
 And unlike our previous approach,
 it will run every test regardless of any encountered test failures.
 
