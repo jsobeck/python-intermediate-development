@@ -302,7 +302,7 @@ by checking the path using the command `which`:
 {: .language-bash}
 
 ~~~
-/home/alex/python-intermediate-light-curve/venv/bin/python3
+/home/alex/InterPython_Workshop_Example/venv/bin/python3
 ~~~
 {: .output}
 
