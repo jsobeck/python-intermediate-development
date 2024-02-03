@@ -364,9 +364,9 @@ So, our `.github/workflows/main.yml` should look like the following:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.10", "3.11"]
 
-    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
+    runs-on: ${{ matrix.os }}
 
 ...
 
@@ -376,12 +376,12 @@ So, our `.github/workflows/main.yml` should look like the following:
     # Next we need to checkout out repository, and set up Python
     # A 'name' is just an optional label shown in the log - helpful to clarify progress - and can be anything
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
-        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+        python-version: ${{ matrix.python-version }}
 ...
 ~~~
 {: .language-yaml}
