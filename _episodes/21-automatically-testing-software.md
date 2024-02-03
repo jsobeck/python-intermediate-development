@@ -222,7 +222,6 @@ import lcanalyzer.models as models
 ~~~
 {: .language-python}
 
-Note that we can import the module as a whole or only some functions.
 Pick a function from this module, for example, `max_mag`, and apply it to one of the light
 curves.
 
@@ -232,7 +231,7 @@ models.max_mag(lc['g'],'psfMag')
 {: .language-python}
 
 ~~~
-31.86361543696225
+19.183367224358136
 ~~~
 {: .output}
 
@@ -251,73 +250,87 @@ models.max_mag(lc['g'],'psfMag')
 >
 {: .challenge}
 
+How would you check if our `max_max` function works correctly?
 
-
-The other statistical functions are similar.
-Note that in real situations
-functions we write are often likely to be more complicated than these,
-but simplicity here allows us to reason about what's happening -
-and what we need to test -
-more easily.
-
-Let's now look into how we can test our application's statistical functions
-to ensure they are functioning correctly.
-
-## Writing Tests to Verify Correct Behaviour
-
-### One Way to Do It?
-
-One way to test our functions would be to write a series of checks or tests,
-each executing a function we want to test with known inputs against known valid results,
-and throw an error if we encounter a result that is incorrect.
-
-Simple test: compare mag_mag output with a given one. **Assert**
-
-Let's make the task more realistic. Imagine you want to write a function
-for getting max values for observations in all bands for a single object.
+The answer that just came to your head, in all likelyhood, sounds similar
+to this: "I would pass a simple DataFrame to this function and check manually
+that the returned maximum value is correct". It makes perfect sense, and, perhaps, may work
+with a function as simple as ours:
 
 ~~~
-All bands max func
+test_input = pd.DataFrame(data=[[1, 5, 3], [7, 8, 9], [3, 4, 1]], columns=list("abc"))
+test_output = 7
+models.max_mag(test_input, "a") == test_output
 ~~~
 {: .language-python}
 ~~~
-dict
+True
 ~~~
 {: .output}
 
-How do we test a function like that?
-Well, obviously, we once again need a known input and known output. Let's construct those:
+But now let's make the task more realistic and recall our original objective: to
+get maximum values of the light curves in _all_ bands. We can write a function
+for this as well:
+
 ~~~
-Dict test input and output
+### Get maximum values for all bands
+def calc_stat(lc, bands, mag_col):
+    # Define an empty dictionary where we will store the results
+    stat = {}
+    # For each band get the maximum value and store it in the dictionary
+    for b in bands:
+        stat[b + "_max"] = models.max_mag(lc[b], mag_col)
+    return stat
 ~~~
 {: .language-python}
-If you just copied and pasted this code in your notebook, you got an error. 
-However, the notebook does not inform us what is wrong. Does our function 
-create wrong keys of the dictionary? Or does it calculate minimum value instead of maximum?
 
-If you spend some time looking at this example, you'll realize that the issue is with the
-test output. Which highlights an important point:
-as well as making sure our code is returning correct answers,
-we also need to ensure the tests themselves are also correct.
-Otherwise, we may go on to fix our code only to return
-an incorrect result that *appears* to be correct.
-So a good rule is to make tests simple enough to understand
-so we can reason about both the correctness of our tests as well as our code.
-Otherwise, our tests hold little value.
+And then construct the test data:
+~~~
+df1 = pd.DataFrame(data=[[1, 5, 3], [7, 8, 9], [3, 4, 1]], columns=list("abc"))
+df2 = pd.DataFrame(data=[[7, 3, 2], [8, 4, 2], [5, 6, 4]], columns=list("abc"))
+df3 = pd.DataFrame(data=[[2, 6, 3], [1, 3, 6], [8, 9, 1]], columns=list("abc"))
+test_input = {"df1": df1, "df2": df2, "df3": df3}
+test_output = {"df1_max": 8, "df12_max": 6, "df3_max": 8}
+test_output == calc_stat(test_input, ["df1", "df2", "df3"], "b")
+~~~
+{: .language-python}
 
-That said, manually constructing even this simple test for a fairly simple function
-can be tedious and produce new errors instead of fixing the old ones. Besides, 
-we would like to test many functions against different scenarios, and for a complex
-function or a library, a **test suite** can include 
-dozens of tests. Obviously, running these tests one by one in a Jupyter Notebook is not a good
-idea, so we need some tool to automatize this process and to obtain a comprehensive
-report on which of the tests were passed and which failed. It is also a good idea
-to run the tests every time when we make some changes in our code, to make sure that by adding 
-a new feature or fixing a bug we didn't break the previous functionality.
+See what kind of output this code produces.
 
-### Using a Testing Framework
+> ## What went wrong?
+> If you just copied the code above, you got `False`.
+> Try to find out what is wrong with our `calc_stat` function.
+>
+> > ## Solution
+> > 
+> > Our `calc_stat` function is fine. Our `test_output` contains two errors.
+> > This example highlights an important point:
+> > as well as making sure our code is returning correct answers,
+> > we also need to ensure the tests themselves are also correct.
+> > Otherwise, we may go on to fix our code only to return
+> > an incorrect result that *appears* to be correct.
+> > So a good rule is to make tests simple enough to understand
+> > so we can reason about both the correctness of our tests as well as our code.
+> > Otherwise, our tests hold little value.
+> {: .solution}
+>
+{: .challenge}
 
-A solution for these tasks are called **unit testing frameworks**.
+Our crude test failed and didn't even inform us about the reasons they failed.
+Sure there should be a better way to do this.
+
+### Testing Frameworks
+
+The example above shows that manually constructing even a simple test for a fairly simple function
+can be tedious, and may produce new errors instead of fixing the old ones. Besides, 
+we would like to test many functions in various scenarios, and for a complex
+function or a library, a **test suite** - a set of tests - can include 
+dozens of tests. Obviously, running them one by one in a notebook is not a good
+idea, so we need a tool to automatize this process and to obtain a comprehensive
+report on which of the tests were passed and which failed. We'd also prefer
+to have something that tells us what exactly went wrong.
+
+A solution for these tasks is called **unit testing frameworks**.
 In such a framework we define the tests we want to run as functions,
 and the framework automatically runs each of these functions in turn,
 summarising the outputs. Since most people don't enjoy writing tests,
@@ -363,52 +376,47 @@ $ python -m pip3 install pytest
 {: .callout}
 
 `pytest` requires that we put our tests into a separate `.py` file.
-Let's look at `tests/test_models.py`:
+We already have some tests in `tests/test_models.py`:
 
 ~~~
 """Tests for statistics functions within the Model layer."""
+import pandas as pd
 
+def test_max_mag_integers():
+    # Test that max_mag function works for integers
+    from lcanalyzer.models import max_mag
+
+    test_input_df = pd.DataFrame(data=[[1, 5, 3], [7, 8, 9], [3, 4, 1]], columns=list("abc"))
+    test_input_colname = "a"
+    test_output = 7
+
+    assert max_mag(test_input_df, test_input_colname) == test_output
+...
 ~~~
 {: .language-python}
 
-Here, although we have specified two of our previous manual tests as separate functions,
-they run the same assertions.
-Each of these test functions, in a general sense, are called **test cases**.
-They specify:
+The first function represent the same **test case** as the one we tried first in
+our notebook. However, it has a different format:
+- we import the function we test right inside the test function, for clarity
+of testing environment;
+- then we specify our test input and output;
+- and then we run our testing using **assert** keyword.
 
-- Inputs, e.g. the `test_input` DataFrame
-- Execution conditions -
-  what we need to do to set up the testing environment to run our test,
-  e.g. importing the `max_mag()` function so we can use it.
-  Note that for clarity of testing environment,
-  we only import the necessary library function we want to test within each test function
-- Testing procedure, e.g. running `max_mag()` with our `test_input` array
-  and using `assert` to test its validity
-- Expected outputs, e.g. our `test_result` number that we test against
-
-Also, we're defining each of these things for a test case we can run independently
-that requires no manual intervention.
-
-Going back to our list of requirements, how easy is it to run these tests?
-We can do this using a Python package called `pytest`.
-Pytest is a testing framework that allows you to write test cases using Python.
-You can use it to test things like Python functions,
-database operations,
-or even things like service APIs -
-essentially anything that has inputs and expected outputs.
-We'll be using Pytest to write unit tests,
-but what you learn can scale to more complex functional testing for applications or libraries.
-
-> ## What About Unit Testing in Other Languages?
->
-> Other unit testing frameworks exist for Python,
-> including Nose2 and Unittest,
-> and the approach to unit testing can be translated to other languages as well,
-> e.g. pFUnit for Fortran,
-> JUnit for Java (the original unit testing framework),
-> Catch or gtest for C++, etc.
-{: .callout}
-
+We haven't met with `assert` keyword before, however, it is essential for developing,
+debugging and testing of robust and reliable code. `assert` keyword is responsible
+for checking if some condition
+is true. If it is true, nothing happens and the execution of the code continues. However,
+if the condition is not fullfilled, an AssertionError occurs. When you write
+your own `assert` checks, you can use the following syntax:
+~~~
+assert condition, message
+~~~
+{: .language-python}
+And testing frameworks already have their own implementations of various assertions,
+for example those that can check if two dictionaries are the same (and then inform us
+where exactly they differ), if two variables are of the same type and so on. Apart from that,
+some other packages, including `numpy` and `pandas`, have `testing` modules that allow you
+to compare numpy arrays, DataFrames, Series and so on.
 
 ### Running Tests
 
@@ -438,13 +446,15 @@ and specify the `tests/test_models.py` file to run the tests in that file explic
 {: .callout}
 
 ~~~
-================================================= test session starts =================================================
-platform darwin -- Python 3.9.13, pytest-7.1.2, pluggy-1.0.0
-rootdir: /Users/riley/Desktop/InterPython_Workshop_Example
-plugins: remotedata-0.4.0, anyio-3.5.0, mock-3.10.0, filter-subpackage-0.1.2, xdist-3.2.1, astropy-header-0.2.2, doctestplus-0.12.1, astropy-0.10.0, cov-4.0.0, openfiles-0.5.0, hypothesis-6.75.2, arraydiff-0.5.0
-collected 6 items                                                                                                     
+============================= test session starts ==============================
+platform linux -- Python 3.11.5, pytest-8.0.0, pluggy-1.4.0
+rootdir: /home/alex/InterPython_Workshop_Example
+plugins: anyio-4.2.0
+collected 2 items                                                              
 
-tests/test_models.py ..
+tests/test_models.py ..                                                  [100%]
+
+============================== 2 passed in 0.44s ===============================
 ~~~
 {: .output}
 
@@ -462,16 +472,16 @@ So if we have many tests, we essentially get a report indicating which tests suc
 > ## Exercise: Write Some Unit Tests
 >
 > We already have a couple of test cases in `tests/test_models.py`
-> that test the `mean_mag()` function.
+> that test the `max_mag()` function.
 > Looking at `lcanalyzer/models.py`,
-> write at least two new test cases that test the `max_mag()` and `min_mag()` functions,
+> write at least two new test cases that test the `mean_mag()` and `min_mag()` functions,
 > adding them to `tests/test_models.py`. Here are some hints:
 >
-> - You could choose to format your functions very similarly to `mean_mag()`,
+> - You could choose to format your functions very similarly to `max_mag()`,
 >   defining test input and expected result arrays followed by the equality assertion.
 > - Try to choose cases that are suitably different,
->   and remember that these functions take a dictionary and return a float
->   corresponding to a chosen key
+>   and remember that these functions take a DataFrame and return a float
+>   corresponding to a chosen column
 > - Experiment with the functions in a notebook cell in `test-development.ipynb` to make sure your test result
 >   is what you expect the function to return for a given input. Don't forget to put your
 >   new test in `tests/test_models.py` once you think it's ready!
@@ -482,10 +492,39 @@ So if we have many tests, we essentially get a report indicating which tests suc
 > > ## Solution
 > >
 > > ~~~
+> > def test_min_mag_negatives():
+> >    # Test that min_mag function works for negatives
+> >    from lcanalyzer.models import min_mag
 > >
+> >    test_input_df = pd.DataFrame(data=[[-7, -7, -3], [-4, -3, -1], [-1, -5, -3]], columns=list("abc"))
+> >    test_input_colname = "b"
+> >    test_output = -7
+> >
+> >    assert min_mag(test_input_df, test_input_colname) == test_output
+> > ~~~
+> > {: .language-python}
+> >
+> > ~~~
+> > def test_mean_mag_integers():
+> >    # Test that mean_mag function works for negatives
+> >    from lcanalyzer.models import mean_mag
+> >
+> >    test_input_df = pd.DataFrame(data=[[-7, -7, -3], [-4, -3, -1], [-1, -5, -3]], columns=list("abc"))
+> >    test_input_colname = "a"
+> >    test_output = -4.
+> >
+> >    assert mean_mag(test_input_df, test_input_colname) == test_output
 > > ~~~
 > > {: .language-python}
 > {: .solution}
+>
+{: .challenge}
+
+> ## Optional Exercise: Write a Unit Test for the `calc_stat` function
+>
+> If you have some time left, extract our `calc_stat` function into the
+> `models.py` file and write a test for this function, using the (correct)
+> test input and output from our experiments earlier.
 >
 {: .challenge}
 
@@ -504,13 +543,13 @@ Add this test in `tests/test_models.py`:
 
 ~~~
 import pytest
-...
-def test_min_mag_string():
-    """Test for TypeError when passing strings"""
-    from lcanalyzer.models import min_mag
+def test_max_mag_strings():
+    # Test for TypeError when passing a string
+    from lcanalyzer.models import max_mag
 
+    test_input_colname = "b"
     with pytest.raises(TypeError):
-        error_expected = mean_mag([['Hello', 'there'], ['General', 'Kenobi']])
+        error_expected = max_mag('string', test_input_colname)
 ~~~
 {: .language-python}
 
@@ -534,7 +573,7 @@ and push this new branch and all its commits to GitHub:
 
 ~~~
 $ git add requirements.txt tests/test_models.py
-$ git commit -m "Add initial test cases for max_mag() and min_mag()"
+$ git commit -m "Add initial test cases for mean_mag() and min_mag()"
 $ git push -u origin test-suite
 ~~~
 {: .language-bash}
@@ -552,6 +591,17 @@ $ git push -u origin test-suite
 > which may be expensive for longer-running applications).
 > It is generally best not to assume your user's inputs will always be rational.
 >
+{: .callout}
+
+
+> ## What About Unit Testing in Other Languages?
+>
+> Other unit testing frameworks exist for Python,
+> including Nose2 and Unittest,
+> and the approach to unit testing can be translated to other languages as well,
+> e.g. pFUnit for Fortran,
+> JUnit for Java (the original unit testing framework),
+> Catch or gtest for C++, etc.
 {: .callout}
 
 {% include links.md %}
