@@ -122,6 +122,21 @@ the most important rules of keeping your notebooks in a good condition:
 > !['Restart and Run All' button](../fig/13_jupBestPractice_4_restart.png){: .image-with-shadow width="500px" }
 > <p style="text-align: center;">'Restart and Run All' button helps you to ensure that your notebook is executed in the right order</p>
 
+> ## Shouldn't We Clear Outputs of All Cells Before Pushing the Notebook into a Repo?
+> There is an old recommendation to always use ` Restart Kernel and Clear Outputs of All Cells`
+> before committing the notebook into a Git repository. This recommendation comes from the fact that
+> native Git tools for comparing different versions of the files (`git diff`) do not handle `.ipynb` files well.
+> Plots in the outputs cause especially inconvenient.
+> However, `git diff` in general isn't suitable for investigating changes in any files that are not, in essence, plain
+> text. More so, clearing the outputs of the notebooks after you finished your work makes it impossible to e.g.
+> use the notebook for a spontaneous presentation or demonstration of the results. The solution to this problem is
+> to use the suitable instruments. Jupyter Lab has several extensions that allow to compare different versions
+> of the notebooks, such as [`nbdime`](https://nbdime.readthedocs.io/en/latest/) and [`jupyterlab-git`](https://github.com/jupyterlab/jupyterlab-git).
+> More so, currently GitHub provides us with a possibility to use so called 'Rich Jupyter Notebook Diffs' when an updated notebook
+> is pushed in your repository. You can enable this function by clicking on your avatar in the top right corner and then selecting
+> `Feature Preview > Rich Jupyter Notebook Diffs`.
+{: .callout}
+
 > ## Jupyter Notebook, Rubin Science Platform and Google Colab
 > While RSP and Google Colab have Jupyter Notebook installed and not Jupyter Lab, all of the
 > best practices above are still applicable on these platworms, with the only exception that
