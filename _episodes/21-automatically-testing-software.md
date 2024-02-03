@@ -103,7 +103,7 @@ Later on, once we've finished writing these tests and are convinced they work pr
 we'll merge our `test-suite` branch back into `develop`.
 
 Don't forget to activate our `venv` environment, launch Jupyter Notebook and let's see 
-how we can test our software for light curve analysis.
+how we can test our software for light curve analysis. 
 
 ## Lightcurve Data Analysis
 
@@ -129,24 +129,90 @@ from two sources: the Kepler Space Telescope and LSST Data Preview 0.
 > {: .colution}
 {: .challenge}
 
-Looking at the data in Jupyter Lab. Data is 2d, mag column is 'psdMag'.
+Now let's open our data and have a look at it. For this we will use `pandas` package.
+Import it, open the `lsst_RRLyr.pkl` catalogue and have a look at the format of this table.
+Don't forget to put your code in the sections where it belongs!
+
 ~~~
-looking at the data
+import pandas as pd
 ~~~
 {: .language-python}
 
 ~~~
-data info
-~~~
-{: .output}
-
-Let's pick lightcurves for a single object. Now we get the first parameter that we are likely
-to need further - list of bands. We'll put them in 'Params' section under the name 'bands'.
-
-~~~
-Selecting LCs for a single object
+lc_datasets = {}
+lc_datasets['lsst'] = pd.read_pickle('data/lsst_RRLyr.pkl')
+lc_datasets['lsst'].info()
 ~~~
 {: .language-python}
+
+~~~
+lc_datasets['lsst'].head()
+~~~
+{: .language-python}
+~~~
+
+We can see that the dataset contains 11177 rows ('entries') and 12 columns.
+the `lc_datasets['lsst'].info()` function also informs us about the types of the data in the columns,
+as well as about the number of non-null values in each column.
+Having a look at the top 5 rows (`lc_datasets['lsst'].head()`) gives us an impression of what kind
+of values we have in each column.
+
+For now there are four columns that we'll need:
+1. 'objectId' that contains identificators of the observed objects;
+2. 'band' that informs us about the band in which the observation is made;
+3. 'expMidptMJD' that contains the time stamp of the observation;
+4. 'psfMag' that containes measured magnitudes.
+
+Let's assume that we want to know the maximum measured magnitudes of
+the light curves in each band for a single
+object. Our dataset contains observations in all bands for a number of sources, so we have
+to a) pick only one source, and b) separate the observations in different bands from each other.
+There are many ways of how to do this, but for the purposes of this episode we
+will store the single-source observational data for each band in a dictionary
+and then apply the `mag_mag` function defined in our `models.py` file.
+
+First, pick an id of the object that we will investigate.
+~~~
+### Pick an object
+obj_id = lc_datasets['lsst']['objectId'].unique()[4]
+~~~
+{: .language-python}
+
+And then store its observations in each band as items of a dictionary
+`lc`.
+~~~
+### Get all the observations for this obj_id for each band
+# Create an empty dict
+lc = {}
+# Define the bands names
+bands = 'ugrizy'
+# For each band create a bool array that indicates
+# that this observation belongs to a certain object and is made in a
+# certain band
+for b in bands:
+    filt_band_obj = (lc_datasets['lsst']['objectId'] == obj_id) & (
+        lc_datasets['lsst']['band'] == b
+    )
+    # Select the observations and store in the dict 'lc'
+    lc[b] = lc_datasets['lsst'][filt_band_obj]
+~~~
+{: .language-python}
+
+> ## Don't forget about the best practices
+>
+> Do you see any variables defined in the code above that
+> you should move in some other section?
+> > ## Solution
+> >
+> > It seems very likely that we will need the variable `bands`
+> > many times in the future. Let's move it to the 'Parameters'
+> > section of the notebook.
+> {: .colution}
+{: .challenge}
+
+Have a look at the resulting dictionary: you will find that each element
+has a key corresponding to the band name, and it's value will contain a Pandas DataFrame with
+observations in this band.
 
 Now we need to import the functions from the `models.py` file.
 We should do it in the 'Imports' section. 
@@ -157,8 +223,7 @@ import lcanalyzer.models as models
 {: .language-python}
 
 Note that we can import the module as a whole or only some functions.
-
-Now let's apply one of the functions, let's say `max_mag` to one of the light
+Pick a function from this module, for example, `max_mag`, and apply it to one of the light
 curves.
 
 ~~~
@@ -177,14 +242,16 @@ models.max_mag(lc['g'],'psfMag')
 > > 
 > > It is better to put
 > > the magnitude column name, 'psfMag', in a variable (let's call it
-> > `colname_mag`) and declare it in the 'Parameters' section. Why? Because in the future
-> > we will want to apply this analysis to another dataset with different column names,
+> > `colname_mag`) and declare it in the 'Parameters' section. Why? Because chances are, in the future
+> > we will want to apply our code to another dataset with different column names,
 > > and if we continue using 'psfMag' across the notebook, later on we'll have to replace it
 > > either manually, or using 'Search' functionality. In a large notebook both actions are likely
 > > to produce errors.
 > {: .solution}
 >
 {: .challenge}
+
+
 
 The other statistical functions are similar.
 Note that in real situations
