@@ -1,5 +1,5 @@
 ---
-title: "Using Debugger for Diagnosing the Issues"
+title: "Issue Diagnostics with a Debugger and Other Tools"
 teaching: 30
 exercises: 20
 questions:
@@ -35,21 +35,6 @@ statements for inspecting intermediate values of the variables. Jupyter Lab with
 cell-by-cell workflow especially encourages this kind of debugging. Another approach
 is to split a larger piece of code into smaller chunks and check them piece by piece.
 However, there is more advanced tool for this, called **debugger**.
-
-To give us a better idea of what is going on, we can:
-
-- split the code into smaller cells to locate the source of error,
-- output program state at various points,
-   e.g. by using print statements to output the contents of variables,
-- use a logging capability to output
-  the state of everything as the program progresses (), or
-- look at intermediately generated files.
-
-But such approaches are often time consuming
-and sometimes not enough to fully pinpoint the issue.
-In complex programs, like simulation codes,
-we often need to get inside the code while it is running and explore.
-This is where using a **debugger** can be useful.
 
 ## Setting the Scene
 
@@ -192,20 +177,68 @@ Instead of adding `print` statements in our function and executing it again and 
 use a debugger at this point to see what is going on and why the function failed.
 
 ## Debugging in Jupyter Lab
+The debugger in essence is a software for inspecting the changes that happen to
+the variables, memory allocation and other resources when your code is being executed. 
+This software can be a simple package that will print something useful in the console 
+(in fact, Python has such a package which is called [`pdb`](https://docs.python.org/3/library/pdb.html))
+or a GUI tool, which is usually integrated into the IDE. To enable the debugger in Jupyter Lab,
+click on a small bug pictogram in the top right corner of your notebook tab (it will turn orange,
+indicating that debugging mode is active), and then open the debugger right-side panel
+(also marked with a bug pictogram).
 
-Enable debugger
-Open debugging panel
-Set a breakpoint
-Run the assertion
-Breakpoint stop
-Moving step by step, keeping an eye on the variables
-Noticing the first error
-Noticing the second error
+The debugger panel contains five sections:
+- Varaibles. This is the place where all variables, user-defined or not, can be inspected in
+  all the details. You can switch between the tree view and table view using the buttons in the top right
+  corner of this section. The tree view provides you with more information, for example, you can see the full
+  list of methods available for this object. However, table view is more concise and simple for understanding,
+  as it contains only variable names, types and values.
+- Callstack. Here you can trace the chain of function calls that brings you to the **breakpoint** -
+  a stopping place in the code, that you define manually. 
+- Breakpoints. Here you will find the list of your breakpoints.
+- Sources. The currently debugged code will be shown here.
+- Kernel sources. Through this section you can inspect the source code
+  of all modules that are currently available to the kernel.
 
-Think of debugging like performing exploratory surgery - on code!
-Debuggers allow us to peer at the internal workings of a program,
-such as variables and other state,
-as it performs its functions.
+![Turning on the debugger in Jupyter Lab](../fig/24_Debugger_1_TurningOn.svg){: .image-with-shadow width="800px" }
+<p style="text-align: center;">Turning on the debugger and setting the breakpoint. The 'Variables' section
+in the table view shows all previously defined variables.</p>
+
+To inspect how our variables change during code execution and find the source of the error,
+we should set a breakpoint somewhere before the error occurs. To be on the safe side, let's put the 
+breakpoint on the line where we define our `stat` dictionary. Now we should go to the cell where we execute
+our assertion of the function output and the expected output and run it.
+
+The execution of the code will start, but then pause once the interpreter reaches the breakpoint.
+Here we should start paying attention to the 'Variables' section. At this point, we have only the variables
+that we passed to the function as the arguments, and an empty `stats` dictionary. In the 'Callstack'
+section, let's click on the `Next` button (the third one in the row; alternatively you can press `F10`).
+The interpreter will move to the next line, and we will see a new variable in the 'Variables' - an empty dict
+called `stat`.
+
+Keep clicking `Next` and moving through the code. You'll notice that some elements appear in the `stat` dictionary:
+first `max` with value 9, then `mean` with value 9...
+
+![Finding the error](../fig/24_Debugger_2_Error.svg){: .image-with-shadow width="800px" }
+<p style="text-align: center;">Finding the error</p>
+
+Wait a second. `mean` equals 9? That can't be right.
+
+Here we found the line in which an error occurs. After looking at it closely we will notice that we used the wrong function,
+and if we keep going through the code with the debugger, we'll notice that the next line contains an error as well.
+
+Case solved! Now we can `Terminate` the debugging (by clicking on a 'Stop' button in the 'Callstack' section), turn off the debugger
+and fix the errors.
+
+> ## Is this really easier than `print` statements?
+> When using the debugger for the first time, it may appear that it is more
+> complicated and cumbersome than just inserting in the code `print` statements
+> here and there. For a short and simple script it is often correct.
+> However, debugging a complex function with multiple calls of other functions
+> can be done faster and with higher efficiency with the debugger. Imaging
+> having to print a large DataFrame variable every two or three lines - it is much easier
+> to inspect how this variable changes 'in real time'.
+>  
+{: .callout}
 
 ## Corner or Edge Cases
 
