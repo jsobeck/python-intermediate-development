@@ -55,7 +55,7 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
    and that you have set up your SSH key pair for authentication with GitHub,
    as explained in [Setup](../setup.html#secure-access-to-github-using-git-from-command-line).
 2. Log into your GitHub account.
-3. Go to the [software project template repository](https://github.com/ShrRa/InterPython_Workshop_Example)
+3. Go to the [software project repository](https://github.com/ShrRa/InterPython_Workshop_Example)
    in GitHub.
 
    ![Software project template repository in GitHub](../fig/11_soft_proj_2_repo.svg){: .image-with-shadow width="800px" }
