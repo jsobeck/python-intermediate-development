@@ -27,13 +27,22 @@ and give a rough idea of where the error is
 by which test(s) are failing.
 But it does not tell us exactly where the problem is (i.e. what line of code),
 or how it came about.
+The process of finding out what causes errors in our code is called **debugging**.
+There are numerous toold and methods for doing this, and in all likelyhood,
+you are already using some of them. Perhaps the most common way of debugging your 
+Python code, especially when the project is relatively simple, is to use `print`
+statements for inspecting intermediate values of the variables. Jupyter Lab with its
+cell-by-cell workflow especially encourages this kind of debugging. Another approach
+is to split a larger piece of code into smaller chunks and check them piece by piece.
+However, there is more advanced tool for this, called **debugger**.
+
 To give us a better idea of what is going on, we can:
 
 - split the code into smaller cells to locate the source of error,
 - output program state at various points,
    e.g. by using print statements to output the contents of variables,
 - use a logging capability to output
-  the state of everything as the program progresses, or
+  the state of everything as the program progresses (), or
 - look at intermediately generated files.
 
 But such approaches are often time consuming
@@ -44,18 +53,22 @@ This is where using a **debugger** can be useful.
 
 ## Setting the Scene
 
-Let us add a new function called `patient_normalise()` to our inflammation example
-to normalise a given inflammation data array so that all entries fall between 0 and 1.
+Let us add a new function called `calc_stats()` 
+that will calculate for us all three statistical indicators (min, max and mean) for all
+bands of our light curve.
 (Make sure you create a new feature branch for this work off your `develop` branch.)
-To normalise each patient's inflammation data
-we need to divide it by the maximum inflammation experienced by that patient.
-To do so, we can add the following code to `inflammation/models.py`:
 
 ~~~
-def patient_normalise(data):
-    """Normalise patient data from a 2D inflammation data array."""
-    max = np.max(data, axis=0)
-    return data / max[:, np.newaxis]
+def calc_stats(lc, bands, mag_col):
+    # Calculate max, mean and min values for all bands of a light curve
+    stats = {}
+    for b in bands:
+        stat = {}
+        stat["max"] = models.max_mag(lc[b], mag_col)
+        stat["mean"] = models.max_mag(lc[b], mag_col)
+        stat["min"] = models.mean_mag(lc[b], mag_col)
+        stats[b] = stat
+    return pd.DataFrame.from_records(stats)
 ~~~
 {: .language-python}
 
@@ -63,100 +76,131 @@ def patient_normalise(data):
 which will be detected by further testing and code style checking below
 so bear with us for the moment!*
 
-In the code above, we first go row by row
-and find the maximum inflammation value for each patient
-and store these values in a 1-dimensional NumPy array `max`.
-We then want to use NumPy's element-wise division,
-to divide each value in every row of inflammation data
-(belonging to the same patient)
-by the maximum value for that patient stored in the 1D array `max`.
-However, we cannot do that division automatically
-as `data` is a 2D array (of shape `(60, 40)`)
-and `max` is a 1D array (of shape `(60, )`),
-which means that their shapes are not compatible.
+This code accepts a dictionary of DataFrames that contain observations of a single object in all bands.
+Then this code iterates through the bands, calculating the requested statistical values and storing them
+in a dictionary. At the end, these dictionaries are converted into a DataFrame, where column names are the
+keys of the original `lc` dictionary, and the index ('row names') are the names of the statistics ('max',
+'mean' and 'min'). Pass one of our previously designed light curves to this function
+to see that the result is an accurate and informative pandas table.
 
-![NumPy arrays of incompatible shapes](../fig/imgDummy.png){: .image-with-shadow width="800px"}
-
-Hence, to make sure that we can perform this division and get the expected result,
-we need to convert `max` to be a 2D array
-by using the `newaxis` index operator to insert a new axis into `max`,
-making it a 2D array of shape `(60, 1)`.
-
-Now the division will give us the expected result.
-Even though the shapes are not identical,
-NumPy's automatic `broadcasting` (adjustment of shapes) will make sure that
-the shape of the 2D `max` array is now "stretched" ("broadcast")
-to match that of `data` - i.e. `(60, 40)`,
-and element-wise division can be performed.
-
-
-> ## Broadcasting
->
-> The term broadcasting describes how NumPy treats arrays with different shapes
-> during arithmetic operations.
-> Subject to certain constraints,
-> the smaller array is “broadcast” across the larger array
-> so that they have compatible shapes.
-> Be careful, though, to understand how the arrays get stretched
-> to avoid getting unexpected results.
+> ## Can't we save them directly into a DataFrame?
+> Technically, we can. However, editing DataFrames row by row or element by element
+> is inefficient from the computational point of view. For this reason, when creating a frame
+> row by row is inevitable, storing data
+> in a list, dictionary or array and then converting them in a DataFrame is the preferred
+> solution. It is also worth noting that in many cases iterations in a loop
+> through the rows of some kind of a table can be avoided entirely with a better
+> design of the algorithm.
 {: .callout}
 
-Note there is an assumption in this calculation
-that the minimum value we want is always zero.
-This is a sensible assumption for this particular application,
-since the zero value is a special case indicating that a patient
-experienced no inflammation on a particular day.
-
-Let us now add a new test in `tests/test_models.py`
-to check that the normalisation function is correct for some test data.
+Now let's design a test case for this function:
 
 ~~~
-@pytest.mark.parametrize(
-    "test, expected",
-    [
-        ([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]])
-    ])
-def test_patient_normalise(test, expected):
-    """Test normalisation works for arrays of one and positive integers.
-       Assumption that test accuracy of two decimal places is sufficient."""
-    from inflammation.models import patient_normalise
-    npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
+test_cols = list("abc")
+test_dict = {}
+test_dict["df0"] = pd.DataFrame(
+    data=[[8, 8, 0], 
+          [0, 1, 1], 
+          [2, 3, 1], 
+          [7, 9, 7]], columns=test_cols
+)
+test_dict["df1"] = pd.DataFrame(
+    data=[[3, 8, 2], 
+          [3, 8, 0], 
+          [3, 9, 8], 
+          [8, 2, 5]], columns=test_cols
+)
+test_dict["df2"] = pd.DataFrame(
+    data=[[8, 4, 3], 
+          [7, 6, 3], 
+          [4, 2, 9], 
+          [6, 4, 0]], columns=test_cols
+)
 ~~~
 {: .language-python}
 
-Note that we are using the `assert_almost_equal()` Numpy testing function
-instead of `assert_array_equal()`,
-since it allows us to test against values that are *almost* equal.
-This is very useful when we have numbers with arbitrary decimal places
-and are only concerned with a certain degree of precision,
-like the test case above,
-where we make the assumption that a test accuracy of two decimal places is sufficient.
+Remember, that we don't have to fill the data manually, but can use built-in `numpy`
+random generator. For example, for the data above `size = (4,3); np.random.randint(0, 10, size)` 
+was used.
 
-Run the tests again using `python -m pytest tests/test_models.py`
-and you will note that the new test is failing,
-with an error message that does not give many clues as to what went wrong.
+The expected output for these data will look like this:
 
 ~~~
-E       AssertionError:
-E       Arrays are not almost equal to 2 decimals
-E
-E       Mismatched elements: 6 / 9 (66.7%)
-E       Max absolute difference: 0.57142857
-E       Max relative difference: 1.345
-E        x: array([[0.14, 0.29, 0.43],
-E              [0.5 , 0.62, 0.75],
-E              [0.78, 0.89, 1.  ]])
-E        y: array([[0.33, 0.67, 1.  ],
-E              [0.67, 0.83, 1.  ],
-E              [0.78, 0.89, 1.  ]])
+test_output = pd.DataFrame(data=[[9,9,6],[5.25,6.75,4.],[1,2,2]],columns=['df0','df1','df2'],index=['max','mean','min'])
+~~~
+{: .language-python}
 
-tests/test_models.py:53: AssertionError
+Finally, we can use `assert` statement to check if our function produces what we expect...
+~~~
+assert calc_stats(test_dict, test_dict.keys(), 'b') == test_output
+~~~
+{: .language-python}
+
+...and get a `ValueError`:
+~~~
+...
+ValueError: The truth value of a DataFrame is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
 ~~~
 {: .output}
 
-Let us use a debugger at this point to see what is going on and why the function failed.
+The reason for this is that `assert` takes a condition that produces a _single_ boolean value,
+but using `==` for two DataFrames results in an element-wise comparison and produces a _DataFrame_
+filled with booleans. 
+
+This is the case when we need to use a more powerful `assert` function, the one that is developed specifically 
+for a certain variable type. `Pandas` has its own module called `testing` that contains a number of type-specific
+`assert`-suitable conditions. Let's import this module:
+
+~~~
+import pandas.testing as pdt
+~~~
+{: .language-python}
+
+And use `assert_frame_equal` function that can compare DataFrames in a meaningful way:
+~~~
+assert pdt.assert_frame_equal(calc_stats(test_dict, test_dict.keys(), 'b'),
+                              test_output,
+                             check_exact=False,
+                             atol=0.01)
+~~~
+{: .language-python}
+
+The first two arguments of this function are just what we would expect: the call of our `calc_stats`
+function and the expected `test_output`. `assert_frame_equal` will be comparing these two DataFrames.
+The next two arguments allow this function to compare the DataFrames with only some degree of precision.
+This precision is determined by the argument `atol`, which stands for 'absolute tolerance'. The DataFrames
+will be considered equal if their elements differ no more than by `atol` value. This is similar to the 
+`pytest.approx` that we encountered in the previous episodes. 
+
+This assertion is falining with an error message that does not give many clues as to what went wrong.
+
+~~~
+...
+AssertionError: DataFrame.iloc[:, 0] (column name="df0") are different
+
+DataFrame.iloc[:, 0] (column name="df0") values are different (66.66667 %)
+[index]: [max, mean, min]
+[left]:  [9.0, 9.0, 5.25]
+[right]: [9.0, 5.25, 1.0]
+At positional index 1, first diff: 9.0 != 5.25
+~~~
+{: .output}
+
+Apparently, there are differences between the two DataFrames in the column 'df0';
+the values in the 'max' row are the same, but the 'mean' and 'min' values are different.
+Instead of adding `print` statements in our function and executing it again and again, let's
+use a debugger at this point to see what is going on and why the function failed.
 
 ## Debugging in Jupyter Lab
+
+Enable debugger
+Open debugging panel
+Set a breakpoint
+Run the assertion
+Breakpoint stop
+Moving step by step, keeping an eye on the variables
+Noticing the first error
+Noticing the second error
 
 Think of debugging like performing exploratory surgery - on code!
 Debuggers allow us to peer at the internal workings of a program,
@@ -165,8 +209,8 @@ as it performs its functions.
 
 ## Corner or Edge Cases
 
-The test case that we have currently written for `patient_normalise`
-is parameterised with a fairly standard data array.
+The test cases that we have written so far 
+are parameterised with a fairly standard DataFrames filled with random integers or floats.
 However, when writing your test cases,
 it is important to consider parameterising them by unusual or extreme values,
 in order to test all the edge or corner cases that your code could be exposed to in practice.
@@ -174,42 +218,41 @@ Generally speaking, it is at these extreme cases that you will find your code fa
 so it's beneficial to test them beforehand.
 
 What is considered an "edge case" for a given component depends on
-what that component is meant to do.
-In the case of `patient_normalise` function, the goal is to normalise a numeric array of numbers.
+what that component is meant to do. 
 For numerical values, extreme cases could be zeros,
 very large or small values,
 not-a-number (`NaN`) or infinity values.
-Since we are specifically considering an *array* of values,
+Since we are specifically considering *arrays* of values,
 an edge case could be that all the numbers of the array are equal.
 
 For all the given edge cases you might come up with,
 you should also consider their likelihood of occurrence.
 It is often too much effort to exhaustively test a given function against every possible input,
-so you should prioritise edge cases that are likely to occur.
-For our `patient_normalise` function, some common edge cases might be the occurrence of zeros,
-and the case where all the values of the array are the same.
+so you should prioritise edge cases that are likely to occur. 
+Let's consider a new function, which purpose is to normalize a single light curve:
 
-When you are considering edge cases to test for,
-try also to think about what might break your code.
-For `patient_normalise` we can see that there is a division by
-the maximum inflammation value for each patient,
-so this will clearly break if we are dividing by zero here,
-resulting in `NaN` values in the normalised array.
+~~~
+def normalize_lc(df,mag_col):
+    max_val = models.max_mag(df,mag_col)
+    lc = df[mag_col]/max_val
+    return lc
+~~~
+{: .language-python}
 
-With all this in mind,
-let us add a few edge cases to our parametrisation of `test_patient_normalise`.
+For a function like this, a common edge case might be the occurrence of zeros,
+and the case where all the values of the array are the same. Indeed, if we passed 
+to such a function a 'light curve' where all measurements are zeros, we would expect
+to have zeros in return. However, since we have division in this function, it will return
+and array of 'NaN' instead of this.
+
+With this in mind,
+let us add a few edge cases to our parametrisation of `test_normalize_lc`.
 We will add two extra tests,
 corresponding to an input array of all 0,
 and an input array of all 1.
 
 ~~~
-@pytest.mark.parametrize(
-    "test, expected",
-    [
-        ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]),
-        ([[1, 1, 1], [1, 1, 1], [1, 1, 1]], [[1, 1, 1], [1, 1, 1], [1, 1, 1]]),
-        ([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]]),
-    ])
+parametrization
 ~~~
 {: .language-python}
 
@@ -218,103 +261,30 @@ due to the division by zero as we predicted.
 
 ~~~
 E           AssertionError:
-E           Arrays are not almost equal to 2 decimals
-E
-E           x and y nan location mismatch:
-E            x: array([[nan, nan, nan],
-E                  [nan, nan, nan],
-E                  [nan, nan, nan]])
-E            y: array([[0, 0, 0],
-E                  [0, 0, 0],
-E                  [0, 0, 0]])
 
-tests/test_models.py:88: AssertionError
 ~~~
 {: .output}
 
-How can we fix this?
-Luckily, there is a NumPy function that is useful here,
-[`np.isnan()`](https://numpy.org/doc/stable/reference/generated/numpy.isnan.html),
-which we can use to replace all the NaN's with our desired result,
-which is 0.
-We can also silence the run-time warning using
-[`np.errstate`](https://numpy.org/doc/stable/reference/generated/numpy.errstate.html):
-
+How can we fix this? For example, we can replace all the NaNs in the
+return DataFrame with zeros using `pandas` function `fillna`. 
 ~~~
 ...
-def patient_normalise(data):
-    """
-    Normalise patient data from a 2D inflammation data array.
-
-    NaN values are ignored, and normalised to 0.
-
-    Negative values are rounded to 0.
-    """
-    max = np.nanmax(data, axis=1)
-    with np.errstate(invalid='ignore', divide='ignore'):
-        normalised = data / max[:, np.newaxis]
-    normalised[np.isnan(normalised)] = 0
-    normalised[normalised < 0] = 0
-    return normalised
+def normalize_lc(df,mag_col):
+    # Normalize a single light curve
+    max_val = models.max_mag(df,mag_col)
+    lc = df[mag_col]/max_val
+    lc = lc.fillna(0)
+    return lc
 ...
 ~~~
 {: .language-python}
 
-> ## Exercise: Exploring Tests for Edge Cases
->
-> Think of some more suitable edge cases to test our `patient_normalise()` function
-> and add them to the parametrised tests.
-> After you have finished remember to commit your changes.
->
-> > ## Possible Solution
-> > ~~~
-> > @pytest.mark.parametrize(
-> >     "test, expected",
-> >     [
-> >         (
-> >             [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
-> >             [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
-> >         ),
-> >         (
-> >             [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
-> >             [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
-> >         ),
-> >         (
-> >             [[float('nan'), 1, 1], [1, 1, 1], [1, 1, 1]],
-> >             [[0, 1, 1], [1, 1, 1], [1, 1, 1]],
-> >         ),
-> >         (
-> >             [[1, 2, 3], [4, 5, float('nan')], [7, 8, 9]],
-> >             [[0.33, 0.67, 1], [0.8, 1, 0], [0.78, 0.89, 1]],
-> >         ),
-> >         (
-> >             [[-1, 2, 3], [4, 5, 6], [7, 8, 9]],
-> >             [[0, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]],
-> >         ),
-> >         (
-> >             [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
-> >             [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]],
-> >         )
-> >     ])
-> > def test_patient_normalise(test, expected):
-> >     """Test normalisation works for arrays of one and positive integers."""
-> >     from inflammation.models import patient_normalise
-> >     npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
-> > ...
-> > ~~~
-> > {: .language-python}
-> >
-> > You could also, for example, test and handle the case of a whole row of NaNs.
-> {: .solution}
->
-{: .challenge}
-
 ## Defensive Programming
 
-In the previous section, we made a few design choices for our `patient_normalise` function:
+In the previous section, we made a few design choices for our `normalize_lc` function:
 
 1. We are implicitly converting any `NaN` and negative values to 0,
-2. Normalising a constant 0 array of inflammation results in an identical array of 0s,
+2. Normalising a constant 0 array of magnitudes in an identical array of 0s,
 3. We don't warn the user of any of these situations.
 
 This could have be handled differently.
@@ -334,56 +304,33 @@ These assumptions are often based on the *value* of the arguments, like we have 
 However, in a dynamic language like Python
 one of the more common preconditions is to check that the arguments of a function
 are of the correct *type*.
-Currently there is nothing stopping someone from calling `patient_normalise` with
-a string, a dictionary, or another object that is not an `ndarray`.
+Currently there is nothing stopping someone from calling `normalize_lc` with
+a string, a dictionary, or another object that is not a DataFrame, or from
+passing a DataFrame filled with strings or lists.
 
-As an example, let us change the behaviour of the `patient_normalise()` function
-to raise an error on negative inflammation values.
-Edit the `inflammation/models.py` file,
-and add a precondition check to the beginning of the `patient_normalise()` function like so:
+As an example, let us change the behaviour of the `normalize_lc()` function
+to raise an error if some magnitudes are smaller than '-90' (since '-99.' or '-99.9' is a 
+common filler value for 'NaNs').
+Edit our function by adding a precondition check like so:
 
 ~~~
 ...
-    if np.any(data < 0):
-        raise ValueError('Inflammation values should not be negative')
+    if any(df[mag_col].abs() > 90):
+        raise ValueError(mag_col+' contains values with abs() larger than 90!')
 ...
 ~~~
 {: .language-python}
 
-We can then modify our test function in `tests/test_models.py`
+We can then modify our test function
 to check that the function raises the correct exception - a `ValueError` -
-when input to the test contains negative values
-(i.e. input case `[[-1, 2, 3], [4, 5, 6], [7, 8, 9]]`).
+when input to the test contains '-99.9' values.
 The [`ValueError`](https://docs.python.org/3/library/exceptions.html#ValueError) exception
 is part of the standard Python library
 and is used to indicate that the function received an argument of the right type,
 but of an inappropriate value.
 
 ~~~
-@pytest.mark.parametrize(
-    "test, expected, expect_raises",
-    [
-        ... # previous test cases here, with None for expect_raises, except for the next one - add ValueError
-        ... # as an expected exception (since it has a negative input value)
-        (
-            [[-1, 2, 3], [4, 5, 6], [7, 8, 9]],
-            [[0, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]],
-            ValueError,
-        ),
-        (
-            [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
-            [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]],
-            None,
-        ),
-    ])
-def test_patient_normalise(test, expected, expect_raises):
-    """Test normalisation works for arrays of one and positive integers."""
-    from inflammation.models import patient_normalise
-    if expect_raises is not None:
-        with pytest.raises(expect_raises):
-            npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
-    else:
-        npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
+parametrization with '-99.9'
 ~~~
 {: .language-python}
 
@@ -402,78 +349,6 @@ Be sure to commit your changes so far and push them to GitHub.
 >
 > > ## Solution
 > >
-> > In `inflammation/models.py`:
-> >
-> > ~~~
-> > ...
-> > def patient_normalise(data):
-> >     """
-> >     Normalise patient data between 0 and 1 of a 2D inflammation data array.
-> >
-> >     Any NaN values are ignored, and normalised to 0
-> >
-> >     :param data: 2D array of inflammation data
-> >     :type data: ndarray
-> >
-> >     """
-> >     if not isinstance(data, np.ndarray):
-> >         raise TypeError('data input should be ndarray')
-> >     if len(data.shape) != 2:
-> >         raise ValueError('inflammation array should be 2-dimensional')
-> >     if np.any(data < 0):
-> >         raise ValueError('inflammation values should be non-negative')
-> >     max = np.nanmax(data, axis=1)
-> >     with np.errstate(invalid='ignore', divide='ignore'):
-> >         normalised = data / max[:, np.newaxis]
-> >     normalised[np.isnan(normalised)] = 0
-> >     return normalised
-> > ...
-> > ~~~
-> >
-> > In `test/test_models.py`:
-> >
-> > ~~~
-> > ...
-> > @pytest.mark.parametrize(
-> >     "test, expected, expect_raises",
-> >     [
-> >         ...
-> >         (
-> >             'hello',
-> >             None,
-> >             TypeError,
-> >         ),
-> >         (
-> >             3,
-> >             None,
-> >             TypeError,
-> >         ),
-> >         (
-> >             [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
-> >             [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]],
-> >             None,
-> >         )
-> >     ])
-> > def test_patient_normalise(test, expected, expect_raises):
-> >     """Test normalisation works for arrays of one and positive integers."""
-> >     from inflammation.models import patient_normalise
-> >     if isinstance(test, list):
-> >         test = np.array(test)
-> >     if expect_raises is not None:
-> >         with pytest.raises(expect_raises):
-> >             npt.assert_almost_equal(patient_normalise(test), np.array(expected), decimal=2)
-> >     else:
-> >         npt.assert_almost_equal(patient_normalise(test), np.array(expected), decimal=2)
-> > ...
-> > ~~~
-> >
-> > Note the conversion from `list` to `np.array` has been moved
-> > out of the call to `npt.assert_almost_equal()` within the test function,
-> > and is now only applied to list items (rather than all items).
-> > This allows for greater flexibility with our test inputs,
-> > since this wouldn't work in the test case that uses a string.
-> >
-> > {: .language-python}
 > {: .solution}
 >
 {: .challenge}
@@ -485,9 +360,11 @@ You should aim to strike a balance between
 making sure you secure your function against incorrect use,
 and writing an overly complicated and expensive function
 that handles cases that are likely never going to occur.
-For example, it would be sensible to validate the shape of your inflammation data array
-when it is actually read from the csv file (in `load_csv`),
-and therefore there is no reason to test this again in `patient_normalise`.
+For example, it would be sensible to validate the values of your
+light curve measurements
+when it is actually read from the file,
+and therefore there is no reason to test this again in `normalize_lc` or 
+any of our functions related to statistics.
 You can also decide against adding explicit preconditions in your code,
 and instead state the assumptions and limitations of your code
 for users of your code in the docstring
@@ -500,32 +377,22 @@ Let's re-run Pylint over our project after having added some more code to it.
 From the project root do:
 
 ~~~
-$ pylint inflammation
+pylint
 ~~~
 {: .language-bash}
 
 You may see something like the following in Pylint's output:
 
 ~~~
-************* Module inflammation.models
-...
-inflammation/models.py:60:4: W0622: Redefining built-in 'max' (redefined-builtin)
-...
+
 ~~~
 {: .language-bash}
 
-The above output indicates that by using the local variable called `max`
-in the `patient_normalise` function,
-we have redefined a built-in Python function called `max`.
-This isn't a good idea and may have some undesired effects
-(e.g. if you redefine a built-in name in a global scope
-you may cause yourself some trouble which may be difficult to trace).
+
 
 > ## Exercise: Fix Code Style Errors
 >
-> Rename our local variable `max` to something else (e.g. call it `max_data`), then rerun your tests and
-> commit these latest changes and
-> push them to GitHub using our usual feature branch workflow. Make sure your `develop` and `main` branches are up to date.
+> 
 {: .challenge}
 
 It may be hard to remember to run linter tools every now and then.
@@ -546,9 +413,7 @@ we can add the following step to our `steps` in `.github/workflows/main.yml`:
 
 ~~~
 ...
-    - name: Check style with Pylint
-      run: |
-        python3 -m pylint --fail-under=0 --reports=y inflammation
+   add CI pylint
 ...
 ~~~
 {: .language-bash}
