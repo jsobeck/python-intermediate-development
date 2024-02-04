@@ -149,7 +149,6 @@ lc_datasets['lsst'].info()
 lc_datasets['lsst'].head()
 ~~~
 {: .language-python}
-~~~
 
 We can see that the dataset contains 11177 rows ('entries') and 12 columns.
 the `lc_datasets['lsst'].info()` function also informs us about the types of the data in the columns,
