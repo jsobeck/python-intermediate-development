@@ -134,7 +134,7 @@ filled with booleans.
 
 This is the case when we need to use a more powerful `assert` function, the one that is developed specifically 
 for a certain variable type. `Pandas` has its own module called `testing` that contains a number of type-specific
-`assert`-suitable conditions. Let's import this module:
+`assert` functions. Let's import this module:
 
 ~~~
 import pandas.testing as pdt
@@ -143,7 +143,7 @@ import pandas.testing as pdt
 
 And use `assert_frame_equal` function that can compare DataFrames in a meaningful way:
 ~~~
-assert pdt.assert_frame_equal(calc_stats(test_dict, test_dict.keys(), 'b'),
+pdt.assert_frame_equal(calc_stats(test_dict, test_dict.keys(), 'b'),
                               test_output,
                              check_exact=False,
                              atol=0.01)
@@ -227,7 +227,7 @@ Here we found the line in which an error occurs. After looking at it closely we 
 and if we keep going through the code with the debugger, we'll notice that the next line contains an error as well.
 
 Case solved! Now we can `Terminate` the debugging (by clicking on a 'Stop' button in the 'Callstack' section), turn off the debugger
-and fix the errors.
+(by clicking on the orange bug sign in the notebook tab; do not skip this step as debugging mode affects performance) and fix the errors.
 
 > ## Is this really easier than `print` statements?
 > When using the debugger for the first time, it may appear that it is more
@@ -239,6 +239,15 @@ and fix the errors.
 > to inspect how this variable changes 'in real time'.
 >  
 {: .callout}
+
+> ## Exercise: Extracting the Functions into `.py` files
+>
+> Following the best practices that you learned on Day 1,
+> put the `calc_stats` function into the `models.py` file
+> and convert the assertion for this function into a proper test
+> in the `tests/test_models.py`.
+>
+{: .challenge}
 
 ## Corner or Edge Cases
 
@@ -266,8 +275,9 @@ Let's consider a new function, which purpose is to normalize a single light curv
 
 ~~~
 def normalize_lc(df,mag_col):
-    max_val = models.max_mag(df,mag_col)
-    lc = df[mag_col]/max_val
+    min = models.min_mag(df,mag_col)
+    max = models.max_mag((df-min),mag_col)
+    lc = (df[mag_col]-min)/max
     return lc
 ~~~
 {: .language-python}
@@ -279,11 +289,10 @@ to have zeros in return. However, since we have division in this function, it wi
 and array of 'NaN' instead of this.
 
 With this in mind,
-let us add a few edge cases to our parametrisation of `test_normalize_lc`.
-We will add two extra tests,
+let us create a test `test_normalize_lc` with parametrization
 corresponding to an input array of all 0,
 and an input array of all 1.
-
+**CONTINUE EDITING HERE**
 ~~~
 parametrization
 ~~~
