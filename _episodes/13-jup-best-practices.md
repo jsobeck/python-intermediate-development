@@ -51,7 +51,7 @@ the most important rules of keeping your notebooks in a good condition:
 3. **Structure first**.Think about the structure of the notebook before you start working, and write the headers of the sections
    in advance. For most astronomical projects, you will need at least four sections: imports, loading the data,
    pre-processing the data and analysis itself. Remember, that you can create subsections using secondary headers!
-   It is also a good idea to put global variables, that later will be used across the code (e.g. sizes of samples, time ranges for
+   It is also a good idea to put variables, that later will be used across the code (e.g. sizes of samples, time ranges for
    period search, magnitude limits) into a separate section before the analysis, and create temporary sections for classes and functions
    (which ultimately should be extracted into `.py` files).
 4. **Utilize Markdown cells** for detailed explanations of what is done in the following code cells. Markdown cells
@@ -80,10 +80,11 @@ the most important rules of keeping your notebooks in a good condition:
 > > 2. **One notebook - one task**. Since for now our notebook is small, we can leave it as it is. However, potentially we could
 > >    have put visualization into a separate notebook.
 > > 3. **Structure first**. Currently the structure of the notebook is not well-defined. Add headers for the sections dedicated to the
-> >    inspection of the datasets and visialization of a light curve, put all imports into the corresponding section and move the global variables
-> >    (in our case we can `plot_filter_labels`, `plot_filter_colors` and `plot_filter_symbols`) into a separate section. 
-> > 4. **Keep it short**. Since our notebook has less than a hundred cells, for now we don't have this problem.
-> > 5. **Utilize Markdown cells**. Give a brief description for each section (you can put it in the same cell as the headers).
+> >    inspection of the datasets and visialization of a light curve, put all imports into the corresponding section and move the variables
+> >    that we are likely to use in different sections to the 'Params' section
+> >    (in our case it can be `plot_filter_labels`, `plot_filter_colors` and `plot_filter_symbols`). 
+> > 5. **Keep it short**. Since our notebook has less than a hundred cells, for now we don't have this problem.
+> > 6. **Utilize Markdown cells**. Give a brief description for each section (you can put it in the same cell as the headers).
 > >    Use some formatting, e.g. in the 'Dataset inspection' section create a table listing the number of objects in current versions of
 > >    each of the datasets.
 > {: .solution}
@@ -123,7 +124,7 @@ the most important rules of keeping your notebooks in a good condition:
 > <p style="text-align: center;">'Restart and Run All' button helps you to ensure that your notebook is executed in the right order</p>
 
 > ## Shouldn't We Clear Outputs of All Cells Before Pushing the Notebook into a Repo?
-> There is an old recommendation to always use ` Restart Kernel and Clear Outputs of All Cells`
+> There is an old recommendation to always use `Restart Kernel and Clear Outputs of All Cells`
 > before committing the notebook into a Git repository. This recommendation comes from the fact that
 > native Git tools for comparing different versions of the files (`git diff`) do not handle `.ipynb` files well.
 > Plots in the outputs cause especially inconvenient.
