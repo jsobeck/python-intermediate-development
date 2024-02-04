@@ -30,10 +30,14 @@ using observations that come from different instruments.
 >
 > For developing and testing our software project, we will use two RR Lyrae candidates variability datasets.
 >
-> The first dataset contains observations coming from the Kepler space telescope. In this dataset, all observations are related to the same source,
-> i.e. the whole table represents a single light curve. The second dataset contains observations of 25 astronomical sources. Considering that the datasets
-> come from different instruments, they also have different formats and column names - a common situation in real life. It is always a good idea to develop your
-> software in such a way that it remains usable even if the format of the input data has changed.
+> The first dataset, `kepler_RRLyr.csv`, contains observations coming from the Kepler space telescope.
+> In this dataset, all observations are related to the same source,
+> i.e. the whole table represents a single light curve. The second dataset, `lsst_RRLyr.pkl`, contains synthetic
+> observations of 25 presumably variable sources from the LSST Data Preview 0. Considering that the datasets
+> come from different instruments, they also have different formats and column names - a common
+> situation in real life. It is always a good idea to develop your
+> software in such a way that it remains usable even if the format of the input data has changed. We will use the differences
+> of the datasets to illustrate some of the topics during this workshop.
 {: .callout}
 
 The project is not finished and contains some errors.
