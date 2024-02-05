@@ -27,7 +27,11 @@ in the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.
 to an unprepared software developer they may seem overly formalized and impractical. 
 However, in the essense, requirements are simply a set of wishes for the software,
 described in an univocal and well-defined terms. Writing requirements it least in some form
-can save you weeks of time.
+can save you weeks of time.  
+The [Software taskforce of the Transients and Variable Stars
+LSST Science Collaboration](https://lsst-tvssc.github.io/taskForces/software_task_force.html) 
+maintains documents related to various software development aspects including templates
+for software requirements and design documents for the astronomical software.
 
 ## Types of Requirements
 
