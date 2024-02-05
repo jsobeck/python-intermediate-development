@@ -100,13 +100,13 @@ Let's recall the solution requirements we discussed in the previous episode:
 
 - *Functional Requirements*:
   - SR1.1.1 (from UR1.1):
-   reading light curves in different formats such as .csv, .json, .dat
-  - SR1.2.1 (from UR1.1):
-    filtering out rows with NaN entries
+    reading light curves in different formats such as .csv, .json, .dat;
+  - SR1.1.2 (from UR1.1):
+    filtering out rows with NaN entries, where NaNs can be filled with different values (e.g. -99.9);
 - *Non-functional Requirements*:
-  - SR2.1.1 (from UR2.1):
-     provide an initial estimate when the light curve will peak in under 10 second
-  - 
+  - SR1.2.3 (from UR1.2):
+    be able to determine periods for a hunder of light curves in under a minute.
+    
 ### How Should We Test These Requirements?
 
 Sometimes when we make changes to our code that we plan to test later,
