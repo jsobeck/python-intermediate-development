@@ -171,7 +171,7 @@ object. Our dataset contains observations in all bands for a number of sources, 
 to a) pick only one source, and b) separate the observations in different bands from each other.
 There are many ways of how to do this, but for the purposes of this episode we
 will store the single-source observational data for each band in a dictionary
-and then apply the `mag_mag` function defined in our `models.py` file.
+and then apply the `max_mag` function defined in our `models.py` file.
 
 First, pick an id of the object that we will investigate.
 ~~~
@@ -256,7 +256,7 @@ models.max_mag(lc['g'],'psfMag')
 >
 {: .challenge}
 
-How would you check if our `max_max` function works correctly?
+How would you check if our `max_mag` function works correctly?
 
 The answer that just came to your head, in all likelyhood, sounds similar
 to this: "I would pass a simple DataFrame to this function and check manually
@@ -323,7 +323,7 @@ See what kind of output this code produces.
 {: .challenge}
 
 Our crude test failed and didn't even inform us about the reasons they failed.
-Sure there should be a better way to do this.
+Surely there must be a better way to do this.
 
 ### Testing Frameworks
 
@@ -356,7 +356,7 @@ We will use a testing framework called `pytest`. It is a Python
 package that can be installed, as usual, using `pip`:
 
 ~~~
-$ python -m pip3 install pytest
+$ python -m pip install pytest
 ~~~
 {: .language-bash}
 
