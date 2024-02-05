@@ -34,20 +34,30 @@ Test **parameterisation** gives us this.
 So instead of writing a separate function for each different test,
 we can **parameterise** the tests with multiple test inputs.
 For example, in `tests/test_models.py` let us rewrite
-the `test_mean_mag_zeros()` and `test_mean_mag_integers()`
+the `test_max_mag_zeros()` and `test_max_mag_integers()`
 into a single test function:
 
 ~~~
 @pytest.mark.parametrize(
-    "test, expected",
+    "test_df, test_colname, expected",
     [
-        ({'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}, 0),
-        ({'a':np.array([1, 2, 3]), 'b':np.array([4, 5, 6])}, 2),
+        (pd.DataFrame(data=[[1, 5, 3], 
+                            [7, 8, 9], 
+                            [3, 4, 1]], 
+                      columns=list("abc")),
+        "a",
+        7),
+        (pd.DataFrame(data=[[0, 0, 0], 
+                            [0, 0, 0], 
+                            [0, 0, 0]], 
+                      columns=list("abc")),
+        "b",
+        0),
     ])
-def test_mean_mag(test, expected):
-    """Test mean function works for array of zeroes and positive integers."""
-    from lightcurves.models import mean_mag
-    npt.assert_array_equal(mean_mag(np.array(test), 'a'), np.array(expected))
+def test_max_mag(test_df, test_colname, expected):
+    """Test max function works for array of zeroes and positive integers."""
+    from lcanalyzer.models import max_mag
+    assert max_mag(test_df, test_colname) == expected
 ~~~
 {: .language-python}
 
@@ -62,16 +72,22 @@ so the function is called over each of these inputs automatically when this test
 
 We specify these as arguments to the `parameterize()` decorator,
 firstly indicating the names of these arguments that will be
-passed to the function (`test`, `expected`),
+passed to the function (`test_df`, `test_colname`, `expected`),
 and secondly the actual arguments themselves that correspond to each of these names -
-the input data (the `test` argument),
+the input data (the `test_df` and `test_colname` arguments),
 and the expected result (the `expected` argument).
-In this case, we are passing in two tests to `test_mean_mag()` which will be run sequentially.
+In this case, we are passing in two tests to `test_max_mag()` which will be run sequentially.
 
-So our first test will run `mean_mag()` on `{'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}` (our `test` argument),
-and check to see if it equals `0` with `magCol` set to `'a'` (our `expected` argument).
-Similarly, our second test will run `mean_mag()`
-with `{'a':np.array([1, 2, 3]), 'b':np.array([4, 5, 6])}` and check it produces `2` with `magCol` set to `'a'`.
+So our first test will run `max_mag()` on `pd.DataFrame(data=[[1, 5, 3], 
+                            [7, 8, 9], 
+                            [3, 4, 1]], 
+                      columns=list("abc"))` (our `test_df` argument),
+and check to see if it equals `7` (our `expected` argument) with `test_colname` set to `'a'`.
+Similarly, our second test will run `max_mag()`
+with `pd.DataFrame(data=[[0, 0, 0], 
+                            [0, 0, 0], 
+                            [0, 0, 0]], 
+                      columns=list("abc"))` and check it produces `0` with `test_colname` set to `'b'`.
 
 The big plus here is that we don't need to write separate functions for each of the tests -
 our test code can remain compact and readable as we write more tests
@@ -79,44 +95,47 @@ and adding more tests scales better as our code becomes more complex.
 
 > ## Exercise: Write Parameterised Unit Tests
 >
-> Rewrite your test functions for `max_mag()` and `min_mag()` to be parameterised,
-> adding in new test cases for each of them.
+> Rewrite your test functions for `mean_mag()` to be parameterised,
+> adding in new test cases. A suggestion: instead of filling the DataFrames manually,
+> you can use `numpy.random.randint()` and `numpy.random.rand()` functions.
+> When developing these tests you are likely to see a situation when
+> the expected value is a float. In some cases your code may produce
+> the output that has some uncertainty; how do you test such functions?
+> For this situation, `pytest` has a special function called `approx`.
+> It allow you to assert _similar_ values with some degree of precision;
+> e.g. `assert func(input) == pytest.approx(expected,0.01))` returns `True`
+> in when `(expected-0.01)<=func(input)<=(expected+0.01)`. Similar solutions
+> exist for `numpy.testing` and other testing tools.
 >
 > > ## Solution
 > > ~~~
 > > ...
+> > # Parametrization for mean_mag function testing
 > > @pytest.mark.parametrize(
-> >     "test, expected",
+> >     "test_df, test_colname, expected",
 > >     [
-> >         ({'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}, 0),
-> >         ({'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}, 5),
-> >         ({'a': np.array([-3, 4, 6]), 'b': np.array([9, -4, 7])}, 9),
+> >         (pd.DataFrame(data=[[1, 5, 3], 
+> >                             [7, 8, 9], 
+> >                             [3, 4, 1]], 
+> >                       columns=list("abc")),
+> >         "a",
+> >         pytest.approx(3.66,0.01)),
+> >         (pd.DataFrame(data=[[0, 0, 0], 
+> >                             [0, 0, 0], 
+> >                             [0, 0, 0]], 
+> >                       columns=list("abc")),
+> >         "b",
+> >         0),
 > >     ])
-> >def test_max_mag():
-> >    from lightcurves.models import max_mag
-> >     """Test max function works for zeroes, positive integers, mix of positive/negative integers."""
-> >    npt.assert_array_equal(max_mag(test, 'b'), expected)
-> >
-> >
-> > @pytest.mark.parametrize(
-> >     "test, expected",
-> >     [
-> >         ({'a': np.array([0, 0, 0]), 'b': np.array([0, 0, 0])}, 0),
-> >         ({'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}, 3),
-> >         ({'a': np.array([-3, 4, 6]), 'b': np.array([9, -4, 7])}, -4),
-> >     ])
-> > def test_min_mag(test, expected):
-> >     """Test min function works for zeroes, positive integers, mix of positive/negative integers."""
-> >     from lightcurves.models import min_mag
-> >     npt.assert_array_equal(min_mag(np.array(test)), np.array(expected))
-> > ...
+> > def test_mean_mag(test_df, test_colname, expected):
+> >     """Test mean function works for array of zeroes and positive integers."""
+> >     from lcanalyzer.models import mean_mag
+> >     assert mean_mag(test_df, test_colname) == expected
 > > ~~~
 > > {: .language-python}
 > {: .solution}
 >
 {: .challenge}
-
-Try them out!
 
 Let's commit our revised `test_models.py` file and test cases to our `test-suite` branch
 (but don't push them to the remote repository just yet!):
@@ -134,9 +153,11 @@ Pytest can't think of test cases for us.
 We still have to decide what to test and how many tests to run.
 Our best guide here is economics:
 we want the tests that are most likely to give us useful information that we don't already have.
-For example, if `mean_mag({'a': np.array([0, 1, 2]), 'b': np.array([3, 4, 5])}, 'a')` works,
-there's probably not much point testing `mean_mag({'a': np.array([1, 2, 3]), 'b': np.array([4, 5, 6])}, 'a')`,
-since it's hard to think of a bug that would show up in one case but not in the other.
+For example, if testing our `max_mag` function with a DataFrame filled with integers works,
+there's probably not much point testing the same function with a DataFrame filled with other integers,
+since it's hard to think of a bug that would show up in one case but not in the other. Note, however,
+that for other function this statement may be incorrect (e.g. if your function is supposed to discard values
+above a certain threshold, and your test case input does not contain such values at all).
 
 Now, we should try to choose tests that are as different from each other as possible,
 so that we force the code we're testing to execute in all the different ways it can -
@@ -149,7 +170,7 @@ that is used by Pytest and using that, we can find this out:
 
 ~~~
 $ pip3 install pytest-cov
-$ python -m pytest --cov=lightcurves.models tests/test_models.py
+$ python -m pytest --cov=lcanalyzer.models tests/test_models.py
 ~~~
 {: .language-bash}
 
@@ -157,59 +178,61 @@ So here, we specify the additional named argument `--cov` to `pytest`
 specifying the code to analyse for test coverage.
 
 ~~~
-====================================== test session starts ======================================
-platform darwin -- Python 3.9.13, pytest-7.1.2, pluggy-1.0.0
-rootdir: /Users/riley/Desktop/InterPython_Workshop_Example
-plugins: remotedata-0.4.0, anyio-3.5.0, mock-3.10.0, filter-subpackage-0.1.2, xdist-3.2.1, astropy-header-0.2.2, doctestplus-0.12.1, astropy-0.10.0, cov-4.0.0, openfiles-0.5.0, hypothesis-6.75.2, arraydiff-0.5.0
-collected 4 items                                                                               
+==================================== test session starts ====================================
+platform linux -- Python 3.11.5, pytest-8.0.0, pluggy-1.4.0
+rootdir: /home/alex/InterPython_Workshop_Example
+plugins: anyio-4.2.0, cov-4.1.0
+collected 9 items                                                                           
 
-tests/test_models.py ....                                                                 [100%]
+tests/test_models_full.py .........                                                   [100%]
 
----------- coverage: platform darwin, python 3.9.13-final-0 ----------
-Name                    Stmts   Miss  Cover
--------------------------------------------
-lightcurves/models.py      12      1    92%
--------------------------------------------
-TOTAL                      12      1    92%
+---------- coverage: platform linux, python 3.11.5-final-0 -----------
+Name                   Stmts   Miss  Cover
+------------------------------------------
+lcanalyzer/models.py      12      1    92%
+------------------------------------------
+TOTAL                     12      1    92%
 
 
-======================================= 4 passed in 0.88s =======================================
+===================================== 9 passed in 0.70s =====================================
 ~~~
 {: .output}
 
-Here we can see that our tests are doing very well - 92% of statements in `inflammation/models.py` have been executed.
+Here we can see that our tests are doing well - 92% of statements in `lcanalyzer/models.py` have been executed.
 But which statements are not being tested?
 The additional argument `--cov-report term-missing` can tell us:
 
 ~~~
-$ python -m pytest --cov=lightcurves.models --cov-report term-missing tests/test_models.py
+$ python -m pytest --cov=lcanalyzer.models --cov-report term-missing tests/test_models.py
 ~~~
 {: .language-bash}
 
 ~~~
 ...
-====================================== test session starts ======================================
-platform darwin -- Python 3.9.13, pytest-7.1.2, pluggy-1.0.0
-rootdir: /Users/riley/Desktop/InterPython_Workshop_Example
-plugins: remotedata-0.4.0, anyio-3.5.0, mock-3.10.0, filter-subpackage-0.1.2, xdist-3.2.1, astropy-header-0.2.2, doctestplus-0.12.1, astropy-0.10.0, cov-4.0.0, openfiles-0.5.0, hypothesis-6.75.2, arraydiff-0.5.0
-collected 4 items                                                                               
+==================================== test session starts ====================================
+platform linux -- Python 3.11.5, pytest-8.0.0, pluggy-1.4.0
+rootdir: /home/alex/InterPython_Workshop_Example
+plugins: anyio-4.2.0, cov-4.1.0
+collected 11 items                                                                          
 
-tests/test_models.py ....                                                                 [100%]
+tests/test_models.py ..                                                               [ 18%]
+tests/test_models_full.py .........                                                   [100%]
 
----------- coverage: platform darwin, python 3.9.13-final-0 ----------
-Name                    Stmts   Miss  Cover   Missing
------------------------------------------------------
-lightcurves/models.py      12      1    92%   19
------------------------------------------------------
-TOTAL                      12      1    92%
+---------- coverage: platform linux, python 3.11.5-final-0 -----------
+Name                   Stmts   Miss  Cover   Missing
+----------------------------------------------------
+lcanalyzer/models.py      12      1    92%   20
+----------------------------------------------------
+TOTAL                     12      1    92%
 
 
-======================================= 4 passed in 0.87s =======================================
+==================================== 11 passed in 0.71s =====================================
+
 ...
 ~~~
 {: .output}
 
-So there's still one statement not being tested at line 19,
+So there's still one statement not being tested at line 20,
 and it turns out it's in the function `load_dataset()`.
 Here we should consider whether or not to write a test for this function,
 and, in general, any other functions that may not be tested.

@@ -198,10 +198,10 @@ jobs:
     # Next we need to checkout out repository, and set up Python
     # A 'name' is just an optional label shown in the log - helpful to clarify progress - and can be anything
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python 3.11
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: "3.11"
 
@@ -305,7 +305,8 @@ and then selecting `commits`
 (located just above the code directory listing on the right,
 alongside the last commit message and a small image of a timer).
 
-![Continuous Integration with GitHub Actions - Initial Build](../fig/ci-initial-ga-build.png){: .image-with-shadow width="1000px"}
+![GitHub Commits](../fig/23_CI_1_Commits.svg){: .image-with-shadow width="600px"}
+![Continuous Integration with GitHub Actions - Initial Build](../fig/23_CI_2_Commits.svg){: .image-with-shadow width="800px"}
 
 You'll see a list of commits for this branch,
 and likely see an orange marker next to the latest commit
@@ -318,13 +319,11 @@ Hopefully after a while, the marker will turn into a green tick indicating a suc
 Clicking it gives you even more information about the build,
 and selecting `Details` link takes you to a complete log of the build and its output.
 
-![Continuous Integration with GitHub Actions - Build Log](../fig/ci-initial-ga-build-log.png){: .image-with-shadow width="1000px"}
+![Continuous Integration with GitHub Actions - Build Details](../fig/23_CI_3_Build.png){: .image-with-shadow width="800px"}
 
 The logs are actually truncated; selecting the arrows next to the entries -
 which are the `name` labels we specified in the `main.yml` file -
 will expand them with more detail, including the output from the actions performed.
-
-![Continuous Integration with GitHub Actions - Build Details](../fig/ci-initial-ga-build-details.png){: .image-with-shadow width="1000px"}
 
 GitHub Actions offers these continuous integration features
 as a completely free service for public repositories,
@@ -364,9 +363,9 @@ So, our `.github/workflows/main.yml` should look like the following:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.10", "3.11"]
 
-    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
+    runs-on: ${{ matrix.os }}
 
 ...
 
@@ -376,12 +375,12 @@ So, our `.github/workflows/main.yml` should look like the following:
     # Next we need to checkout out repository, and set up Python
     # A 'name' is just an optional label shown in the log - helpful to clarify progress - and can be anything
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
-        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+        python-version: ${{ matrix.python-version }}
 ...
 ~~~
 {: .language-yaml}
@@ -403,7 +402,7 @@ $ git push
 
 If we go to our GitHub build now, we can see that a new job has been created for each permutation.
 
-![Continuous Integration with GitHub Actions - Build Matrix](../fig/ci-ga-build-matrix.png){: .image-with-shadow width="1000px"}
+![Continuous Integration with GitHub Actions - Build Matrix](../fig/23_CI_4_Checks.png){: .image-with-shadow width="800px"}
 
 Note all jobs running in parallel (up to the limit allowed by our account)
 which potentially saves us a lot of time waiting for testing results.
