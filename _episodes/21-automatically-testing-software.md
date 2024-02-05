@@ -114,7 +114,7 @@ from two sources: the Kepler Space Telescope and LSST Data Preview 0.
 > ## Don't forget about the best practices
 >
 > Following the best practices from [the corresponding section](/13-jup-best-practices/index.html#jupyter-lab-best-practices),
-> let's start with drafting the structure of our notebook.
+> let's start with creating a new notebook and drafting its structure.
 > Using headers in the markdown cells, determine the sections of your notebook.
 > 
 > > ## Solution
