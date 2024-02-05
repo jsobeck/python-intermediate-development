@@ -310,39 +310,83 @@ print(list(result))
 ~~~
 {: .output}
 
-> ## Exercise: Check Inflammation Patient Data Against A Threshold Using Map
-> Write a new function called `daily_above_threshold()` in our inflammation `models.py` that
-> determines whether or not each daily inflammation value for a given patient
-> exceeds a given threshold.
->
-> Given a patient row number in our data, the patient dataset itself, and a given threshold,
-> write the function to use `map()` to generate and return a list of booleans,
-> with each value representing whether or not the daily inflammation value for that patient
-> exceeded the given threshold.
->
-> Ordinarily we would use Numpy's own `map` feature,
-> but for this exercise, let's try a solution without it.
->
+> ## Exercise: Use Pandas Map and Apply functions for processing complex data 
+> 
+> For common tasks, like filtering the table following a certain condition or applying arithmetical operations
+> to table columns, with libraries like `numpy` and `pandas` it is always better to use built-in functions, since
+> they are often optimized and work much faster than using `map` with a lambda function. However, not all data
+> can be processed using already existing solutions.
+> Apart from the Python built-in `map` function, `numpy` and `pandas` have their own implementations
+> of mapping, optimized for processing
+> numpy arrays, Series and DataFrames. One situation in which it can be really handy is
+> when you have a table with complex data stored in the columns, e.g. lists, dicts or arrays.
+> For example, some surveys use such a format for storing light curves or spectra measurements.
+> Let's simulate such situation:
+> ~~~
+> # Create an empty list where we will be storing our light curves
+> lcs = []
+> # For each observed object
+> for obj_id in lc_datasets["lsst"]["objectId"].unique():
+>     # Create an empty dict for the light curves of this object
+>     lc = {}
+>     lc['objectId'] = obj_id
+>     for b in bands:
+>         filt_band_obj = (lc_datasets["lsst"]["objectId"] == obj_id) & (
+>             lc_datasets["lsst"]["band"] == b
+>         )
+>         # The observations in each band are converted to lists and stored as dict elements
+>         lc[b+'_'+mag_col] = np.array(lc_datasets["lsst"][filt_band_obj][mag_col])
+>         lc[b+'_'+time_col] = np.array(lc_datasets["lsst"][filt_band_obj][time_col])
+>     lcs.append(lc)
+> # Turn the list of dicts into a DataFrame    
+> lcs = pd.DataFrame.from_records(lcs)
+> {: .language-python}
+> In the resulting DataFrame each row will contain an Id of the observed object, six columns for
+> magnitude arrays and six corresponding columns with time stamps arrays. How would you deal with NaNs
+> in the data stored in this format? For this task, you may find to be useful
+> functions `pd.map`, `pd.apply`, `np.where` and `np.isnan`. Try to come up with a solution where you replace
+> the NaN values with zeros, and with a solution where you discard them entirely (don't forget to remove
+> the corresponding time stamps values too!). 
+> 
 > > ## Solution
+> > Let's consider two possible solutions: the one where we replace the NaN values with zeros,
+> > and the one where we discard NaN values entirely.
+> > For the first solution we can use `pd.map` function, that act similarly to the classic Python `map`,
+> > but works only for `pd.Series`.
 > > ~~~
-> > def daily_above_threshold(patient_num, data, threshold):
-> >     """Determine whether or not each daily inflammation value exceeds a given threshold for a given patient.
-> >
-> >     :param patient_num: The patient row number
-> >     :param data: A 2D data array with inflammation data
-> >     :param threshold: An inflammation threshold to check each daily value against
-> >     :returns: A boolean list representing whether or not each patient's daily inflammation exceeded the threshold
-> >     """
-> >
-> >     return list(map(lambda x: x > threshold, data[patient_num]))
+> > b = 'u'
+> > lcs[b+'_'+mag_col+'_cleaned'] = lcs[b+'_'+mag_col].map(lambda l: np.where(np.isnan(l),0,l))
 > > ~~~
 > > {: .language-python}
 > >
-> > Note: `map()` function returns a map iterator object
-> > which needs to be converted to a collection object
-> > (such as a list, dictionary, set, tuple)
-> > using the corresponding "factory" function (in our case `list()`).
+> > For the second solution, we need to remove not only NaN values from the magnitude arrays,
+> > but also corresponding to them time stamps. For this reason, we cannot use `pd.map` as it
+> > can be used only with `pd.Series` (e.g. with only one column). However, another Pandas function,
+> > `apply`, can accept rows.
+> > ~~~
+> > b = "u"
+> > # Create column names variables for better readability
+> > mcol = b + "_" + mag_col
+> > tcol = b + "_" + time_col
+> > mcol_cl = mcol + "_cleaned"
+> > tcol_cl = tcol + "_cleaned"
+> > # The new cleaned columns, `mcol_cl` and `tcol_cl`, contain the result of applying
+> > # a lambda function to each row (`axis=1` argument). The lambda function returns a tuple
+> > # of two numpy arrays, filtered according to the mask that is `False` for the elements that
+> > # are NaNs and `True` to all other elements.
+> > lcs[[mcol_cl, tcol_cl]] = lcs.apply(
+> >     lambda l: (
+> >         l[mcol][~np.isnan(l[mcol])],
+> >         l[tcol][~np.isnan(l[mcol])],
+> >     ),
+> >     axis=1,
+> >     result_type="expand",
+> > )
+> > ~~~
+> > {: .language-python}
 > {: .solution}
+> Note: you're better not to store a table with any kinds of collections (lists, tuples, dictionaries or arrays)
+> in the columns in a '.csv' file, since reading and parsing it correctly can take a lot of effort.
 {: .challenge}
 
 #### Comprehensions for Mapping/Data Generation
@@ -613,78 +657,6 @@ def sum_of_squares(sequence):
 ~~~
 {: .language-python}
 
->## Exercise: Extend Inflammation Threshold Function Using Reduce
-> Extend the `daily_above_threshold()` function you wrote previously
-> to return a count of the number of days a patient's inflammation is over the threshold.
-> Use `reduce()` over the boolean array that was previously returned to generate the count,
-> then return that value from the function.
->
-> You may choose to define a separate function to pass to `reduce()`,
-> or use an inline lambda expression to do it (which is a bit trickier!).
->
-> Hints:
-> - Remember that you can define an `initialiser` value with `reduce()`
->   to help you start the counter
-> - If defining a lambda expression,
->   note that it can conditionally return different values using the syntax
->   `<value> if <condition> else <another_value>` in the expression.
->
-> > ## Solution
-> > Using a separate function:
-> > ~~~
-> > def daily_above_threshold(patient_num, data, threshold):
-> >     """Count how many days a given patient's inflammation exceeds a given threshold.
-> >
-> >     :param patient_num: The patient row number
-> >     :param data: A 2D data array with inflammation data
-> >     :param threshold: An inflammation threshold to check each daily value against
-> >     :returns: An integer representing the number of days a patient's inflammation is over a given threshold
-> >     """
-> >     def count_above_threshold(a, b):
-> >         if b:
-> >             return a + 1
-> >         else:
-> >             return a
-> >
-> >    # Use map to determine if each daily inflammation value exceeds a given threshold for a patient
-> >    above_threshold = map(lambda x: x > threshold, data[patient_num])
-> >    # Use reduce to count on how many days inflammation was above the threshold for a patient
-> >    return reduce(count_above_threshold, above_threshold, 0)
-> > ~~~
-> > {: .language-python}
-> >
-> > Note that the `count_above_threshold` function used by `reduce()`
-> > was defined within the `daily_above_threshold()` function
-> > to limit its scope and clarify its purpose
-> > (i.e. it may only be useful as part of `daily_above_threshold()`
-> > hence being defined as an inner function).
-> >
-> > The equivalent code using a lambda expression may look like:
-> >
-> > ~~~
-> > from functools import reduce
-> >
-> > ...
-> >
-> > def daily_above_threshold(patient_num, data, threshold):
-> >     """Count how many days a given patient's inflammation exceeds a given threshold.
-> >
-> >     :param patient_num: The patient row number
-> >     :param data: A 2D data array with inflammation data
-> >     :param threshold: An inflammation threshold to check each daily value against
-> >     :returns: An integer representing the number of days a patient's inflammation is over a given threshold
-> >     """
-> >
-> >     above_threshold = map(lambda x: x > threshold, data[patient_num])
-> >     return reduce(lambda a, b: a + 1 if b else a, above_threshold, 0)
-> > ~~~
-> > {: .language-python}
-> Where could this be useful?
-> For example, you may want to define the success criteria for a trial if, say,
-> 80% of patients do not exhibit inflammation in any of the trial days, or some similar metrics.
->{: .solution}
-{: .challenge}
-
 ## Decorators
 
 Finally, we will look at one last aspect of Python where functional programming is coming handy.
@@ -773,6 +745,8 @@ and can even make multiple decorated versions using different decorators.
 > One small task you might find a useful case for a decorator is
 > measuring the time taken to execute a particular function.
 > This is an important part of performance profiling.
+> While in the Jupyter Lab you can use cell magics for this task,
+> in `.py` file a decorator is a suitable replacement.
 >
 > Write a decorator which you can use to measure the execution time of the decorated function
 > using the [time.process_time_ns()](https://docs.python.org/3/library/time.html#time.process_time_ns) function.
