@@ -20,10 +20,14 @@ The requirements of our software are the basis on which the whole project rests 
 if we get the requirements wrong, we'll build the wrong software.
 However, it's unlikely that we'll be able to determine all of the requirements upfront.
 Especially when working in a research context,
-requirements are flexible and change as we develop our software. There are 
-guidelines for preparing and carrying out a requirements analysis. A
-comprehensive overview how to prepare and report requirements can be
-in the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.ieee.org/document/278253).
+requirements are flexible and change as we develop our software. While there are 
+guidelines for preparing and carrying out a requirements analysis (e.g. a
+comprehensive overview can be found 
+in the [IEEE Guide for Software Requirements Specifications](https://ieeexplore.ieee.org/document/278253)),
+to an unprepared software developer they may seem overly formalized and impractical. 
+However, in the essense, requirements are simply a set of wishes for the software,
+described in an univocal and well-defined terms. Writing requirements it least in some form
+can save you weeks of time.
 
 ## Types of Requirements
 
@@ -32,7 +36,8 @@ but at a high level a useful way to split them is into
 *business requirements*,
 *user requirements*,
 and *solution requirements*.
-Let's take a look at these now.
+While this terminology comes from business, we can adapt
+it to the academia reality. Let's take a look at these now.
 
 ### Business Requirements
 
@@ -43,9 +48,8 @@ These are captured in a Business Requirements Specification.
 
 For adapting our research light curve project, example business requirements could include:
 
-- BR1: Analyzing transient light curves, such as a Supernova Ia light curve,
-requires a new type of analysis to be implemented.
-
+- BR1: Functionality for analyzing periodic light curves, such as observations of RR Lyrae that we already have;
+- BR2: Functionality for analyzing transient light curves, such as observations of Supernovae Ia;
 
 ### User (or Stakeholder) Requirements
 
@@ -57,29 +61,38 @@ These are typically captured in a User Requirements Specification.
 For our light curve project,
 they could include:
 
-- UR1.1 (from BR1):
-support for statistical measures in the analysis of light curves
-    (report the position of the peaks, peaks, etc. )
+- UR1.1 (from BR1): a possibility to process light curves from different surveys;
+- UR1.2 (from BR1): support of a period determination algorithm;
+
+For the second business requirements, the user requirements can be the following:
+
+- UR2.1 (from BR2): support of a transient event detection algorithm;
+- UR2.2 (from BR2): a possibility to automatically classify SNe types.
   
 ### Solution Requirements
 
-Solution (or product) requirements describe characteristics that software must have to
+Solution (or product) requirements describe characteristics that software has to have in order to
 satisfy the stakeholder requirements. They fall into two key categories:
 
 - *Functional requirements* focus on functionalities and features of a solution.
   For our software, building on our user requirements, e.g.:
     - SR1.1.1 (from UR1.1):
-      reading light curves in different formats such as .csv, .json, .dat
-    - SR1.2.1 (from UR1.1):
-      filtering out rows with NaN entries
+      reading light curves in different formats such as .csv, .json, .dat;
+    - SR1.1.2 (from UR1.1):
+      filtering out rows with NaN entries, where NaNs can be filled with different values (e.g. -99.9);
 - *Non-functional requirements* focus on
   *how* the behaviour of a solution is expressed or constrained,
   e.g. performance, security, usability, or portability.
   These are also known as *quality of service* requirements.
   For our project, e.g.:
-    - SR2.1.1 (from UR1.1):
-      provide an initial estimate when a light curve will peak 
-      in under 10 seconds
+    - SR1.2.3 (from UR1.2):
+      be able to determine periods for a hunder of light curves in under a minute.
+
+This way, the business, user and solution requirements correspond to the different levels of 
+implementation. Knowing the business requirements allows you to design the software in a more efficient way,
+e.g. by keeping in mind that the functionality for loading and pre-processing the light curves has to support not only periodic,
+but also transient light curves. At the same time, solution requirements often determine which tools you are
+going to use (e.g. whether you should take parallelization into account).
 
 #### The Importance of Non-functional Requirements
 
