@@ -116,6 +116,7 @@ from two sources: the Kepler Space Telescope and LSST Data Preview 0.
 > Following the best practices from [the corresponding section](/13-jup-best-practices/index.html#jupyter-lab-best-practices),
 > let's start with drafting the structure of our notebook.
 > Using headers in the markdown cells, determine the sections of your notebook.
+> 
 > > ## Solution
 > > We can start with the following sections:
 > > 1. Imports
@@ -126,7 +127,9 @@ from two sources: the Kepler Space Telescope and LSST Data Preview 0.
 > > 6. Trying the model.py functions
 > > 7. Test development
 > > If we need something else, we can always add it later.
-> {: .colution}
+> > 
+> {: .solution}
+> 
 {: .challenge}
 
 Now let's open our data and have a look at it. For this we will use `pandas` package.
@@ -206,7 +209,9 @@ for b in bands:
 > > It seems very likely that we will need the variable `bands`
 > > many times in the future. Let's move it to the 'Parameters'
 > > section of the notebook.
-> {: .colution}
+> > 
+> {: .solution}
+> 
 {: .challenge}
 
 Have a look at the resulting dictionary: you will find that each element
@@ -236,15 +241,17 @@ models.max_mag(lc['g'],'psfMag')
 
 > ## Don't forget about the best practices
 > Do you see anything in the code we just typed that can be put in the 'Parameters'?
+> 
 > > ## Solution
 > > 
 > > It is better to put
-> > the magnitude column name, 'psfMag', in a variable (let's call it
-> > `colname_mag`) and declare it in the 'Parameters' section. Why? Because chances are, in the future
+> > the magnitude column name, 'psfMag', in a variable (let's call it `colname_mag`) and
+> > declare it in the 'Parameters' section. Why? Because chances are, in the future
 > > we will want to apply our code to another dataset with different column names,
 > > and if we continue using 'psfMag' across the notebook, later on we'll have to replace it
 > > either manually, or using 'Search' functionality. In a large notebook both actions are likely
 > > to produce errors.
+> > 
 > {: .solution}
 >
 {: .challenge}
