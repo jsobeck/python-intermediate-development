@@ -40,132 +40,35 @@ but it would be useful to be able to combine data from a range of different sour
 and with more data than just an array of numbers.
 
 ~~~
-data = np.array([[1., 2., 3.],
-                 [4., 5., 6.]])
+data = pd.DataFrame(data = [[1., 2., 3.],
+                            [4., 5., 6.]],
+                    columns = list('abc'))
 ~~~
 {: .language-python}
 
 Using this data structure has the advantage of
-being able to use NumPy operations to process the data
+being able to use Pandas operations to process the data
 and Matplotlib to plot it,
 but often we need to have more structure than this.
-For example, we may need to attach more information about the patients
-and store this alongside our measurements of inflammation.
+For example, we may need to attach more information about the object which light
+curve we analyse, such as cutout image of this source or its spectra.
 
-We can do this using the Python data structures we're already familiar with,
-dictionaries and lists.
-For instance, we could attach a name to each of our patients:
-
+In a way, we already encountered this problem when we needed to store light curves
+of a single object, but obtained in different bands. Our solution then was to use a dictionary
+where keys corresponded to the bands names, and values were the DataFrames with the measurements.
+Generally speaking, we can expand this solution by adding new elements with values of other
+data types. For example, we could write something like this:
 ~~~
-patients = [
-    {
-        'name': 'Alice',
-        'data': [1., 2., 3.],
-    },
-    {
-        'name': 'Bob',
-        'data': [4., 5., 6.],
-    },
-]
+lc = {}
+...
+lc['spectra'] = np.array([4,5,6]) 
 ~~~
 {: .language-python}
+Since Python distionaries can store elements of different types, there is nothing
+that would stop us from this. We can also make nested dictionaries, creating really complex data
+structures.
 
-> ## Exercise: Structuring Data
->
-> Write a function, called `attach_names`,
-> which can be used to attach names to our patient dataset.
-> When used as below, it should produce the expected output.
->
-> If you're not sure where to begin,
-> think about ways you might be able to effectively loop over two collections at once.
-> Also, don't worry too much about the data type of the `data` value,
-> it can be a Python list, or a NumPy array - either is fine.
->
-> ~~~
-> data = np.array([[1., 2., 3.],
->                  [4., 5., 6.]])
->
-> output = attach_names(data, ['Alice', 'Bob'])
-> print(output)
-> ~~~
-> {: .language-python}
->
-> ~~~
-> [
->     {
->         'name': 'Alice',
->         'data': [1., 2., 3.],
->     },
->     {
->         'name': 'Bob',
->         'data': [4., 5., 6.],
->     },
-> ]
-> ~~~
-> {: .output}
->
-> > ## Solution
-> >
-> > One possible solution, perhaps the most obvious,
-> > is to use the `range` function to index into both lists at the same location:
-> >
-> > ~~~
-> > def attach_names(data, names):
-> >     """Create datastructure containing patient records."""
-> >     output = []
-> >
-> >     for i in range(len(data)):
-> >         output.append({'name': names[i],
-> >                        'data': data[i]})
-> >
-> >     return output
-> > ~~~
-> > {: .language-python}
-> >
-> > However, this solution has a potential problem that can occur sometimes,
-> > depending on the input.
-> > What might go wrong with this solution?
-> > How could we fix it?
-> >
-> > > ## A Better Solution
-> > >
-> > > What would happen if the `data` and `names` inputs were different lengths?
-> > >
-> > > If `names` is longer, we'll loop through, until we run out of rows in the `data` input,
-> > > at which point we'll stop processing the last few names.
-> > > If `data` is longer, we'll loop through, but at some point we'll run out of names -
-> > > but this time we try to access part of the list that doesn't exist,
-> > > so we'll get an exception.
-> > >
-> > > A better solution would be to use the `zip` function,
-> > > which allows us to iterate over multiple iterables without needing an index variable.
-> > > The `zip` function also limits the iteration to whichever of the iterables is smaller,
-> > > so we won't raise an exception here,
-> > > but this might not quite be the behaviour we want,
-> > > so we'll also explicitly `assert` that the inputs should be the same length.
-> > > Checking that our inputs are valid in this way is an example of a precondition,
-> > > which we introduced conceptually in an earlier episode.
-> > >
-> > > If you've not previously come across the `zip` function,
-> > > read [this section](https://docs.python.org/3/library/functions.html#zip)
-> > > of the Python documentation.
-> > >
-> > > ~~~
-> > > def attach_names(data, names):
-> > >     """Create datastructure containing patient records."""
-> > >     assert len(data) == len(names)
-> > >     output = []
-> > >
-> > >     for data_row, name in zip(data, names):
-> > >         output.append({'name': name,
-> > >                        'data': data_row})
-> > >
-> > >     return output
-> > > ~~~
-> > > {: .language-python}
-> > {: .solution}
-> {: .solution}
-{: .challenge}
+Then we can get lost in them.
 
 ## Classes in Python
 
@@ -179,9 +82,9 @@ A class is a **template** (blueprint) for a structured piece of data,
 so when we create some data using a class,
 we can be certain that it has the same structure each time.
 
-With our list of dictionaries we had in the example above,
-we have no real guarantee that each dictionary has the same structure,
-e.g. the same keys (`name` and `data`) unless we check it manually.
+With our dictionaries we had in the examples befpre,
+we have no real guarantee that each dictionary has the same structure
+unless we check it manually. 
 With a class, if an object is an **instance** of that class
 (i.e. it was made using that template),
 we know it will have the structure defined by that class.
@@ -230,23 +133,24 @@ The behaviours we may have seen previously include:
 
 ## Encapsulating Data
 
-Let's start with a minimal example of a class representing our patients.
+Let's start with a minimal example of a class representing a light curve.
 
 ~~~
-# file: inflammation/models.py
+# file: lcanalyzer/models.py
 
-class Patient:
-    def __init__(self, name):
-        self.name = name
-        self.observations = []
+class Lightcurve:
+    def __init__(self, obj_id):
+        self.obj_id = obj_id
+        self.timestamps = []
+        self.mags = []
 
-alice = Patient('Alice')
-print(alice.name)
+star_obs = Lightcurve(obj_id)
+print(star_obs.obj_id)
 ~~~
 {: .language-python}
 
 ~~~
-Alice
+'3432323428908'
 ~~~
 {: .output}
 
@@ -257,16 +161,16 @@ inside a new instance of the class -
 this is very similar to **constructors** in other languages,
 so the term is often used in Python too.
 The `__init__` method is called every time we create a new instance of the class,
-as in `Patient('Alice')`.
+as in `Lightcurve(obj_id)`.
 The argument `self` refers to the instance on which we are calling the method
 and gets filled in automatically by Python -
 we do not need to provide a value for this when we call the method.
 
-Data encapsulated within our Patient class includes
-the patient's name and a list of inflammation observations.
+Data encapsulated within our Lightcurve class includes
+the object's id, a list containing timestamps and a list containing magnitude measurements.
 In the initialiser method,
-we set a patient's name to the value provided,
-and create a list of inflammation observations for the patient (initially empty).
+we set an object's id  to the value provided,
+and create the lists for observations (initially empty).
 Such data is also referred to as the attributes of a class
 and holds the current state of an instance of the class.
 Attributes are typically hidden (encapsulated) internal object details
@@ -278,7 +182,7 @@ to allow other objects to interact with this class' instances.
 ## Encapsulating Behaviour
 
 In addition to representing a piece of structured data
-(e.g. a patient who has a name and a list of inflammation observations),
+(e.g. an object that has an id and the lists with timestamps and magnitude observations),
 a class can also provide a set of functions, or **methods**,
 which describe the **behaviours** of the data encapsulated in the instances of that class.
 To define the behaviour of a class we add functions which operate on the data the class contains.
@@ -294,16 +198,19 @@ As we saw with the `__init__` method previously,
 we do not need to explicitly provide a value for the `self` argument,
 this is done for us by Python.
 
-Let's add another method on our Patient class that adds a new observation to a Patient instance.
+**CONTINUE FROM HERE**
+
+Let's add another method on our Lightcurve class that adds observations to a Lightcurve instance.
 
 ~~~
-# file: inflammation/models.py
+# file: lcanalyzer/models.py
 
-class Patient:
-    """A patient in an inflammation study."""
-    def __init__(self, name):
-        self.name = name
-        self.observations = []
+class Lightcurve:
+    """A Lightcurve """
+    def __init__(self, obj_id):
+        self.obj_id = obj_id
+        self.timestamps = []
+        self.mags = []
 
     def add_observation(self, value, day=None):
         if day is None:
