@@ -212,7 +212,7 @@ jobs:
 
     - name: Test with PyTest
       run: |
-        python -m pytest --cov=lightcurves.models tests/test_models.py
+        python -m pytest --cov=lcanalyzer.models tests/test_models.py
 ~~~
 {: .language-yaml}
 
