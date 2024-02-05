@@ -28,8 +28,8 @@ At this point, it becomes particularly important that the software be designed s
 What should be the overall structure of our software,
 how should all the pieces of functionality fit together,
 and how should we work towards fulfilling this overall design throughout development?
- Similar to the software requirements, the actual implementation and timeline https://ieeexplore.ieee.org/document/278258
-of the development process should be documented. One example are the
+ Similar to the software requirements, the actual implementation and timeline
+of the development process should be documented. One example of are the
 [IEEE software design descriptions](https://ieeexplore.ieee.org/document/278258). 
 
 **Software design**, covers some of the following aspects:
