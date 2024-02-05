@@ -240,7 +240,7 @@ Case solved! Now we can `Terminate` the debugging (by clicking on a 'Stop' butto
 >  
 {: .callout}
 
-> ## Exercise: Extracting the Functions into `.py` files
+> ## Optional Exercise: Extracting the Functions into `.py` Files
 >
 > Following the best practices that you learned on Day 1,
 > put the `calc_stats` function into the `models.py` file
