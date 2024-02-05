@@ -250,7 +250,7 @@ Each of these steps are:
   although it's the same number as `3.10` -
   would be interpreted as the wrong version!
 - **Install latest version of pip, dependencies, and our lightcurves package:**
-  In order to locally install our `lightcurves` package
+  In order to locally install our `lcanalyzer` package
   it's good practice to upgrade the version of pip that is present first,
   then we use pip to install our package dependencies.
   Once installed, we can use `pip3 install -e .` as before to install our own package.
@@ -363,7 +363,7 @@ So, our `.github/workflows/main.yml` should look like the following:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10"]
 
     runs-on: ${{ matrix.os }}
 
