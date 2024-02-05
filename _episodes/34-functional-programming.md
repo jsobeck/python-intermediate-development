@@ -201,8 +201,8 @@ so we will get the right result regardless of when or where the code runs.
 > updating the state of internal local variables, etc.;
 > instead, they will provide a functional-appearing interface
 > but may use non-functional features internally.
-> An example of this is the [Python Pandas library](https://pandas.pydata.org/)
-> for data manipulation built on top of NumPy -
+> An example of this is the [Pandas library](https://pandas.pydata.org/)
+> that we already used in previous episodes -
 > most of its functions appear pure
 > as they return new data objects instead of changing existing ones.
 {: .callout}
