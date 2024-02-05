@@ -163,6 +163,15 @@ A few notes before we start.
 > please [open an issue]({{ site.github.repository_url }}/issues/new) describing what you see
 > and how it differs from the lesson content.
 > Feel free to add as many screenshots as necessary to clarify the issue.
+> 
 {: .callout}
+
+> ## Let Us Know About the Issues
+> The original materials were adapted specifically for this workshop. They weren't used before,
+> and it is possible that they contain typos, code errors, or underexplained or unclear moments.
+> Please, let us know about these issues. It will help us to improve the materials and make
+> the next workshop better.
+> 
+{: .testimonial}
 
 {% include links.md %}
