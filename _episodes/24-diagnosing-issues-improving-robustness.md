@@ -275,8 +275,9 @@ Let's consider a new function, which purpose is to normalize a single light curv
 
 ~~~
 def normalize_lc(df,mag_col):
-    min = models.min_mag(df,mag_col)
-    max = models.max_mag((df-min),mag_col)
+    # Normalize a single light curve
+    min = min_mag(df,mag_col)
+    max = max_mag((df-min),mag_col)
     lc = (df[mag_col]-min)/max
     return lc
 ~~~
@@ -290,31 +291,80 @@ and array of 'NaN' instead of this.
 
 With this in mind,
 let us create a test `test_normalize_lc` with parametrization
-corresponding to an input array of all 0,
+corresponding to an input array of random integers, an input array of all 0,
 and an input array of all 1.
-**CONTINUE EDITING HERE**
+
 ~~~
-parametrization
+# Parametrization for normalize_lc function testing
+@pytest.mark.parametrize(
+    "test_input_df, test_input_colname, expected",
+    [
+        (pd.DataFrame(data=[[8, 9, 1], 
+                            [1, 4, 1], 
+                            [1, 2, 4], 
+                            [1, 4, 1]], 
+                      columns=list("abc")),
+        "b",
+        pd.Series(data=[1,0.285,0,0.285])),
+        (pd.DataFrame(data=[[1, 1, 1], 
+                            [1, 1, 1], 
+                            [1, 1, 1], 
+                            [1, 1, 1]], 
+                      columns=list("abc")),
+        "b",
+        pd.Series(data=[0.,0.,0.,0.])),
+        (pd.DataFrame(data=[[0, 0, 0], 
+                            [0, 0, 0], 
+                            [0, 0, 0], 
+                            [0, 0, 0]], 
+                      columns=list("abc")),
+        "b",
+         pd.Series(data=[0.,0.,0.,0.])),
+    ])
+def test_normalize_lc(test_input_df, test_input_colname, expected):
+    """Test how normalize_lc function works for arrays of positive integers."""
+    from lcanalyzer.models_full import normalize_lc
+    import pandas.testing as pdt
+    pdt.assert_series_equal(normalize_lc(test_input_df,test_input_colname),expected,check_exact=False,atol=0.01,check_names=False)
 ~~~
 {: .language-python}
 
+Pay attention, that since this our `normalize_lc` function returns a `pandas.Series`, we have to use the corresponding assert function
+(`pdt.assert_series_equal`). Another thing to pay attention to is the arguments of this function. Not only we specify the `atol` for 
+ensuring that there will be no issues when comparing floats, but also set `check_names=False`, since by default the `Series` returned from
+the `normalize_lc` function will have the name of the column for which we performed the normalization. Custom assert functions, such as
+`assert_series_equal`, often take a large number of arguments that specify which parameters of the objects have to be compared. E.g. you can 
+opt out of comparing the `dtypes` of a `Series`, the column orders of a `DataFrame` and so on.
+
 Running the tests now from the command line results in the following assertion error,
-due to the division by zero as we predicted.
+due to the division by zero as we predicted. Note that not only the test case with all zeros
+fails, but also the test with all ones too, due to the extraction of the `min` value!
 
 ~~~
-E           AssertionError:
+E   AssertionError: Series are different
+E   
+E   Series values are different (100.0 %)
+E   [index]: [0, 1, 2, 3]
+E   [left]:  [nan, nan, nan, nan]
+E   [right]: [0.0, 0.0, 0.0, 0.0]
+E   At positional index 0, first diff: nan != 0.0
 
+testing.pyx:173: AssertionError
+====================================================================================== short test summary info ======================================================================================
+FAILED tests/test_models_full.py::test_normalize_lc[test_input_df1-b-expected1] - AssertionError: Series are different
+FAILED tests/test_models_full.py::test_normalize_lc[test_input_df2-b-expected2] - AssertionError: Series are different
 ~~~
 {: .output}
 
 How can we fix this? For example, we can replace all the NaNs in the
-return DataFrame with zeros using `pandas` function `fillna`. 
+return Series with zeros using `pandas` function `fillna`. 
 ~~~
 ...
 def normalize_lc(df,mag_col):
     # Normalize a single light curve
-    max_val = models.max_mag(df,mag_col)
-    lc = df[mag_col]/max_val
+    min = min_mag(df,mag_col)
+    max = max_mag((df-min),mag_col)
+    lc = (df[mag_col]-min)/max
     lc = lc.fillna(0)
     return lc
 ...
@@ -325,14 +375,14 @@ def normalize_lc(df,mag_col):
 
 In the previous section, we made a few design choices for our `normalize_lc` function:
 
-1. We are implicitly converting any `NaN` and negative values to 0,
-2. Normalising a constant 0 array of magnitudes in an identical array of 0s,
+1. We are implicitly converting any `NaN` to 0,
+2. Normalising a constant array of magnitudes in an identical array of 0s,
 3. We don't warn the user of any of these situations.
 
 This could have be handled differently.
 We might decide that we do not want to silently make these changes to the data,
 but instead to explicitly check that the input data satisfies a given set of assumptions
-(e.g. no negative values)
+(e.g. no negative values or no values outside of a certain range)
 and raise an error if this is not the case.
 Then we can proceed with the normalisation,
 confident that our normalisation function will work correctly.
@@ -351,8 +401,8 @@ a string, a dictionary, or another object that is not a DataFrame, or from
 passing a DataFrame filled with strings or lists.
 
 As an example, let us change the behaviour of the `normalize_lc()` function
-to raise an error if some magnitudes are smaller than '-90' (since '-99.' or '-99.9' is a 
-common filler value for 'NaNs').
+to raise an error if some magnitudes are smaller than '-90' (since in astronomical data '-99.' or '-99.9' are
+common filler values for 'NaNs').
 Edit our function by adding a precondition check like so:
 
 ~~~
@@ -371,16 +421,85 @@ is part of the standard Python library
 and is used to indicate that the function received an argument of the right type,
 but of an inappropriate value.
 
+In `lcanalyzer/models.py`
 ~~~
-parametrization with '-99.9'
+def normalize_lc(df,mag_col):
+    # Normalize a light curve
+    if any(df[mag_col].abs() > 90):
+        raise ValueError(mag_col+' contains values with abs() larger than 90!')
+    min = min_mag(df,mag_col)
+    max = max_mag((df-min),mag_col)
+    lc = (df[mag_col]-min)/max
+    lc = lc.fillna(0)
+    return lc
 ~~~
 {: .language-python}
 
+Here we added a condition that if our input data contains values that are larger than 90 or smaller than -90,
+we should raise a `ValueError` with the corresponding message.
+
+In `tests/test_models.py`
+~~~
+# Parametrization for normalize_lc function testing with ValueError
+@pytest.mark.parametrize(
+    "test_input_df, test_input_colname, expected, expected_raises",
+    [
+        (pd.DataFrame(data=[[8, 9, 1], 
+                            [1, 4, 1], 
+                            [1, 2, 4], 
+                            [1, 4, 1]], 
+                      columns=list("abc")),
+        "b",
+        pd.Series(data=[1,0.285,0,0.285]),
+        None),
+        (pd.DataFrame(data=[[1, 1, 1], 
+                            [1, 1, 1], 
+                            [1, 1, 1], 
+                            [1, 1, 1]], 
+                      columns=list("abc")),
+        "b",
+        pd.Series(data=[0.,0.,0.,0.]),
+        None),
+        (pd.DataFrame(data=[[0, 0, 0], 
+                            [0, 0, 0], 
+                            [0, 0, 0], 
+                            [0, 0, 0]], 
+                      columns=list("abc")),
+        "b",
+        pd.Series(data=[0.,0.,0.,0.]),
+        None),
+        (pd.DataFrame(data=[[8, 9, 1], 
+                            [1, -99.9, 1], 
+                            [1, 2, 4], 
+                            [1, 4, 1]], 
+                      columns=list("abc")),
+        "b",
+        pd.Series(data=[1,0.285,0,0.285]),
+        ValueError),
+    ])
+def test_normalize_lc(test_input_df, test_input_colname, expected,expected_raises):
+    """Test how normalize_lc function works for arrays of positive integers."""
+    from lcanalyzer.models_full import normalize_lc
+    import pandas.testing as pdt
+    if expected_raises is not None:
+        with pytest.raises(expected_raises):
+            pdt.assert_series_equal(normalize_lc(test_input_df,test_input_colname),expected,check_exact=False,atol=0.01,check_names=False)
+    else:
+        pdt.assert_series_equal(normalize_lc(test_input_df,test_input_colname),expected,check_exact=False,atol=0.01,check_names=False)
+~~~
+{: .language-python}
+
+And in the `test_models` we had to add to our parametrization a new function argument 
+called `expected_raises`, which is equal to `None`
+for the test cases where our function should not invoke any raises. In the testing function itself
+we are adding an `if` statement to separately handling the situation when a raise is expected.
+
 Be sure to commit your changes so far and push them to GitHub.
 
-> ## Optional Exercise: Add a Precondition to Check the Correct Type and Shape of Data
+> ## Optional Exercise: Add a Precondition to Check the Correct Type and Column Names
 >
-> Add preconditions to check that data is an `ndarray` object and that it is of the correct shape.
+> Add preconditions to check that input data is `DataFrame` object and that its columns
+> contain the column for which we have to perform normalization.
 > Add corresponding tests to check that the function raises the correct exception.
 > You will find the Python function
 > [`isinstance`](https://docs.python.org/3/library/functions.html#isinstance)
@@ -388,10 +507,6 @@ Be sure to commit your changes so far and push them to GitHub.
 > [`TypeError`](https://docs.python.org/3/library/exceptions.html#TypeError).
 > Once you are done, commit your new files,
 > and push the new commits to your remote repository on GitHub.
->
-> > ## Solution
-> >
-> {: .solution}
 >
 {: .challenge}
 
@@ -419,21 +534,29 @@ Let's re-run Pylint over our project after having added some more code to it.
 From the project root do:
 
 ~~~
-pylint
+pylint lcanalyzer
 ~~~
 {: .language-bash}
 
 You may see something like the following in Pylint's output:
 
 ~~~
-
+************* Module lcanalyzer.models
+lcanalyzer/models.py:45:0: C0116: Missing function or method docstring (missing-function-docstring)
+lcanalyzer/models.py:49:4: W0622: Redefining built-in 'min' (redefined-builtin)
+lcanalyzer/models.py:50:4: W0622: Redefining built-in 'max' (redefined-builtin)
 ~~~
 {: .language-bash}
 
-
+The above output indicates that by using the local variables called `min` and `max` in the `normalize_lc` function, 
+we have redefined a built-in Python functions called `min` and `max`. This isn’t a good idea and may have some 
+undesired effects (e.g. if you redefine a built-in name in a global scope you may cause yourself 
+some trouble which may be difficult to trace).
 
 > ## Exercise: Fix Code Style Errors
->
+>Rename our local variable `min` and `max` to something else (e.g. call it `min_data` and `max_data`),
+> and use `black lcanalyzer/models.py` to automatically reformat your code in agreement with `PEP8`.
+> Then rerun your tests, commit these latest changes and push them to GitHub using our usual feature branch workflow.
 > 
 {: .challenge}
 
@@ -455,7 +578,13 @@ we can add the following step to our `steps` in `.github/workflows/main.yml`:
 
 ~~~
 ...
-   add CI pylint
+   - name: Check .py style with Pylint
+      run: |
+        python3 -m pylint --fail-under=0 --reports=y lcanalyzer
+
+    - name: Check .ipynb style with Pylint
+      run: |
+        python3 -m nbqa pylint --fail-under=0 light-curve-analysis.ipynb --disable=C0114
 ...
 ~~~
 {: .language-bash}
