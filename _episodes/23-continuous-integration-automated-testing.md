@@ -370,7 +370,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11"]
 
-    runs-on: ${% raw %}${{ matrix.os }}{% endraw %}
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
 ...
 
@@ -385,7 +385,7 @@ jobs:
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
-        python-version: ${% raw %}${{ matrix.python-version }}{% endraw %}
+        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
 ...
 ~~~
 {: .language-yaml}
