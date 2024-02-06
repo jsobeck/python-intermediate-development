@@ -334,6 +334,7 @@ section of the Python documentation.
 > - return the length of the lightcurve as the length of the `Variable` instance;
 > - check that we are passing the suitable type of the data to our `add_observations` method, convert it into `np.array`
 >   and check that the length of all observational arrays is the same.
+>   
 > A hint: you may want to write _several_ methods for the second task.
 >
 > > ## Solution
@@ -670,8 +671,10 @@ before we can properly initialise a `RRLyrae` model with their data.
 >   of a given object in a given band (the object ID and the band is determined by the user);
 > - It should be able to return a dictionary with the light curve of a given object in a given
 >   band (use the `Lightcurve` class we developed earlier).
+> 
 > In addition to this, develop a visualization function for the light curve that you can obtain
 > with your new classes (you can use the one that we had in the `lcanalyzer/views.py` as a template).
+>
 > Try using Test Driven Development for any features you add:
 > write the tests first, then add the feature.
 >
