@@ -323,7 +323,7 @@ and an input array of all 1.
     ])
 def test_normalize_lc(test_input_df, test_input_colname, expected):
     """Test how normalize_lc function works for arrays of positive integers."""
-    from lcanalyzer.models_full import normalize_lc
+    from lcanalyzer.models import normalize_lc
     import pandas.testing as pdt
     pdt.assert_series_equal(normalize_lc(test_input_df,test_input_colname),expected,check_exact=False,atol=0.01,check_names=False)
 ~~~
@@ -479,7 +479,7 @@ In `tests/test_models.py`
     ])
 def test_normalize_lc(test_input_df, test_input_colname, expected,expected_raises):
     """Test how normalize_lc function works for arrays of positive integers."""
-    from lcanalyzer.models_full import normalize_lc
+    from lcanalyzer.models import normalize_lc
     import pandas.testing as pdt
     if expected_raises is not None:
         with pytest.raises(expected_raises):
