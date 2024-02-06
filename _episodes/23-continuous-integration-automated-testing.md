@@ -365,7 +365,7 @@ So, our `.github/workflows/main.yml` should look like the following:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.8", "3.9", "3.10"]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
 ...
 
@@ -380,7 +380,7 @@ So, our `.github/workflows/main.yml` should look like the following:
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
 ...
 ~~~
 {: .language-yaml}
