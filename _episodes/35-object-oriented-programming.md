@@ -133,16 +133,16 @@ The behaviours we may have seen previously include:
 
 ## Encapsulating Data
 
-Let's start with a minimal example of a class representing a light curve.
+Let's start with a minimal example of a class representing a variable object.
 
 ~~~
-# file: lcanalyzer/models.py
-
-class Lightcurve:
+class Variable:
     def __init__(self, obj_id):
         self.obj_id = obj_id
-        self.timestamps = []
-        self.mags = []
+        self.lc = {
+                   'mjd': np.array([]),
+                   'mag': np.array([])
+                  }
 
 star_obs = Lightcurve(obj_id)
 print(star_obs.obj_id)
@@ -150,7 +150,7 @@ print(star_obs.obj_id)
 {: .language-python}
 
 ~~~
-'3432323428908'
+1405624461041897445
 ~~~
 {: .output}
 
@@ -161,16 +161,17 @@ inside a new instance of the class -
 this is very similar to **constructors** in other languages,
 so the term is often used in Python too.
 The `__init__` method is called every time we create a new instance of the class,
-as in `Lightcurve(obj_id)`.
+as in `Variable(obj_id)`.
 The argument `self` refers to the instance on which we are calling the method
 and gets filled in automatically by Python -
 we do not need to provide a value for this when we call the method.
 
-Data encapsulated within our Lightcurve class includes
-the object's id, a list containing timestamps and a list containing magnitude measurements.
+Data encapsulated within our Variable class includes
+the object's id, and a light curve dictionary, 
+that contains a numpy array with timestamps and a numpy array with magnitude measurements.
 In the initialiser method,
 we set an object's id  to the value provided,
-and create the lists for observations (initially empty).
+and create the numpy arrays for observations (initially empty).
 Such data is also referred to as the attributes of a class
 and holds the current state of an instance of the class.
 Attributes are typically hidden (encapsulated) internal object details
@@ -198,53 +199,57 @@ As we saw with the `__init__` method previously,
 we do not need to explicitly provide a value for the `self` argument,
 this is done for us by Python.
 
-**CONTINUE FROM HERE**
-
-Let's add another method on our Lightcurve class that adds observations to a Lightcurve instance.
+Let's add another method on our Variable class that adds observations to a Variable instance.
 
 ~~~
-# file: lcanalyzer/models.py
-
-class Lightcurve:
-    """A Lightcurve """
+class Variable:
+    """A Variable class"""
     def __init__(self, obj_id):
         self.obj_id = obj_id
-        self.timestamps = []
-        self.mags = []
+        self.lc = {
+                   'mjd': np.array([]),
+                   'mag': np.array([])
+                  }
 
-    def add_observation(self, value, day=None):
-        if day is None:
-            if self.observations:
-                day = self.observations[-1]['day'] + 1
-            else:
-                day = 0
+    def add_observations(self, mjds, mags, mag_errs=None):
+        """
+        Adds observations to the light curve.
+    
+        Args:
+          mjds: A vector of Modified Julian Dates (x values).
+          mags: A vector of luminosities (y values).
+        """
+        self.lc['mjd'] = np.array(mjds)
+        self.lc['mag'] = np.array(mags)
+        if mag_errs is not None:
+          self.lc['mag_errs'] = np.array(mag_errs)
 
-        new_observation = {
-            'day': day,
-            'value': value,
-        }
+        return
 
-        self.observations.append(new_observation)
-        return new_observation
 
-alice = Patient('Alice')
-print(alice)
-
-observation = alice.add_observation(3)
-print(observation)
-print(alice.observations)
+obj_id = lc_datasets['lsst']['objectId'].unique()[7]
+b = 'g'
+filt_band_obj = (lc_datasets['lsst']['objectId'] == obj_id) & (
+        lc_datasets['lsst']['band'] == b
+    )
+obj_obs = lc_datasets['lsst'][filt_band_obj]
+star = Variable(obj_id)
+star.add_observations(obj_obs[time_col],obj_obs[mag_col])
+print(star)
+print(star.lc)
 ~~~
 {: .language-python}
 
 ~~~
-<__main__.Patient object at 0x7fd7e61b73d0>
-{'day': 0, 'value': 3}
-[{'day': 0, 'value': 3}]
+<__main__.Variable object at 0x7fc0fb40a750>
+{'mjd': array([60559.2973682, 59791.3473572, 60559.2978172, 61017.0665232,
+       60281.1630512, 59840.2103322, 60560.2654012
+...
 ~~~
 {: .output}
 
-Note also how we used `day=None` in the parameter list of the `add_observation` method,
-then initialise it if the value is indeed `None`.
+Note also how we used `mag_errs=None` in the parameter list of the `add_observations` method,
+then initialise it if the value is not `None`, i.e. if the user passed magnitude errors.
 This is one of the common ways to handle an optional argument in Python,
 so we'll see this pattern quite a lot in real projects.
 
@@ -283,59 +288,36 @@ hence the name **dunder method**.
 When writing your own Python classes,
 you'll almost always want to write an `__init__` method,
 but there are a few other common ones you might need sometimes.
-You may have noticed in the code above that the method `print(alice)`
+You may have noticed in the code above that the method `print(star)`
 returned `<__main__.Patient object at 0x7fd7e61b73d0>`,
-which is the string representation of the `alice` object.
-We may want the print statement to display the object's name instead.
+which is the string representation of the `star` object.
+We may want the print statement to display the object's id instead.
 We can achieve this by overriding the `__str__` method of our class.
 
 ~~~
-# file: inflammation/models.py
-
-class Patient:
-    """A patient in an inflammation study."""
-    def __init__(self, name):
-        self.name = name
-        self.observations = []
-
-    def add_observation(self, value, day=None):
-        if day is None:
-            try:
-                day = self.observations[-1]['day'] + 1
-
-            except IndexError:
-                day = 0
-
-
-        new_observation = {
-            'day': day,
-            'value': value,
-        }
-
-        self.observations.append(new_observation)
-        return new_observation
-
+...
     def __str__(self):
-        return self.name
+      return str(self.obj_id)
 
 
-alice = Patient('Alice')
-print(alice)
+star = Variable(obj_id')
+print(star)
 ~~~
 {: .language-python}
 
 ~~~
-Alice
+1405624461041897445
 ~~~
 {: .output}
 
 These dunder methods are not usually called directly,
 but rather provide the implementation of some functionality we can use -
-we didn't call `alice.__str__()`,
-but it was called for us when we did `print(alice)`.
+we didn't call `star.__str__()`,
+but it was called for us when we did `print(star)`.
 Some we see quite commonly are:
 
-- `__str__` - converts an object into its string representation, used when you call `str(object)` or `print(object)`
+- `__str__` - converts an object into its string representation, used when you call `str(object)` or `print(object)`.
+  Pay attention that we had to convert our `self.obj_id` to string in order for this method to work
 - `__getitem__` - Accesses an object by key, this is how `list[x]` and `dict[x]` are implemented
 - `__len__` - gets the length of an object when we use `len(object)` - usually the number of items it contains
 
@@ -346,37 +328,64 @@ For a more complete list of these special methods,
 see the [Special Method Names](https://docs.python.org/3/reference/datamodel.html#special-method-names)
 section of the Python documentation.
 
-> ## Exercise: A Basic Class
+> ## Exercise: Useful Methods for the Variable Class
 >
-> Implement a class to represent a book.
-> Your class should:
->
-> - Have a title
-> - Have an author
-> - When printed using `print(book)`, show text in the format "title by author"
->
-> ~~~
-> book = Book('A Book', 'Me')
->
-> print(book)
-> ~~~
-> {: .language-python}
->
-> ~~~
-> A Book by Me
-> ~~~
-> {: .output}
->
+> Add several methods to our class, that would provide the following functionality:
+> - return the length of the lightcurve as the length of the `Variable` instance;
+> - check that we are passing the suitable type of the data to our `add_observations` method, convert it into `np.array`
+>   and check that the length of all observational arrays is the same.
+> A hint: you may want to write _several_ methods for the second task.
 > > ## Solution
+> > For the first task we can write our own `__len__` dunder method:
 > >
 > > ~~~
-> > class Book:
-> >     def __init__(self, title, author):
-> >         self.title = title
-> >         self.author = author
+> > class Variable:
+> > ...
+> > def __len__(self):
+> >     return len(self.lc["mjd"])
+> > ~~~
+> > {: .language-python}
+> > 
+> > For the second task we may want to break it into several features and write a function for
+> > each of them:
+> > ~~~
+> > class Variable:
+> > ...
 > >
-> >     def __str__(self):
-> >         return self.title + ' by ' + self.author
+> >   def convert_to_array(self,data):
+> >        # Check if the data is iterable and convert it into np.array, otherwise raise an exception
+> >        if not isinstance(data, np.ndarray):
+> >            if isinstance(data, (list,tuple,pd.Series)):
+> >                data = np.array(data)
+> >            elif isinstance(data, (int, float)):
+> >                data = np.array([data])
+> >            else:
+> >                raise ValueError("The data type of the input is incorrect!")
+> >        return data
+> >
+> >    def compare_len(self,arrs):
+> >        # Check that all arrays are of the same length
+> >        lens = [len(arr) for arr in arrs]
+> >        if len(set(lens)) > 1: # set() turns an iterable into a set of unique values.
+> >        # If the values are all the same, the set will contain only one element
+> >            raise ValueError("Passed timestamps and mags or mag_errs arrays have different lengths!")
+> >        return
+> >        
+> >   def add_observations(self, mjds, mags, mag_errs=None):
+> >        """
+> >        Adds observations to the light curve.
+> >
+> >        Args:
+> >          mjds: A vector of Modified Julian Dates (x values).
+> >          mags: A vector of luminosities (y values).
+> >          mag_errs: A vector of magnitude errors.
+> >        """
+> >        self.lc["mjd"] = self.convert_to_array(mjds)
+> >        self.lc["mag"] = self.convert_to_array(mags)
+> >        if mag_errs is not None:
+> >            self.lc["mag_errs"] = self.convert_to_array(mag_errs)
+> >        self.compare_len(self.lc.values())
+> >        return        
 > > ~~~
 > > {: .language-python}
 > {: .solution}
@@ -389,27 +398,22 @@ Properties are methods which behave like data -
 when we want to access them, we do not need to use brackets to call the method manually.
 
 ~~~
-# file: inflammation/models.py
-
-class Patient:
+class Variable:
     ...
 
     @property
-    def last_observation(self):
-        return self.observations[-1]
-
-alice = Patient('Alice')
-
-alice.add_observation(3)
-alice.add_observation(4)
-
-obs = alice.last_observation
-print(obs)
+    def mean_mag(self):
+        return np.mean(self.lc['mags'])
+...
+star = Variable(obj_id)
+...
+mean_mag = star.mean_mag
+print(mean_mag)
 ~~~
 {: .language-python}
 
 ~~~
-{'day': 1, 'value': 4}
+18.03180312045771
 ~~~
 {: .output}
 
@@ -435,71 +439,72 @@ which we need to be able to describe:
 
 ### Composition
 
-You should hopefully have come across the term **composition** already -
-in the novice Software Carpentry, we use composition of functions to reduce code duplication.
-That time, we used a function which converted temperatures in Celsius to Kelvin
-as a **component** of another function which converted temperatures in Fahrenheit to Kelvin.
+In object oriented programming, we can make things components of other things.
 
-In the same way, in object oriented programming, we can make things components of other things.
+We often use **composition** where we can say 'x *has a* y' -
+for example in our `lcanalyzer` project,
+we might want to say that a star _has_ a multiband lightcurve, 
+or that a lightcurve _has_ a single-band lightcurve.
 
-We often use composition where we can say 'x *has a* y' -
-for example in our inflammation project,
-we might want to say that a doctor *has* patients
-or that a patient *has* observations.
-
-In the case of our example, we're already saying that patients have observations,
-so we're already using composition here.
-We're currently implementing an observation as a dictionary with a known set of keys though,
-so maybe we should make an `Observation` class as well.
+In the case of our example, we're already saying that our varuable star has a lightcurve,
+so we're already using composition here. 
+We're currently implementing a single-band lightcurve as a dictionary with a known set of keys though,
+and in the previous examples we used a dictionary to store DataFrames with single-band observations
+to represent multi-band data. Nothing stops us from turning these dictionaries into
+proper classes.In fact, this is exactly what we should do. For our current class example
+it will look like this:
 
 ~~~
-# file: inflammation/models.py
+class Lightcurve:
+    """Class Lightcurve"""
+    def __init__(self, mjds=None, mags=None, mag_errs = None):
+        self.lc = {}
+        if mjds is not None:
+            self.lc = self.add_observations(mjds, mags, mag_errs)
 
-class Observation:
-    def __init__(self, day, value):
-        self.day = day
-        self.value = value
+    def add_observations(self, mjds, mags, mag_errs = None):
+        self.lc["mjds"] = self.convert_to_array(mjds)
+        self.lc["mags"] = self.convert_to_array(mags)
+        if mag_errs is not None:
+            self.lc["mag_errs"] = self.convert_to_array(mag_errs)
+        self.compare_len(self.lc.values())
+        return self.lc
+    
+    def convert_to_array(self,data):
+...
 
+class Variable:
+    """A Variable class"""
+
+    def __init__(self, obj_id):
+        self.obj_id = obj_id
+        self.mband_lc = {}
+    
+    def add_lc(self,band,mjds,mags,mag_errs=None):
+        self.mband_lc[band] = Lightcurve(mjds,mags,mag_errs)
+        return self.mband_lc
+        
     def __str__(self):
-        return str(self.value)
-
-class Patient:
-    """A patient in an inflammation study."""
-    def __init__(self, name):
-        self.name = name
-        self.observations = []
-
-    def add_observation(self, value, day=None):
-        if day is None:
-            try:
-                day = self.observations[-1].day + 1
-
-            except IndexError:
-                day = 0
-
-        new_observation = Observation(day, value)
-
-        self.observations.append(new_observation)
-        return new_observation
-
-    def __str__(self):
-        return self.name
+        return str(self.obj_id)
 
 
-alice = Patient('Alice')
-obs = alice.add_observation(3)
+star = Variable(obj_id)
+star.add_lc(band = b,mjds = obj_obs[time_col], mags = obj_obs[mag_col])
+star.mband_lc['g'].mean_mag
 
-print(obs)
 ~~~
 {: .language-python}
 
 ~~~
-3
+18.03180312045771
 ~~~
 {: .output}
 
 Now we're using a composition of two custom classes to
-describe the relationship between two types of entity in the system that we're modelling.
+describe the relationship between two types of entity in the system that we're modelling. The benefit of this 
+approach is that we can create a new class called e.g. `Asteroid` that will have its own analysis methods than will
+differ from those of the class `Variable`. The implementation of `Asteroid` class will be different, but it can
+still have the `Lightcurve`.
 
 ### Inheritance
 
@@ -510,12 +515,12 @@ If class `X` inherits from (*is a*) class `Y`,
 we say that `Y` is the **superclass** or **parent class** of `X`,
 or `X` is a **subclass** of `Y`.
 
-If we want to extend the previous example to also manage people who aren't patients
-we can add another class `Person`.
-But `Person` will share some data and behaviour with `Patient` -
-in this case both have a name and show that name when you print them.
-Since we expect all patients to be people (hopefully!),
-it makes sense to implement the behaviour in `Person` and then reuse it in `Patient`.
+Extending the previous example, we can recall that there are different types
+of variables. For example, we can have periodic variables, such as RR Lyrae, or transient ones,
+such as supernovae (or SNe for short). Periodic variables will need a method for 
+determining their periods, while transient ones will benefit from implementing
+an algorithm for SNe classification. Instead of writing these
+two classes completely independently, we can make them both the subclasses of the class `Variable`.
 
 To write our class in Python,
 we used the `class` keyword, the name of the class,
@@ -524,66 +529,29 @@ If the class **inherits** from another class,
 we include the parent class name in brackets.
 
 ~~~
-# file: inflammation/models.py
+class RRLyrae(Variable):
+    """A class for RR Lyrae stars."""
+    def __init__(self, obj_id):
+        super().__init__(obj_id)
+        self.period = None
 
-class Observation:
-    def __init__(self, day, value):
-        self.day = day
-        self.value = value
+    def period_determination(self, period_range=(0.1,3)):
+        """A function to determine the period"""
+        self.period = 0.3
+        return
 
-    def __str__(self):
-        return str(self.value)
-
-class Person:
-    def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return self.name
-
-class Patient(Person):
-    """A patient in an inflammation study."""
-    def __init__(self, name):
-        super().__init__(name)
-        self.observations = []
-
-    def add_observation(self, value, day=None):
-        if day is None:
-            try:
-                day = self.observations[-1].day + 1
-
-            except IndexError:
-                day = 0
-
-        new_observation = Observation(day, value)
-
-        self.observations.append(new_observation)
-        return new_observation
-
-alice = Patient('Alice')
-print(alice)
-
-obs = alice.add_observation(3)
-print(obs)
-
-bob = Person('Bob')
-print(bob)
-
-obs = bob.add_observation(4)
-print(obs)
+rr_lyrae = RRLyrae(obj_id)
+rr_lyrae.period_determination()
+print(rr_lyrae.mband_lc)
+print(rr_lyrae.period)
 ~~~
 {: .language-python}
 
 ~~~
-Alice
-3
-Bob
-AttributeError: 'Person' object has no attribute 'add_observation'
+{}
+0.3
 ~~~
 {: .output}
-
-As expected, an error is thrown because we cannot add an observation to `bob`,
-who is a Person but not a Patient.
 
 We see in the example above that to say that a class inherits from another,
 we put the **parent class** (or **superclass**) in brackets after the name of the **subclass**.
@@ -602,14 +570,14 @@ Python will search for it among the parent classes.
 The order in which it does this search is known as the **method resolution order** -
 a little more on this in the Multiple Inheritance callout below.
 
-The line `super().__init__(name)` gets the parent class,
+The line `super().__init__(obj_id)` gets the parent class,
 then calls the `__init__` method,
-providing the `name` variable that `Person.__init__` requires.
+providing the `obj_id` variable that `Variable.__init__` requires.
 This is quite a common pattern, particularly for `__init__` methods,
 where we need to make sure an object is initialised as a valid `X`,
 before we can initialise it as a valid `Y` -
-e.g. a valid `Person` must have a name,
-before we can properly initialise a `Patient` model with their inflammation data.
+e.g. a valid `Variable` must have an `obj_id`,
+before we can properly initialise a `RRLyrae` model with their data.
 
 
 > ## Composition vs Inheritance
@@ -677,135 +645,31 @@ before we can properly initialise a `Patient` model with their inflammation data
 {: .callout}
 
 
-> ## Exercise: A Model Patient
+> ## Exercise: A Supernovae Class
 >
 > Let's use what we have learnt in this episode and combine it with what we have learnt on
 > [software requirements](../31-software-requirements/index.html)
 > to formulate and implement a
 > [few new solution requirements](../31-software-requirements/index.html#exercise-new-solution-requirements)
-> to extend the model layer of our clinical trial system.
+> to extend the model layer of our `lcanalyzer`.
 >
-> Let's start with extending the system such that there must be
-> a `Doctor` class to hold the data representing a single doctor, which:
+> We had a business requirement BR2: "Functionality for analyzing transient light curves,
+> such as observations of Supernovae Ia" and the following user requirement
+> UR2.2: "a possibility to automatically classify SNe types". What kind of solution
+> requirements can you think of that would be needed to satisfy these business and user requirements?
 >
->   - must have a `name` attribute
->   - must have a list of patients that this doctor is responsible for.
->
-> In addition to these, try to think of an extra feature you could add to the models
-> which would be useful for managing a dataset like this -
-> imagine we're running a clinical trial, what else might we want to know?
+> Implement two new classes: a `TransientLightCurve`, that would inherit after the `Transient`,
+> and `Supernovae`, that would inherit after the `Variable` and had an attribute of
+> the class `TransientLightCurve`. Add a few new attributes to each of
+> these classes.
+> 
 > Try using Test Driven Development for any features you add:
 > write the tests first, then add the feature.
-> The tests have been started for you in `tests/test_patient.py`,
-> but you will probably want to add some more.
->
 > Once you've finished the initial implementation, do you have much duplicated code?
+> Can you think of any other classes that would be useful to implement?
 > Is there anywhere you could make better use of composition or inheritance
 > to improve your implementation?
 >
-> For any extra features you've added,
-> explain them and how you implemented them to your neighbour.
-> Would they have implemented that feature in the same way?
->
-> > ## Solution
-> > One example solution is shown below.
-> > You may start by writing some tests (that will initially fail),
-> > and then develop the code to satisfy the new requirements and pass the tests.
-> > ~~~
-> > # file: tests/test_patient.py
-> > """Tests for the Patient model."""
-> >
-> > def test_create_patient():
-> >     """Check a patient is created correctly given a name."""
-> >     from inflammation.models import Patient
-> >     name = 'Alice'
-> >     p = Patient(name=name)
-> >     assert p.name == name
-> >
-> > def test_create_doctor():
-> >     """Check a doctor is created correctly given a name."""
-> >     from inflammation.models import Doctor
-> >     name = 'Sheila Wheels'
-> >     doc = Doctor(name=name)
-> >     assert doc.name == name
-> >
-> > def test_doctor_is_person():
-> >     """Check if a doctor is a person."""
-> >     from inflammation.models import Doctor, Person
-> >     doc = Doctor("Sheila Wheels")
-> >     assert isinstance(doc, Person)
-> >
-> > def test_patient_is_person():
-> >     """Check if a patient is a person. """
-> >     from inflammation.models import Patient, Person
-> >     alice = Patient("Alice")
-> >     assert isinstance(alice, Person)
-> >
-> > def test_patients_added_correctly():
-> >     """Check patients are being added correctly by a doctor. """
-> >     from inflammation.models import Doctor, Patient
-> >     doc = Doctor("Sheila Wheels")
-> >     alice = Patient("Alice")
-> >     doc.add_patient(alice)
-> >     assert doc.patients is not None
-> >     assert len(doc.patients) == 1
-> >
-> > def test_no_duplicate_patients():
-> >     """Check adding the same patient to the same doctor twice does not result in duplicates. """
-> >     from inflammation.models import Doctor, Patient
-> >     doc = Doctor("Sheila Wheels")
-> >     alice = Patient("Alice")
-> >     doc.add_patient(alice)
-> >     doc.add_patient(alice)
-> >     assert len(doc.patients) == 1
-> > ...
-> > ~~~
-> > {: .language-python}
-> >
-> > ~~~
-> > # file: inflammation/models.py
-> > ...
-> > class Person:
-> >     """A person."""
-> >     def __init__(self, name):
-> >         self.name = name
-> >
-> >     def __str__(self):
-> >         return self.name
-> >
-> > class Patient(Person):
-> >     """A patient in an inflammation study."""
-> >     def __init__(self, name):
-> >         super().__init__(name)
-> >         self.observations = []
-> >
-> >     def add_observation(self, value, day=None):
-> >         if day is None:
-> >             try:
-> >                 day = self.observations[-1].day + 1
-> >             except IndexError:
-> >                 day = 0
-> >         new_observation = Observation(day, value)
-> >         self.observations.append(new_observation)
->         return new_observation
-> >
-> > class Doctor(Person):
-> >     """A doctor in an inflammation study."""
-> >     def __init__(self, name):
-> >         super().__init__(name)
-> >         self.patients = []
-> >
-> >     def add_patient(self, new_patient):
-> >         # A crude check by name if this patient is already looked after
-> >         # by this doctor before adding them
-> >         for patient in self.patients:
-> >             if patient.name == new_patient.name:
-> >                 return
-> >         self.patients.append(new_patient)
-> > ...
-> > ~~~
-> {: .language-python}
-> {: .solution}
 {: .challenge}
 
 {% include links.md %}
