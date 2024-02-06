@@ -390,7 +390,7 @@ jobs:
 ~~~
 {: .language-yaml}
 
-The ${{ }} are used as a means to reference configuration values from the matrix. 
+The `$\{{ }}` are used as a means to reference configuration values from the matrix. 
 This way, every possible permutation of Python versions 3.10 and 3.11 with the latest 
 versions of Ubuntu, Mac OS and Windows operating systems will be tested and we can expect 6 build jobs in total.
 
