@@ -585,40 +585,43 @@ before we can properly initialise a `RRLyrae` model with their data.
 > When deciding how to implement a model of a particular system,
 > you often have a choice of either composition or inheritance,
 > where there is no obviously correct choice.
-> For example, it's not obvious whether a photocopier *is a* printer and *is a* scanner,
-> or *has a* printer and *has a* scanner.
+> For example, it's not obvious whether a multi-messenger event (i.e. the one that has
+> information coming with different carriers, such as electromagnetic waves and gravitational
+> waves)
+> *is a* light curve and *is a* [chirp](https://www.ligo.org/science/GW-Inspiral.php),
+> or *has a* light curve and *has a* chirp.
 >
 > ~~~
-> class Machine:
+> class Signal:
 >     pass
 >
-> class Printer(Machine):
+> class Lightcurve(Signal):
 >     pass
 >
-> class Scanner(Machine):
+> class Chirp(Signal):
 >     pass
 >
-> class Copier(Printer, Scanner):
->     # Copier `is a` Printer and `is a` Scanner
+> class MultiMessengerEvent(Lightcurve, Chirp):
+>     # Multi-messenger event `is a` Lightcurve and `is a` Chirp
 >     pass
 > ~~~
 > {: .language-python}
 >
 > ~~~
-> class Machine:
+> class Signal:
 >     pass
 >
-> class Printer(Machine):
+> class Lightcurve(Signal):
 >     pass
 >
-> class Scanner(Machine):
+> class Chirp(Signal):
 >     pass
 >
-> class Copier(Machine):
+> class MultiMessengerEvent(Signal):
 >     def __init__(self):
->         # Copier `has a` Printer and `has a` Scanner
->         self.printer = Printer()
->         self.scanner = Scanner()
+>         # Multi-messenger event `has a` Lightcurve and `has a` Chirp
+>         self.lc = Lightcurve()
+>         self.chirp = Chirp()
 > ~~~
 > {: .language-python}
 >
@@ -637,11 +640,11 @@ before we can properly initialise a `RRLyrae` model with their data.
 >
 > **Multiple Inheritance** is when a class inherits from more than one direct parent class.
 > It exists in Python, but is often not present in other Object Oriented languages.
-> Although this might seem useful, like in our inheritance-based model of the photocopier above,
+> Although this might seem useful, like in our inheritance-based model of the Multi-messenger event above,
 > it's best to avoid it unless you're sure it's the right thing to do,
 > due to the complexity of the inheritance heirarchy.
 > Often using multiple inheritance is a sign you should instead be using composition -
-> again like the photocopier model above.
+> again like the Multi-messenger event model above.
 {: .callout}
 
 
