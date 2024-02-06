@@ -360,6 +360,11 @@ So, our `.github/workflows/main.yml` should look like the following:
 
 ~~~
 ...
+# now define a single job 'build' (but could define more)
+jobs:
+
+  build:
+  
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
