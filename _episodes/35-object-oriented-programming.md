@@ -798,8 +798,8 @@ before we can properly initialise a `RRLyrae` model with their data.
 > > ~~~
 > > {: .language-python}
 > >
-> > {: .solution}
->
+>  {: .solution}
+> 
 {: .challenge}
 
 > ## Optional Exercise: A Supernovae Class
