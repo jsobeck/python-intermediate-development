@@ -107,13 +107,13 @@ how we can test our software for light curve analysis.
 
 ## Lightcurve Data Analysis
 
-Let's go back to our [lightcurve analysis software project](/11-software-project/index.html#light-curve-analysis-project).
+Let's go back to our [lightcurve analysis software project](/python-intermediate-development/11-software-project/index.html#light-curve-analysis-project).
 Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
 from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
 > ## Don't forget about the best practices
 >
-> Following the best practices from [the corresponding section](/13-jup-best-practices/index.html),
+> Following the best practices from [the corresponding section](/python-intermediate-development/13-jup-best-practices/index.html),
 > let's start with creating a new notebook and drafting its structure.
 > Using headers in the markdown cells, determine the sections of your notebook.
 > 
