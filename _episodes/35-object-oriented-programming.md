@@ -647,8 +647,153 @@ before we can properly initialise a `RRLyrae` model with their data.
 > again like the Multi-messenger event model above.
 {: .callout}
 
+> ## Exercise: A Survey Class
+>
+> Use what we've learned to develop a class for processing the survey dataset itself.
+> First, create a new folder that we will call `lcanalyzeroop`. In this folder,
+> create a separate file called `lightcurve.py` - it will contain our
+> `Lightcurve` class. Another file, `survey.py`, will contain our Survey class.
+> These two files will correspond to the `models` level of our package. Also create
+> a file called `plot.py`, that will contain visualization functions and will correspond to the
+> `views` aspect.
+> As always, whenever it is convenient, you can start developing your code in a notebook (don't forget about the
+> best practices!), and then move the finished code in the `.py` files.
+> Alternatively, you can write the code right in the `.py` files and check its functionality
+> by importing those files in the notebook.
+> The solution requirements for the `Survey` class may look like this:
+> - This software should be able to read `.csv` and `.pkl` files;
+> - It should be able to give us the list of unique object IDs;
+> - It should be able to return a DataFrame with all the observations
+>   of a given object in a given band (the object ID and the band is determined by the user);
+> - It should be able to return a dictionary with the light curve of a given object in a given
+>   band (use the `Lightcurve` class we developed earlier).
+> In addition to this, develop a visualization function for the light curve that you can obtain
+> with your new classes (you can use the one that we had in the `lcanalyzer/views.py` as a template).
+> Try using Test Driven Development for any features you add:
+> write the tests first, then add the feature. 
+> > ## Solution
+> > An example of a minimal implementation can look like this:
+> > In `lcanalyzeroop/lightcurve.py`
+> > ~~~
+> > import pandas as pd
+> > import numpy as np
+> > 
+> > class Lightcurve:
+> >     """Class Lightcurve"""
+> > 
+> >     def __init__(self, mjds=None, mags=None, mag_errs=None):
+> >         self.lc = {}
+> >         if mjds is not None:
+> >             self.add_observations(mjds, mags, mag_errs)
+> > 
+> >     def add_observations(self, mjds, mags, mag_errs=None):
+> >         self.lc["mjds"] = self.convert_to_array(mjds)
+> >         self.lc["mags"] = self.convert_to_array(mags)
+> >         if mag_errs is not None:
+> >             self.lc["mag_errs"] = self.convert_to_array(mag_errs)
+> >         self.compare_len(self.lc.values())
+> >         return self.lc
+> > 
+> >     def convert_to_array(self, data):
+> >         if not isinstance(data, np.ndarray):
+> >             if isinstance(data, (list, tuple, pd.Series)):
+> >                 data = np.array(data)
+> >             elif isinstance(data, (int, float)):
+> >                 data = np.array([data])
+> >             else:
+> >                 raise ValueError("The data type of the input is incorrect!")
+> >         return data
+> > 
+> >     def compare_len(self, arrs):
+> >         lens = [len(arr) for arr in arrs]
+> >         if len(set(lens)) > 1:
+> >             raise ValueError(
+> >                 "Passed timestamps and mags or mag_errs arrays have different lengths!"
+> >             )
+> >         return
+> > 
+> >     @property
+> >     def mean_mag(self):
+> >         return np.mean(self.lc["mags"])
+> > 
+> >     def __len__(self):
+> >         return len(self.lc["mjds"])
+> > ~~~
+> > {: .language-python}
+> > In `lcanalyzer/survey.py`:
+> > ~~~
+> > from lcanalyzer_oop.lightcurve import *
+> > import pandas as pd
+> > 
+> > class Survey:
+> >     def __init__(
+> >         self,
+> >         filename,
+> >         id_col="objectId",
+> >         band_col="band",
+> >         time_col="expMidptMJD",
+> >         mag_col="psfMag",
+> >     ):
+> >         self.id_col = id_col
+> >         self.band_col = band_col
+> >         self.time_col = time_col
+> >         self.mag_col = mag_col
+> >         self.data = self.load_table(filename)
+> >         self.unique_objects = self.data[self.id_col].unique()
+> > 
+> >     def load_table(self, filename):
+> >         """Load a table from CSV file.
+> > 
+> >         :param filename: The name of the .csv file to load
+> >         :returns: pd.DataFrame with the data from the file.
+> >         """
+> >         if filename.endswith(".csv"):
+> >             df = pd.read_csv(filename)
+> >         elif filename.endswith(".pkl"):
+> >             df = pd.read_pickle(filename)
+> >         return df
+> > 
+> >     def get_obj_band_df(self, obj_id, band):
+> >         filt_band_obj = (self.data[self.id_col] == obj_id) & (
+> >             self.data[self.band_col] == band
+> >         )
+> >         return self.data[filt_band_obj]
+> > 
+> >     def get_lc(self, obj_id, band):
+> >         df = self.get_obj_band_df(obj_id, band)
+> >         lc = Lightcurve(mjds=df[self.time_col], mags=df[self.mag_col])
+> >         return lc.lc
+> > ~~~
+> > {: .language-python}
+> > In `lcanalyzeroop/plots.py`:
+> > ~~~
+> > """Module containing code for plotting a lightcurve."""
+> > 
+> > from matplotlib import pyplot as plt
+> >     
+> > def plotUnfolded(mjds,mags,mjd_label='Mjd (days)',mag_label='Mag',color='blue',marker='o'):
+> >     fig = plt.figure(figsize=(7,5))
+> >     ax = fig.add_subplot(1,1,1)
+> >     ax.scatter(
+> >         mjds,
+> >         mags,
+> >         color=color,
+> >         marker=marker
+> >     )
+> >     ax.minorticks_on()
+> >     ax.set_xlabel(mjd_label)
+> >     ax.set_ylabel(mag_label)
+> >     fig.tight_layout()
+> >     plt.show()
+> > 
+> > 
+> > ~~~
+> > {: .language-python}
+> > {: .solution}
+> 
+{: .challenge}
 
-> ## Exercise: A Supernovae Class
+> ## Optional Exercise: A Supernovae Class
 >
 > Let's use what we have learnt in this episode and combine it with what we have learnt on
 > [software requirements](../31-software-requirements/index.html)
