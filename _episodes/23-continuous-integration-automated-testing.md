@@ -338,7 +338,7 @@ we can use a feature called **build matrices**
 which really shows the value of using CI to test at scale.
 
 Suppose the intended users of our software use either Ubuntu, Mac OS, or Windows,
-and either have Python version 3.8, 3.9 or 3.10 installed,
+and either have Python version 3.10 or 3.11 installed,
 and we want to support all of these.
 Assuming we have a suitable test suite,
 it would take a considerable amount of time to set up testing platforms
