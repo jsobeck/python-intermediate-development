@@ -335,6 +335,7 @@ section of the Python documentation.
 > - check that we are passing the suitable type of the data to our `add_observations` method, convert it into `np.array`
 >   and check that the length of all observational arrays is the same.
 > A hint: you may want to write _several_ methods for the second task.
+>
 > > ## Solution
 > > For the first task we can write our own `__len__` dunder method:
 > >
@@ -388,7 +389,9 @@ section of the Python documentation.
 > >        return        
 > > ~~~
 > > {: .language-python}
+> > 
 > {: .solution}
+> 
 {: .challenge}
 
 ### Properties
@@ -670,7 +673,8 @@ before we can properly initialise a `RRLyrae` model with their data.
 > In addition to this, develop a visualization function for the light curve that you can obtain
 > with your new classes (you can use the one that we had in the `lcanalyzer/views.py` as a template).
 > Try using Test Driven Development for any features you add:
-> write the tests first, then add the feature. 
+> write the tests first, then add the feature.
+>
 > > ## Solution
 > > An example of a minimal implementation can look like this:
 > > In `lcanalyzeroop/lightcurve.py`
@@ -720,6 +724,7 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >         return len(self.lc["mjds"])
 > > ~~~
 > > {: .language-python}
+> > 
 > > In `lcanalyzer/survey.py`:
 > > ~~~
 > > from lcanalyzer_oop.lightcurve import *
@@ -765,6 +770,7 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >         return lc.lc
 > > ~~~
 > > {: .language-python}
+> > 
 > > In `lcanalyzeroop/plots.py`:
 > > ~~~
 > > """Module containing code for plotting a lightcurve."""
@@ -785,10 +791,9 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >     ax.set_ylabel(mag_label)
 > >     fig.tight_layout()
 > >     plt.show()
-> > 
-> > 
 > > ~~~
 > > {: .language-python}
+> > 
 > > {: .solution}
 > 
 {: .challenge}
