@@ -14,7 +14,7 @@ keypoints:
 As we have seen, we have different programming paradigms that are suitable for different problems
 and affect the structure of our code.
 In programming languages that support multiple paradigms, such as Python,
-we have the luxury of using elements of different paradigms paradigms and we,
+we have the luxury of using elements of different paradigms and we,
 as software designers and programmers,
 can decide how to use those elements in different architectural components of our software.
 Let's now circle back to the architecture of our software for one final look.
