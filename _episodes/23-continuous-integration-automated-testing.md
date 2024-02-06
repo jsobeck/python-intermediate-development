@@ -363,7 +363,7 @@ So, our `.github/workflows/main.yml` should look like the following:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.10", "3.11"]
 
     runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
@@ -387,9 +387,9 @@ So, our `.github/workflows/main.yml` should look like the following:
 
 The `{% raw %}${{ }}{% endraw %}` are used
 as a means to reference configuration values from the matrix.
-This way, every possible permutation of Python versions 3.8, 3.9, and 3.10
+This way, every possible permutation of Python versions 3.10 and 3.11
 with the latest versions of Ubuntu, Mac OS and Windows operating systems
-will be tested and we can expect 9 build jobs in total.
+will be tested and we can expect 6 build jobs in total.
 
 Let's commit and push this change and see what happens:
 
