@@ -671,14 +671,15 @@ before we can properly initialise a `RRLyrae` model with their data.
 >   of a given object in a given band (the object ID and the band is determined by the user);
 > - It should be able to return a dictionary with the light curve of a given object in a given
 >   band (use the `Lightcurve` class we developed earlier).
-> 
+>
 > In addition to this, develop a visualization function for the light curve that you can obtain
 > with your new classes (you can use the one that we had in the `lcanalyzer/views.py` as a template).
->
+> 
 > Try using Test Driven Development for any features you add:
 > write the tests first, then add the feature.
 >
 > > ## Solution
+> > 
 > > An example of a minimal implementation can look like this:
 > > In `lcanalyzeroop/lightcurve.py`
 > > ~~~
@@ -796,9 +797,9 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >     plt.show()
 > > ~~~
 > > {: .language-python}
-> > 
+> >
 > > {: .solution}
-> 
+>
 {: .challenge}
 
 > ## Optional Exercise: A Supernovae Class
