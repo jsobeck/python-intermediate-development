@@ -370,7 +370,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11"]
 
-    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
+    runs-on: ${{ matrix.os }}
 
 ...
 
@@ -382,19 +382,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
-        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+        python-version: ${{ matrix.python-version }}
 ...
 ~~~
 {: .language-yaml}
 
-The `{% raw %}${{ }}{% endraw %}` are used
-as a means to reference configuration values from the matrix.
-This way, every possible permutation of Python versions 3.10 and 3.11
-with the latest versions of Ubuntu, Mac OS and Windows operating systems
-will be tested and we can expect 6 build jobs in total.
+The `${{ }}` are used as a means to reference configuration values from the matrix. 
+This way, every possible permutation of Python versions 3.10 and 3.11 with the latest 
+versions of Ubuntu, Mac OS and Windows operating systems will be tested and we can expect 6 build jobs in total.
 
 Let's commit and push this change and see what happens:
 
