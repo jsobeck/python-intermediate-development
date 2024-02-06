@@ -34,15 +34,15 @@ that suit the way in which we expect to use it.
 We should reuse these established ideas where we can, but we don't need to stick to them exactly.
 
 In this episode we'll be taking our Object Oriented code from the previous episode
-and integrating it into our existing MVC pattern.
-But first we will explain some features of
-the Controller (`inflammation-analysis.py`) component of our architecture.
+and looking into how we can use it with not only `.ipynb` files as Controllers, but also through the command
+line. In other words, we will start turning our separate `.py` files into a full-fledged Python package.
 
-### Controller Structure
+### Creating a `.py` Controller File for Command Line Calls 
 
-You will have noticed already that structure of the `inflammation-analysis.py` file
-follows this pattern:
+In the root directory of our repository, let's create a new `lc-package.py` file that will serve as a Controller
+when we are calling our package from the command line.
 
+Such files usually have a standardised structure:
 ~~~
 # import modules
 
@@ -65,12 +65,12 @@ after some other actions have been performed
 along with a number of other special dunder variables,
 by the python interpreter before the execution of any code in the source file.
 What value is given by the interpreter to `__name__` is determined by
-the manner in which it is loaded.
+the manner in which it is loaded. 
 
 If we run the source file directly using the Python interpreter, e.g.:
 
 ~~~
-$ python3 inflammation-analysis.py
+$ python3 lc-package.py
 ~~~
 {: .language-bash}
 
@@ -86,15 +86,15 @@ __name__ = "__main__"
 However, if your source file is imported by another Python script, e.g:
 
 ~~~
-import inflammation-analysis
+import lc-package
 ~~~
 {: .language-python}
 
-then the interpreter will assign the name `"inflammation-analysis"`
+then the interpreter will assign the name `"lc-package"`
 from the import statement to the `__name__` variable:
 
 ~~~
-__name__ = "inflammation-analysis"
+__name__ = "lc-package"
 ...
 # rest of your code
 ~~~
@@ -123,7 +123,7 @@ and enables the automatic generation of help and usage messages.
 These include, as we saw at the start of this course,
 the generation of helpful error messages when users give the program invalid arguments.
 
-The basic usage of `argparse` can be seen in the `inflammation-analysis.py` script.
+Let's use  `argparse` in our `lc-package.py` script.
 First we import the library:
 
 ~~~
@@ -135,7 +135,7 @@ We then initialise the argument parser class, passing an (optional) description 
 
 ~~~
 parser = argparse.ArgumentParser(
-    description='A basic patient inflammation data management system')
+    description='A package for inspecting LSST survey tables containing variability observations')
 ~~~
 {: .language-python}
 
@@ -145,17 +145,14 @@ In our basic case, we want only the names of the file(s) to process:
 
 ~~~
 parser.add_argument(
-    'infiles',
-    nargs='+',
-    help='Input CSV(s) containing inflammation series for each patient')
+    'infile',
+    help='Input CSV or PKL file containing LSST light curves')
 ~~~
 {: .language-python}
 
-Here we have defined what the argument will be called (`'infiles'`) when it is read in;
-the number of arguments to be expected
-(`nargs='+'`, where `'+'` indicates that there should be 1 or more arguments passed);
+Here we have defined what the argument will be called (`'infiles'`) when it is read in
 and a help string for the user
-(`help='Input CSV(s) containing inflammation series for each patient'`).
+(`help='Input CSV or PKL file containing LSST light curves'`).
 
 You can add as many arguments as you wish,
 and these can be either mandatory (as the one above) or optional.
@@ -171,26 +168,132 @@ args = parser.parse_args()
 
 This returns an object (that we've called `arg`) containing all the arguments requested.
 These can be accessed using the names that we have defined for each argument,
-e.g. `args.infiles` would return the filenames that have been input.
+e.g. `args.infile` would return the filenames that have been input.
+
+Now that you have some familiarity with `argparse`,
+we will demonstrate below how you can use this to add extra functionality to your controller.
+
+### Connecting a View
+
+In the `plots.py` file we have a function that allows us to plot a 
+light curve. Now we need to make sure people can call this view 
+even without Jupyter Lab -
+that means connecting it to the controller
+and ensuring that there's a way to request this view when running the program.
+The changes we need to make here are that the `main` function
+needs to be able to direct us to the view we've requested -
+and we need to add to the command line interface - the controller -
+the necessary data to drive the new view.
+
+~~~
+# file: lc-package.py
+
+import argparse
+from lcanalyzer_oop import survey, plots
+
+def main():
+    """The MVC Controller of the LSST data table.
+
+    The Controller is responsible for:
+    - selecting the necessary models and views for the current task
+    - passing data between models and views
+    """
+    infile = args.infile
+    lsst = survey.Survey(infile)
+
+    if args.info == 'unique':
+        print(lsst.unique_objects)
+
+    if args.info == 'plotFirst':
+        obj_id = lsst.unique_objects[0]
+        band = args.band
+        time_col = 'mjds'
+        mag_col = 'mags'
+        lc = lsst.get_lc(obj_id, band)
+        plots.plotUnfolded(lc[time_col],lc[mag_col])
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='A package for inspecting LSST survey tables containing variability observations')
+
+    parser.add_argument(
+    'infile',
+    help='Input CSV or PKL file containing LSST light curves')
+    
+    parser.add_argument(
+        '--info',
+        default='unique',
+        choices=['unique', 'plotFirst'],
+        help='Which info should be displayed?')
+
+    parser.add_argument(
+        '--band',
+        type=str,
+        default='g',
+        help='Which band should be plotted?')
+
+    args = parser.parse_args()
+    main()
+~~~
+{: .language-python}
+
+We've added two options to our command line interface here:
+one to request a specific view and one for the photometric band that we want to lookup.
+For the full range of features that we have access to with `argparse` see the
+[Python module documentation](https://docs.python.org/3/library/argparse.html?highlight=argparse#module-argparse).
+Allowing the user to request a specific view like this is
+a similar model to that used by the popular Python library Click -
+if you find yourself needing to build more complex interfaces than this,
+Click would be a good choice.
+You can find more information in [Click's documentation](https://click.palletsprojects.com/).
+
+Now we can request a list of the unique ids in our dataset (since the argument `info` has a default value
+`unique`, we can do this without specifying anything except the file name):
+
+~~~
+$ python3 lc-package.py data/lsst_RRLyr.pkl
+~~~
+{: .language-bash}
+
+~~~
+[1251384969897480052 1251745609711384492 1252299763571782414
+ 1251604872223041749 1327638300307004563 1329353538446317664
+ 1327400805795401837...
+...
+~~~
+{: .output}
+
+Or we can call the plotting function for the first object:
+
+~~~
+$ python lc-package.py data/lsst_RRLyr.pkl --info plotFirst
+~~~
+{: .language-bash}
+
+![Plotting from the command line](../fig/36_ArchRevisited_1_Plotting.png){: .image-with-shadow width="800px" }
 
 The help for the script can be accessed using the `-h` or `--help` optional argument
 (which `argparse` includes by default):
 
 ~~~
-$ python3 inflammation-analysis.py --help
+$ python3 lc-package.py --help
 ~~~
 {: .language-bash}
 
 ~~~
-usage: inflammation-analysis.py [-h] infiles [infiles ...]
+usage: lc-package.py [-h] [--info {unique,plotFirst}] [--band BAND] infile
 
-A basic patient inflammation data management system
+A package for inspecting LSST survey tables containing variability
+observations
 
 positional arguments:
-  infiles     Input CSV(s) containing inflammation series for each patient
+  infile                Input CSV or PKL file containing LSST light curves
 
-optional arguments:
-  -h, --help  show this help message and exit
+options:
+  -h, --help            show this help message and exit
+  --info {unique,plotFirst}
+                        Which info should be displayed?
+  --band BAND           Which band should be plotted?
+
 ~~~
 {: .output}
 
@@ -225,206 +328,12 @@ by setting `required = True` within the `add_argument()` command.
 >    in the usage section of the help page.
 {: .callout}
 
-Now that you have some familiarity with `argparse`,
-we will demonstrate below how you can use this to add extra functionality to your controller.
-
-### Adding a New View
-
-Let's start with adding a view that allows us to see the data for a single patient.
-First, we need to add the code for the view itself
-and make sure our `Patient` class has the necessary data -
-including the ability to pass a list of measurements to the `__init__` method.
-Note that your Patient class may look very different now,
-so adapt this example to fit what you have.
-
-~~~
-# file: inflammation/views.py
-
-...
-
-def display_patient_record(patient):
-    """Display data for a single patient."""
-    print(patient.name)
-    for obs in patient.observations:
-        print(obs.day, obs.value)
-~~~
-{: .language-python}
-
-~~~
-# file: inflammation/models.py
-
-...
-
-class Observation:
-    def __init__(self, day, value):
-        self.day = day
-        self.value = value
-
-    def __str__(self):
-        return self.value
-
-class Person:
-    def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return self.name
-
-class Patient(Person):
-    """A patient in an inflammation study."""
-    def __init__(self, name, observations=None):
-        super().__init__(name)
-
-        self.observations = []
-        ### MODIFIED START ###
-        if observations is not None:
-            self.observations = observations
-        ### MODIFIED END ###
-
-    def add_observation(self, value, day=None):
-        if day is None:
-            try:
-                day = self.observations[-1].day + 1
-
-            except IndexError:
-                day = 0
-
-        new_observation = Observation(day, value)
-
-        self.observations.append(new_observation)
-        return new_observation
-~~~
-{: .language-python}
-
-Now we need to make sure people can call this view -
-that means connecting it to the controller
-and ensuring that there's a way to request this view when running the program.
-The changes we need to make here are that the `main` function
-needs to be able to direct us to the view we've requested -
-and we need to add to the command line interface - the controller -
-the necessary data to drive the new view.
-
-~~~
-# file: inflammation-analysis.py
-
-#!/usr/bin/env python3
-"""Software for managing patient data in our imaginary hospital."""
-
-import argparse
-
-from inflammation import models, views
-
-
-def main(args):
-    """The MVC Controller of the patient data system.
-
-    The Controller is responsible for:
-    - selecting the necessary models and views for the current task
-    - passing data between models and views
-    """
-    infiles = args.infiles
-    if not isinstance(infiles, list):
-        infiles = [args.infiles]
-
-    for filename in infiles:
-        inflammation_data = models.load_csv(filename)
-
-        ### MODIFIED START ###
-        if args.view == 'visualize':
-            view_data = {
-                'average': models.daily_mean(inflammation_data),
-                'max': models.daily_max(inflammation_data),
-                'min': models.daily_min(inflammation_data),
-            }
-
-            views.visualize(view_data)
-
-        elif args.view == 'record':
-            patient_data = inflammation_data[args.patient]
-            observations = [models.Observation(day, value) for day, value in enumerate(patient_data)]
-            patient = models.Patient('UNKNOWN', observations)
-
-            views.display_patient_record(patient)
-        ### MODIFIED END ###
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='A basic patient data management system')
-
-    parser.add_argument(
-        'infiles',
-        nargs='+',
-        help='Input CSV(s) containing inflammation series for each patient')
-
-    ### MODIFIED START ###
-    parser.add_argument(
-        '--view',
-        default='visualize',
-        choices=['visualize', 'record'],
-        help='Which view should be used?')
-
-    parser.add_argument(
-        '--patient',
-        type=int,
-        default=0,
-        help='Which patient should be displayed?')
-    ### MODIFIED END ###
-
-    args = parser.parse_args()
-
-    main(args)
-~~~
-{: .language-python}
-
-We've added two options to our command line interface here:
-one to request a specific view and one for the patient ID that we want to lookup.
-For the full range of features that we have access to with `argparse` see the
-[Python module documentation](https://docs.python.org/3/library/argparse.html?highlight=argparse#module-argparse).
-Allowing the user to request a specific view like this is
-a similar model to that used by the popular Python library Click -
-if you find yourself needing to build more complex interfaces than this,
-Click would be a good choice.
-You can find more information in [Click's documentation](https://click.palletsprojects.com/).
-
-For now, we also don't know the names of any of our patients,
-so we've made it `'UNKNOWN'` until we get more data.
-
-We can now call our program with these extra arguments to see the record for a single patient:
-
-~~~
-$ python3 inflammation-analysis.py --view record --patient 1 data/inflammation-01.csv
-~~~
-{: .language-bash}
-
-~~~
-UNKNOWN
-0 0.0
-1 0.0
-2 1.0
-3 3.0
-4 1.0
-5 2.0
-6 4.0
-7 7.0
-...
-~~~
-{: .output}
-
-> ## Additional Material
+> ## Add an Optional Argument For Selecting the Object
 >
-> Now that we've covered the basics of different programming paradigms
-> and how we can integrate them into our multi-layer architecture,
-> there are two optional extra episodes which you may find interesting.
->
-> Both episodes cover the persistence layer of software architectures
-> and methods of persistently storing data, but take different approaches.
-> The episode on [persistence with JSON](/persistence) covers
-> some more advanced concepts in Object Oriented Programming, while
-> the episode on [databases](/databases) starts to build towards a true multilayer architecture,
-> which would allow our software to handle much larger quantities of data.
-{: .callout}
-
+> Extend our `lc-package.py` controller by adding another optional argument
+> that would allow the user to specify the id of the object for which they
+> want to plot the light curve.
+{: .challenge}
 
 ## Towards Collaborative Software Development
 
@@ -448,3 +357,5 @@ have a look and comment on key code changes to see how they fit within the codeb
 Such reviews check the correctness of the new code, test coverage, functionality changes,
 and confirm that they follow the coding guides and best practices.
 Let's have a look at some code review techniques available to us.
+
+{% include links.md %}
