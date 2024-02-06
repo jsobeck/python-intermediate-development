@@ -90,7 +90,7 @@ satisfy the stakeholder requirements. They fall into two key categories:
   These are also known as *quality of service* requirements.
   For our project, e.g.:
     - SR1.2.3 (from UR1.2):
-      be able to determine periods for a hunder of light curves in under a minute.
+      be able to determine periods for a hundred of light curves in under a minute.
 
 This way, the business, user and solution requirements correspond to the different levels of 
 implementation. Knowing the business requirements allows you to design the software in a more efficient way,
