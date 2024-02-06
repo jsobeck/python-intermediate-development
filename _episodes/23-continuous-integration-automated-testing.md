@@ -370,7 +370,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11"]
 
-    runs-on: \${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
 ...
 
@@ -385,12 +385,12 @@ jobs:
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
-        python-version: \${{ matrix.python-version }}
+        python-version: ${{ matrix.python-version }}
 ...
 ~~~
 {: .language-yaml}
 
-The `\${{ }}` are used as a means to reference configuration values from the matrix. 
+The `${{ }}` are used as a means to reference configuration values from the matrix. 
 This way, every possible permutation of Python versions 3.10 and 3.11 with the latest 
 versions of Ubuntu, Mac OS and Windows operating systems will be tested and we can expect 6 build jobs in total.
 
