@@ -1,7 +1,7 @@
 ---
 title: "Software Architecture and Design"
 teaching: 15
-exercises: 30
+exercises: 0
 questions:
 - "What should we consider when designing software?"
 - "How can we make sure the components of our software are reusable?"
