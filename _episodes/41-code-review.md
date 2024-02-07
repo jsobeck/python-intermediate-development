@@ -67,42 +67,19 @@ and something you should adopt in your development process too.
 
 ## Code Review
 
-[Code review][code-review] is a software quality assurance practice
+Regardless of the collaborative code development model your team uses, 
+[code review][code-review] is one of the widely accepted best practices for software development in teams
+and something you should adopt in your development process too. 
+
+Code review is a software quality assurance practice
 where one or several people from the team (different from the code's author)
-check the software by viewing parts of its source code.
-
-> ## Group Exercise: Advantages of Code Review
-> Discuss as a group: what do you think are the reasons behind, and advantages of, code review?
-> > ## Solution
-> > The purposes of code review include:
-> > - improving internal code readability, understandability, quality and maintainability
-> > - checking for coding standards compliance, code uniformity and consistency
-> > - checking for test coverage and detecting bugs and code defects early
-> > - detecting performance problems and identifying code optimisation points
-> > - finding alternative/better solutions.
-> >
-> > An effective code review prevents errors from creeping into your software
-> > by improving code quality at an early stage of the software development process.
-> > It helps with learning, i.e. sharing knowledge about the codebase,
-> > solution approaches,
-> > expectations regarding quality,
-> > coding standards, etc.
-> > Developers use code review feedback from more senior developers
-> > to improve their own coding practices and expertise.
-> > Finally, it helps increase the sense of collective code ownership and responsibility,
-> > which in turn helps increase the "bus factor"
-> > and reduce the risk resulting from information and capabilities
-> > being held by a single person "responsible" for a certain part of the codebase
-> > and not being shared among team members.
-> {: .solution}
-{: .challenge}
-
-Code review is one of the most useful team code development practices -
-someone checks your design or code for errors, they get to learn from your solution,
+check the software by viewing parts of its source code at the point when the code changes.
+Code review is very useful for all parties involved  -
+someone checks your design or code for errors and gets to learn from your solution; 
 having to explain code to someone else clarifies
-your rationale and design decisions in your mind too,
-and collaboration helps to improve the overall team software development process.
-It is universally applicable throughout the software development cycle -
+your rationale and design decisions in your mind too. 
+
+Code review is universally applicable throughout the software development cycle -
 from design to development to maintenance.
 According to Michael Fagan, the author of the
 [code inspection technique](https://en.wikipedia.org/wiki/Fagan_inspection),
@@ -118,48 +95,24 @@ as close as possible to the point where they were introduced.
 There are several **code review techniques** with various degree of formality
 and the use of a technical infrastructure, including:
 
-- **Over-the-shoulder code review**
-  is the most common and informal of code review techniques and involves
-  one or more team members standing over the code author's shoulder
-  while the author walks the reviewers through a set of code changes.
-- **Email pass-around code review**
-  is another form of lightweight code review where the code author
-  packages up a set of changes and files and sends them over to reviewers via email.
-  Reviewers examine the files and differences against the code base,
-  ask questions and discuss with the author and other developers,
-  and suggest changes over email.
-  The difficult part of this process is the manual collection the files under review
-  and noting differences.
-- **Pair programming**
-  is a code development process that incorporates continuous code review -
-  two developers sit together at a computer,
-  but only one of them actively codes whereas the other provides real-time feedback.
-  It is a great way to inspect new code and train developers,
-  especially if an experienced team member walks a younger developer through the new code,
-  providing explanations and suggestions through a conversation.
-  It is conducted in-person and synchronously but it can be time-consuming
-  as the reviewer cannot do any other work during the pair programming period.
-- **Fagan code inspection**
-  is a formal and heavyweight process of finding defects in specifications or designs
-  during various phases of the software development process.
-  There are several roles taken by different team members in a Fagan inspection
-  and each inspection is a formal 7-step process with a predefined entry and exit criteria.
-  See [Fagan inspection](https://en.wikipedia.org/wiki/Fagan_inspection)
-  for full details on this method.
-- **Tool-assisted code review**
-  process uses a specialised tool to facilitate the process of code review,
-  which typically helps with the following tasks:
-  (1) collecting and displaying the updated files and highlighting what has changed,
-  (2) facilitating a conversation between team members (reviewers and developers), and
-  (3) allowing code administrators and product managers
-  a certain control and overview of the code development workflow.
-  Modern tools may provide a handful of other functionalities too, such as metrics
-  (e.g. inspection rate, defect rate, defect density).
+ - [Over-the-shoulder code review](https://about.gitlab.com/topics/version-control/what-is-code-review/#Over-the-shoulder%20reviews) - 
+   one developer talks the other developer through the code changes while sitting 
+   at the same machine.
+ - [Pair programming](https://about.gitlab.com/topics/version-control/what-is-code-review/#Pair%20programming) -
+   two developers work on the code at the same time with one of them actively coding and the 
+   other providing real-time feedback.
+ - [Formal code inspection](https://en.wikipedia.org/wiki/Fagan_inspection) -
+   up to 6 partipants go through a formalised process to inspect the code specification or 
+   design for defects.
+ - [Tool assisted code review](https://about.gitlab.com/topics/version-control/what-is-code-review/#Tool-assisted%20reviews) -
+   developers use tools such as GitHub to review the code independently and give feedback.
 
-Each of the above techniques have their pros and cons and varying degrees practicality -
-it is up to the team to decide which ones are most suitable for the project and when to use them.
-We will have a look at the **tool-assisted code review process**
-using GitHub's built-in code review tool - **pull requests**.
+You can read more about these techniques in the ["Five Types of Review" section](https://www.khoury.northeastern.edu/home/lieber/courses/cs4500/f07/lectures/code-review-types.pdf) of the ["Best Kept Secrets of Peer Code Review" eBook](https://www.yumpu.com/en/document/view/19324443/best-kept-secrets-of-peer-code-review-pdf-smartbear).
+
+It is worth trying multiple code review techniques to see what works
+best for you and your team.
+We will have a look at the **tool-assisted code review process**, which is likely to be the most effective and efficient.
+We will use GitHub's built-in code review tool - **pull requests**, or PRs.
 It is a lightweight tool, included with GitHub's core service for free
 and has gained popularity within the software development community in recent years.
 
@@ -231,8 +184,7 @@ and receives a pull request on their repository from the third team member).
 If you are going through the material on your own and do not have a collaborator,
 you can do pull requests on your own repository from one to another branch.
 
-Recall [solution requirements SR1.1.1 and SR1.2.1](../31-software-requirements/index.html#solution-requirements)
-from an earlier episode.
+Recall [solution requirements from the last exercise in the OOP episode](../35-object-oriented-programming/index.html#exercise-a-survey-class).
 Your team member has implemented one of them according to the specification
 (let's call it `feature-x`)
 but tests are still missing.
@@ -289,12 +241,13 @@ compared to that of personal repositories.
    ~~~
    {: .language-bash}
 2. Check with the repository owner (your team member)
-   which feature (SR1.1.1 or SR1.2.1) they implemented in the
-   [previous exercise](/32-software-design/index.html#implement-requirements)
+   which feature they implemented in the
+   previous exercise (it also should be stated on the top of the `.py` files with the
+   corresponding classes)
    and what is the name of the branch they worked on.
    Let's assume the name of the branch was `feature-x`
    (you should amend the branch name for your case accordingly).
-3. Your task is to add tests for the code on `feature-x` branch.
+4. Your task is to add tests for the code on `feature-x` branch.
    You should do so on a separate branch called `feature-x-tests`,
    which will branch off `feature-x`.
    This is to enable you later on to create a pull request
@@ -317,9 +270,7 @@ compared to that of personal repositories.
 #### Step 3: Adding New Code
 
 > ## Exercise: Implement Tests for the New Feature
-> Look back at the
-> [solution requirements](/31-software-requirements/index.html#solution-requirements)
-> (SR1.1.1 or SR1.2.1)
+> Look at the solution requirements
 > for the feature that was implemented in your shared repository.
 > Implement tests against the appropriate specification in your local feature branch.
 >
@@ -462,14 +413,7 @@ and [Smartbear](https://smartbear.com/learn/code-review/best-practices-for-peer-
      and [Google recommendations](https://google.github.io/eng-practices/review/developer/small-cls.html)
      as to what a "large pull request" is but be aware that it is not exact science.
    - don't force push to a pull request as it changes the repository history
-     and can corrupt your pull request for other collaborators
-   - use pull request states in GitHub effectively (based on your team's code review process) -
-     e.g. in GitHub you can open a pull request in a `DRAFT` state
-     to show progress or request early feedback;
-     `READY FOR REVIEW` when you are ready for feedback;
-     `CHANGES REQUESTED` to let the author know
-     they need to fix the requested changes or discuss more;
-     `APPROVED` to let the author they can merge their pull request.
+     and can corrupt your pull request for other collaborators.
 
 > ## Exercise: Code Review in Your Own Working Environment
 >
@@ -480,20 +424,10 @@ and [Smartbear](https://smartbear.com/learn/code-review/best-practices-for-peer-
 >
 > Now think about how you typically develop code,
 > and how you might institute code review practices within your own working environment.
-> Write down briefly for your own reference (perhaps using bullet points)
-> some answers to the following questions:
->
-> - Which 2 or 3 key circumstances would code review be most useful for you and your colleagues?
-> - Referring to the first section of this episode above,
->   which type of code review would be most useful for each circumstance
->   (and would work best within your own working environment)?
-> - Taking one of these circumstances where code review would be most beneficial,
->   how would you organise such a code review, e.g.:
->   - Which aspects of the codebase would be the most useful to cover?
->   - How often would you do them?
->   - How long would the activity take?
->   - Who would ideally be involved?
->   - Any particular practices you would use?
+> Discuss in your group with whom among your peers of collegues you could
+> team up for the code review. Think about the possibilites to introduce this practice
+> to the programming courses in your university or make it a part of the weekly
+> group meeting. Which code review approaches would be the most practical for you?
 {: .challenge}
 
 {% include links.md %}
