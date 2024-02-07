@@ -323,6 +323,7 @@ print(list(result))
 > when you have a table with complex data stored in the columns, e.g. lists, dicts or arrays.
 > For example, some surveys use such a format for storing light curves or spectra measurements.
 > Let's simulate such situation:
+> 
 > ~~~
 > # Create an empty list where we will be storing our light curves
 > lcs = []
@@ -342,6 +343,7 @@ print(list(result))
 > # Turn the list of dicts into a DataFrame    
 > lcs = pd.DataFrame.from_records(lcs)
 > {: .language-python}
+> 
 > In the resulting DataFrame each row will contain an Id of the observed object, six columns for
 > magnitude arrays and six corresponding columns with time stamps arrays. How would you deal with NaNs
 > in the data stored in this format? For this task, you may find to be useful
