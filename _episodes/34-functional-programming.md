@@ -224,13 +224,14 @@ Let's see how we can do data processing using functional programming.
 When working with data you will often find that you need to
 apply a transformation to each datapoint of a dataset
 and then perform some aggregation across the whole dataset.
-One instance of this data processing approach is known as MapReduce
-and is applied when processing (but not limited to) Big Data,
+One instance of this data processing approach is known as MapReduce. This term
+usually arises in application to Big Data distributed processing on a cluster,
 e.g. using tools such as [Spark](https://en.wikipedia.org/wiki/Apache_Spark)
-or [Hadoop](https://hadoop.apache.org/).
-The name MapReduce comes from applying an operation to (mapping) each value in a dataset,
+or [Hadoop](https://hadoop.apache.org/). However, the name itself comes from 
+applying an operation to (mapping) each value in a dataset,
 then performing a reduction operation which
-collects/aggregates all the individual results together to produce a single result.
+collects/aggregates all the individual results together to produce a single result. 
+This approach can be modelled even on a single processor and a small dataset.
 MapReduce relies heavily on composability and parallelisability of functional programming -
 both map and reduce can be done in parallel and on smaller subsets of data,
 before aggregating all intermediate results into the final result.
