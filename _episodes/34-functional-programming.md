@@ -342,6 +342,7 @@ print(list(result))
 >     lcs.append(lc)
 > # Turn the list of dicts into a DataFrame    
 > lcs = pd.DataFrame.from_records(lcs)
+> ~~~
 > {: .language-python}
 > 
 > In the resulting DataFrame each row will contain an Id of the observed object, six columns for
