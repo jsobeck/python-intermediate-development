@@ -144,7 +144,7 @@ class Variable:
                    'mag': np.array([])
                   }
 
-star_obs = Lightcurve(obj_id)
+star_obs = Variable(obj_id)
 print(star_obs.obj_id)
 ~~~
 {: .language-python}
