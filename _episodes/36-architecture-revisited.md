@@ -1,7 +1,7 @@
 ---
 title: "Architecture Revisited: Adding a .py Controller"
 teaching: 15
-exercises: 0
+exercises: 10
 questions:
 - "How can we extend our software within the constraints of the MVC architecture?"
 objectives:
@@ -329,7 +329,7 @@ by setting `required = True` within the `add_argument()` command.
 >    in the usage section of the help page.
 {: .callout}
 
-> ## Add an Optional Argument For Selecting the Object
+> ## Optional Exercise: Add an Optional Argument For Selecting the Object
 >
 > Extend our `lc-package.py` controller by adding another optional argument
 > that would allow the user to specify the id of the object for which they
