@@ -140,7 +140,7 @@ GitHub provides a very useful [guide to writing Markdown][github-markdown] for i
 Let's start writing `README.md` using a text editor of your choice and add the following line.
 
 ~~~
-# Inflam
+# LcAnalyzer
 ~~~
 {: .language-markdown}
 
@@ -155,24 +155,24 @@ and products provides some helpful pointers.
 We should also add a short description underneath the title.
 
 ~~~
-# Inflam
-Inflam is a data management system written in Python that manages trial data used in clinical inflammation studies.
+# LcAnalyzer
+LcAnalyzer is a package written in Python that allows you to inspect light curves.
 ~~~
 {: .language-markdown}
 
 To give readers an idea of the software's capabilities, let's add some key features next:
 
 ~~~
-# Inflam
-Inflam is a data management system written in Python that manages trial data used in clinical inflammation studies.
+# LcAnalyzer
+LcAnalyzer is a package written in Python that allows you to inspect light curves.
 
 ## Main features
-Here are some key features of Inflam:
+Here are some key features of LcAnalyzer:
 
-- Provide basic statistical analyses over clinical trial data
-- Ability to work on trial data in Comma-Separated Value (CSV) format
-- Generate plots of trial data
-- Analytical functions and views can be easily extended based on its Model-View-Controller architecture
+- Reading CSV and Pickle files;
+- Giving the list of unique objects present in the data;
+- Selecting observations of a given star in a given bands;
+...
 ~~~
 {: .language-markdown}
 
@@ -181,26 +181,17 @@ it's very important to specify what other software and related dependencies
 are needed to use the software (typically called `dependencies` or `prerequisites`):
 
 ~~~
-# Inflam
-Inflam is a data management system written in Python that manages trial data used in clinical inflammation studies.
-
-## Main features
-Here are some key features of Inflam:
-
-- Provide basic statistical analyses over clinical trial data
-- Ability to work on trial data in Comma-Separated Value (CSV) format
-- Generate plots of trial data
-- Analytical functions and views can be easily extended based on its Model-View-Controller architecture
+...
 
 ## Prerequisites
-Inflam requires the following Python packages:
+LcAnalyzer requires the following Python packages:
 
-- [NumPy](https://www.numpy.org/) - makes use of NumPy's statistical functions
+- [Pandas](https://pandas.pydata.org/) - makes use of Pandas's data types and statistical functions
 - [Matplotlib](https://matplotlib.org/stable/index.html) - uses Matplotlib to generate statistical plots
 
-The following optional packages are required to run Inflam's unit tests:
+The following optional packages are required to run LcAnalyzer's unit tests:
 
-- [pytest](https://docs.pytest.org/en/stable/) - Inflam's unit tests are written using pytest
+- [pytest](https://docs.pytest.org/en/stable/) - LcAnalyzer's unit tests are written using pytest
 - [pytest-cov](https://pypi.org/project/pytest-cov/) - Adds test coverage stats to unit testing
 ~~~
 {: .language-markdown}
@@ -210,12 +201,12 @@ with some text describing the link within `[]` followed by the link itself withi
 
 One really neat feature - and a common practice - of using many CI infrastructures is that
 we can include the status of running recent tests within our README file.
-Just below the `# Inflam` title on our README.md file,
+Just below the `# LcAnalyzer` title on our README.md file,
 add the following (replacing `<your_github_username>` with your own:
 
 ~~~
-# Inflam
-![Continuous Integration build in GitHub Actions](https://github.com/<your_github_username>/python-intermediate-inflammation/workflows/CI/badge.svg?branch=main)
+# LcAnalyzer
+![Continuous Integration build in GitHub Actions](https://github.com/<your_github_username>/light-curve-analysis/workflows/CI/badge.svg?branch=main)
 ...
 ~~~
 {: .language-markdown}
