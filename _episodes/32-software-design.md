@@ -121,7 +121,7 @@ bad practice to use unit tests for this purpose.
 This is because unit tests test *if* a given aspect is behaving correctly,
 whereas performance tests test *how efficiently* it does it.
 Performance testing produces measurements of performance which require a different kind of analysis
-(using techniques such as [*code profiling*](https://towardsdatascience.com/how-to-assess-your-code-performance-in-python-346a17880c9f)),
+(using _integration_ and _performance_ tests, as well as techniques such as [*code profiling*](https://towardsdatascience.com/how-to-assess-your-code-performance-in-python-346a17880c9f)),
 and require careful and specific configurations of operating environments to ensure fair testing.
 Furthermore, it is important to note that unit testing frameworks are not intended
 for measuring system performance as a whole, as they only test individual units.
