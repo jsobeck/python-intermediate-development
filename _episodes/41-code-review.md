@@ -286,12 +286,23 @@ compared to that of personal repositories.
 {: .challenge}
 
 > ## Testing Based on Requirements
+> 
 > Tests should test functionality,
 > which stem from the software requirements,
 > rather than an implementation.
 > Tests can be seen as a reflection of those requirements -
 > checking if the requirements are satisfied.
+> 
 {: .callout}
+
+> ## Exercise: Edit One of the Notebooks
+>
+> Comparing changes introduced to a notebook may be problematic,
+> since notebooks aren't plain text format. Open one of the notebooks
+> in the `feature-x-tests` branch and make some small changes,
+> e.g. make a plot for a different light curve from our dataset.
+> We will use this change later.
+{: .challenge}
 
 Remember to commit your new code to your branch `feature-x-tests`.
 
@@ -333,14 +344,26 @@ You should receive a similar pull request from other team members on your reposi
 #### Step 5: Code Review
 
 1. The repository moderator/code reviewers reviews your changes
-   and provides feedback to you in the form of comments.
+   and provides feedback to you in the form of comments. 
 2. Respond to their comments and do any subsequent commits,
    as requested by reviewers.
 3. It may take a few rounds of exchanging comments and discussions until
    the team is ready to accept your changes.
 
 Perform the above actions on the pull request you received,
-this time acting as the moderator/code reviewer.
+this time acting as the moderator/code reviewer. 
+In this role, look through the
+`Commits`, `Checks` and `Files` tabs. They provide you with information on what
+are the commits that will be merged with your branch, whether the code passed all the
+workflow checks, and in case of the `Files`, help you to see the introduced changes in each
+file, with green highlighting the additions and red highlighting what was deleted.
+
+In the `Files`, pay attention to the `.ipynb` files (it is likely that you will need to click
+on the `Load diff`). The changes contain a lot of cell metainformation that changes at each execution of
+the cell, even if the actual output didn't change. In order to review these changes properly, click on your
+avatar in the top right corner of the window and select `Feature Preview` option. There in the left side 
+menu you can activate the `Rich Jupyter Notebook Diffs` that will give you an opportunity to review
+the notebooks much like the ordinary `.py` files. 
 
 #### Step 6: Closing a Pull Request
 
