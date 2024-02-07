@@ -1,11 +1,11 @@
 ---
-title: "Architecture Revisited: Extending Software"
+title: "Architecture Revisited: Adding a .py Controller"
 teaching: 15
 exercises: 0
 questions:
 - "How can we extend our software within the constraints of the MVC architecture?"
 objectives:
-- "Extend our software to add a view of a single patient in the study and the software's command line interface to request a specific view."
+- "Extend our software to add a command line interface to request a specific view."
 keypoints:
 - "By breaking down our software into components with a single responsibility, we avoid having to rewrite it all when requirements change.
   Such components can be as small as a single function, or be a software package in their own right."
@@ -35,9 +35,9 @@ We should reuse these established ideas where we can, but we don't need to stick
 
 In this episode we'll be taking our Object Oriented code from the previous episode
 and looking into how we can use it with not only `.ipynb` files as Controllers, but also through the command
-line. In other words, we will start turning our separate `.py` files into a full-fledged Python package.
+line.
 
-### Creating a `.py` Controller File for Command Line Calls 
+### Creating a `.py` Controller File for Command Line Execution 
 
 In the root directory of our repository, let's create a new `lc-package.py` file that will serve as a Controller
 when we are calling our package from the command line.
@@ -189,7 +189,7 @@ the necessary data to drive the new view.
 # file: lc-package.py
 
 import argparse
-from lcanalyzer_oop import survey, plots
+from lcanalyzer import survey, plots
 
 def main():
     """The MVC Controller of the LSST data table.
