@@ -48,6 +48,7 @@ Such files usually have a standardised structure:
 
 def main():
     # perform some actions
+    pass
 
 if __name__ == "__main__":
     # perform some actions before main()
