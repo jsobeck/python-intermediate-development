@@ -838,7 +838,9 @@ before we can properly initialise a `RRLyrae` model with their data.
 > You can implement two new classes: a `TransientLC`, that would inherit after the `Lightcurve`,
 > and `Supernovae`, that would inherit after the `Variable` and had an attribute of
 > the class `TransientLightCurve`. Add a few new attributes to each of
-> these classes.
+> these classes and write some new methods (you can always use 'pass' in place of the functionality
+> that you don't have time to implement right now) to understand what would be the best architecture
+> for this implementation.
 >
 {: .challenge}
 
