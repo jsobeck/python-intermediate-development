@@ -450,12 +450,12 @@ for example in our `lcanalyzer` project,
 we might want to say that a star _has_ a multiband lightcurve, 
 or that a lightcurve _has_ a single-band lightcurve.
 
-In the case of our example, we're already saying that our varuable star has a lightcurve,
+In the case of our example, we're already saying that our variable star has a lightcurve,
 so we're already using composition here. 
 We're currently implementing a single-band lightcurve as a dictionary with a known set of keys though,
 and in the previous examples we used a dictionary to store DataFrames with single-band observations
 to represent multi-band data. Nothing stops us from turning these dictionaries into
-proper classes.In fact, this is exactly what we should do. For our current class example
+proper classes. In fact, this is exactly what we should do. For our current class example,
 it will look like this:
 
 ~~~
@@ -502,13 +502,15 @@ star.mband_lc['g'].mean_mag
 ~~~
 18.03180312045771
 ~~~
-{: .output}
+{: .output} 
 
 Now we're using a composition of two custom classes to
 describe the relationship between two types of entity in the system that we're modelling. The benefit of this 
-approach is that we can create a new class called e.g. `Asteroid` that will have its own analysis methods than will
+approach is that we can create a new class called e.g. `Asteroid`, and it will require implementing its own analysis methods that will
 differ from those of the class `Variable`. The implementation of `Asteroid` class will be different, but it can
-still have the `Lightcurve`.
+still have the `Lightcurve`. Note that this is only one possible implementation; for example, we are still storing 
+our light curve observations in a dictionary (`self.lc = {}`) to avoid rewriting our already existing functions,
+but in reality it is likely will be more practical to turn `mjds` and `mags` into separate variables. 
 
 ### Inheritance
 
@@ -557,8 +559,8 @@ print(rr_lyrae.period)
 ~~~
 {: .output}
 
-We see in the example above that to say that a class inherits from another,
-we put the **parent class** (or **superclass**) in brackets after the name of the **subclass**.
+In this example, `Variable` is a **parent class** (or **superclass**),
+and `RRLyrae` is a **subclass**.
 
 There's something else we need to add as well -
 Python doesn't automatically call the `__init__` method on the parent class
@@ -571,8 +573,7 @@ Python will look for one on the parent class and use it automatically.
 This is true of all methods -
 if we call a method which doesn't exist directly on our class,
 Python will search for it among the parent classes.
-The order in which it does this search is known as the **method resolution order** -
-a little more on this in the Multiple Inheritance callout below.
+The order in which it does this search is known as the **method resolution order**.
 
 The line `super().__init__(obj_id)` gets the parent class,
 then calls the `__init__` method,
@@ -596,13 +597,13 @@ before we can properly initialise a `RRLyrae` model with their data.
 > or *has a* light curve and *has a* chirp.
 >
 > ~~~
-> class Signal:
+> class Observation:
 >     pass
 >
-> class Lightcurve(Signal):
+> class Lightcurve(Observation):
 >     pass
 >
-> class Chirp(Signal):
+> class Chirp(Observation):
 >     pass
 >
 > class MultiMessengerEvent(Lightcurve, Chirp):
@@ -612,16 +613,16 @@ before we can properly initialise a `RRLyrae` model with their data.
 > {: .language-python}
 >
 > ~~~
-> class Signal:
+> class Observation:
 >     pass
 >
-> class Lightcurve(Signal):
+> class Lightcurve(Observation):
 >     pass
 >
-> class Chirp(Signal):
+> class Chirp(Observation):
 >     pass
 >
-> class MultiMessengerEvent(Signal):
+> class MultiMessengerEvent(Observation):
 >     def __init__(self):
 >         # Multi-messenger event `has a` Lightcurve and `has a` Chirp
 >         self.lc = Lightcurve()
@@ -654,34 +655,47 @@ before we can properly initialise a `RRLyrae` model with their data.
 > ## Exercise: A Survey Class
 >
 > Use what we've learned to develop a class for processing the survey dataset itself.
-> First, create a new folder that we will call `lcanalyzeroop`. In this folder,
-> create a separate file called `lightcurve.py` - it will contain our
-> `Lightcurve` class. Another file, `survey.py`, will contain our Survey class.
-> These two files will correspond to the `models` level of our package. Also create
-> a file called `plot.py`, that will contain visualization functions and will correspond to the
-> `views` aspect.
-> As always, whenever it is convenient, you can start developing your code in a notebook (don't forget about the
-> best practices!), and then move the finished code in the `.py` files.
-> Alternatively, you can write the code right in the `.py` files and check its functionality
-> by importing those files in the notebook.
-> The solution requirements for the `Survey` class may look like this:
-> - This software should be able to read `.csv` and `.pkl` files;
-> - It should be able to give us the list of unique object IDs;
-> - It should be able to return a DataFrame with all the observations
->   of a given object in a given band (the object ID and the band is determined by the user);
-> - It should be able to return a dictionary with the light curve of a given object in a given
->   band (use the `Lightcurve` class we developed earlier).
+> You already have most of the functionality implemented, now you have to think about
+> how to re-implement it within an OOP paradigm. At the early stages of a software project
+> it is pretty common to spend some time drafting out separate features before getting a
+> cleare picture of what your software will be as a whole, especially if you work alone.
+> This is called ['bottom-up design'](https://en.wikipedia.org/wiki/Bottom%E2%80%93up_and_top%E2%80%93down_design#Software_development)
+> (as opposed to the 'top-down design', in which you start with drafting the overall architecture).
+> Create a new branck for this work (you can call it `dev-oop` or something similar).
 >
-> In addition to this, develop a visualization function for the light curve that you can obtain
-> with your new classes (you can use the one that we had in the `lcanalyzer/views.py` as a template).
-> 
+> You can start with defining the requirements. In the [software requirements
+> episode](../31-software-requirements/index.html#exercise-new-solution-requirements) we already
+> had a couple of solution requirements chiseled out:
+> - **SR1.1.1** (from UR1.1): the package can read the data in different formats, such as .csv and .pkl;
+> - **SR1.1.2** (from UR1.1): the package can filter out the rows with NaN entries, where NaNs can be filled with different values (e.g. -99.9).
+>
+> A couple more that you should include:
+> - **SR1.1.3** (from UR1.1): the package can return the list of unique object IDs;
+> - **SR1.1.4** (from UR1.1): the package can return a dict with the light curve of a user specified object in a user specified band.
+> Think of a few more, and write them on the top of you new notebook (or `.py` file if that's more convenient for you)
+> before starting your work.
+>
 > Try using Test Driven Development for any features you add:
-> write the tests first, then add the feature.
+> write the tests first, then add the feature. Don't forget to put the code you finished
+> in the `.py` files!
 >
 > > ## Solution
+> >
+> > Let's assume that in addition to the requirements above we also added two more functional requirements:
+> > - **SR1.1.5** (from UR1.1): the package can return a DataFrame with all the observations
+>   of a given object in a given band;
+> > - **SR1.1.6** (from UR1.1): the package can plot an unfolded light curve.
 > > 
-> > An example of a minimal implementation can look like this:
-> > In `lcanalyzeroop/lightcurve.py`
+> > We can start the implementation with this:
+> > - in the `lcanalyzer` directory we can create two new files for the
+> >   models level of our architecture: `lightcurve.py` which will contain the `Lightcurve`
+> >   class, and `survey.py` that will containe the `Survey` class. Also we will create a file `plots.py`
+> >   for the views level of the architecture.
+> > - in the `tests` directory we will create files `test_lightcurve.py`, `test_survey.py` and `test_plots.py`.
+> > - in the root directory we will create a new `.ipynb` file where we will initially develop the code.
+> >
+> > The minimal implementation of the requirements above would look like this:
+> > In `lcanalyzer/lightcurve.py`
 > > ~~~
 > > import pandas as pd
 > > import numpy as np
@@ -731,13 +745,14 @@ before we can properly initialise a `RRLyrae` model with their data.
 > > 
 > > In `lcanalyzer/survey.py`:
 > > ~~~
-> > from lcanalyzer_oop.lightcurve import *
+> > from lcanalyzer.lightcurve import *
 > > import pandas as pd
 > > 
 > > class Survey:
 > >     def __init__(
 > >         self,
 > >         filename,
+> >         clean_nans = True,
 > >         id_col="objectId",
 > >         band_col="band",
 > >         time_col="expMidptMJD",
@@ -747,10 +762,10 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >         self.band_col = band_col
 > >         self.time_col = time_col
 > >         self.mag_col = mag_col
-> >         self.data = self.load_table(filename)
+> >         self.data = self.load_table(filename, clean_nans)
 > >         self.unique_objects = self.data[self.id_col].unique()
 > > 
-> >     def load_table(self, filename):
+> >     def load_table(self, filename, clean_nans = True):
 > >         """Load a table from CSV file.
 > > 
 > >         :param filename: The name of the .csv file to load
@@ -760,6 +775,8 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >             df = pd.read_csv(filename)
 > >         elif filename.endswith(".pkl"):
 > >             df = pd.read_pickle(filename)
+> >         if clean_nans == True:
+> >            df = self.clean_table(df)
 > >         return df
 > > 
 > >     def get_obj_band_df(self, obj_id, band):
@@ -775,7 +792,7 @@ before we can properly initialise a `RRLyrae` model with their data.
 > > ~~~
 > > {: .language-python}
 > > 
-> > In `lcanalyzeroop/plots.py`:
+> > In `lcanalyzer/plots.py`:
 > > ~~~
 > > """Module containing code for plotting a lightcurve."""
 > > 
@@ -804,28 +821,17 @@ before we can properly initialise a `RRLyrae` model with their data.
 
 > ## Optional Exercise: A Supernovae Class
 >
-> Let's use what we have learnt in this episode and combine it with what we have learnt on
-> [software requirements](../31-software-requirements/index.html)
-> to formulate and implement a
-> [few new solution requirements](../31-software-requirements/index.html#exercise-new-solution-requirements)
-> to extend the model layer of our `lcanalyzer`.
+> Formulate and implement a [few new solution requirements](../31-software-requirements/index.html#exercise-new-solution-requirements)
+> for the business requirement BR2: "Functionality for analyzing transient light curves,
+> such as observations of Supernovae Ia" and the subsequent user requirement
+> UR2.2: "a possibility to automatically classify SNe types". Use what you've learned
+> and developed in this episode to minimize code duplication. Try using Test Driven Development for any features you add:
+> write the tests first, then add the feature.
 >
-> We had a business requirement BR2: "Functionality for analyzing transient light curves,
-> such as observations of Supernovae Ia" and the following user requirement
-> UR2.2: "a possibility to automatically classify SNe types". What kind of solution
-> requirements can you think of that would be needed to satisfy these business and user requirements?
->
-> Implement two new classes: a `TransientLightCurve`, that would inherit after the `Transient`,
+> You can implement two new classes: a `TransientLC`, that would inherit after the `Lightcurve`,
 > and `Supernovae`, that would inherit after the `Variable` and had an attribute of
 > the class `TransientLightCurve`. Add a few new attributes to each of
 > these classes.
-> 
-> Try using Test Driven Development for any features you add:
-> write the tests first, then add the feature.
-> Once you've finished the initial implementation, do you have much duplicated code?
-> Can you think of any other classes that would be useful to implement?
-> Is there anywhere you could make better use of composition or inheritance
-> to improve your implementation?
 >
 {: .challenge}
 
