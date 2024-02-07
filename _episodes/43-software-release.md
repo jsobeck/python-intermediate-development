@@ -41,6 +41,20 @@ This term is used to refer to both:
 - A way of structuring / bundling a project for easier distribution and installation -
   a "distributable package"
 
+## Creating the __init__.py file
+
+In order to consider a directory with `.py` files a package, Python requires that this directory
+contained a `__init__.py` file. In the simplest case it can be empty (like the `__init__.py` in our original
+`lcanalyzer` directory), however, it may also contain the code that will be executed when
+the package is imported into another script for the first time. Often `__init__.py`
+contains a docstring, a variable `__all__` that represents a list of all methods that
+should be imported when the user invokes `from package_name import *` statement, 
+a list of hard dependencies that must be imported in order for the package to be minimally functional,
+different kinds of configurations (e.g. defining some specific paths) and so on.
+
+For now we will limit ourselves to the empty `__init__.py` file. Create it
+in the `lcanalyzer` directory, and make sure to commit it to the repository.
+
 ## Packaging our Software with Poetry
 
 ### Installing Poetry
@@ -69,7 +83,7 @@ $ which poetry
 {: .language-bash}
 
 ~~~
-/home/alex/python-intermediate-inflammation/venv/bin/poetry
+/home/alex/InterPython_Workshop_Example/venv/bin/poetry
 ~~~
 {: .output}
 
@@ -118,31 +132,31 @@ $ poetry init
 ~~~
 This command will guide you through creating your pyproject.toml config.
 
-Package name [example]:  inflammation
+Package name [example]:  lcanalyzer
 Version [0.1.0]: 1.0.0
-Description []:  Analyse patient inflammation data
+Description []:  Inspect light curves
 Author [None, n to skip]: James Graham <J.Graham@software.ac.uk>
 License []:  MIT
-Compatible Python versions [^3.8]: ^3.8
+Compatible Python versions [^3.11]: ^3.11
 
 Would you like to define your main dependencies interactively? (yes/no) [yes] no
 Would you like to define your development dependencies interactively? (yes/no) [yes] no
 Generated file
 
 [tool.poetry]
-name = "inflammation"
+name = "lcanalyzer"
 version = "1.0.0"
-description = "Analyse patient inflammation data"
-authors = ["James Graham <J.Graham@software.ac.uk>"]
+description = "Inspect light curves"
+authors = ["ShrRa"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 
-[tool.poetry.dev-dependencies]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
@@ -150,12 +164,11 @@ Do you confirm generation? (yes/no) [yes] yes
 ~~~
 {: .output}
 
-We've called our package "inflammation" in the setup above,
-instead of "inflammation-analysis" like we did in our previous `setup.py`.
-This is because Poetry will automatically find our code
+We've called our package "lcanalyzer" in the setup above,
+because Poetry will automatically find our code
 if the name of the distributable package matches the name of our module package.
 If we wanted our distributable package to have a different name,
-for example "inflammation-analysis",
+for example "lcanalysis",
 we could do this by explicitly listing the module packages to bundle -
 see [the Poetry docs on packages](https://python-poetry.org/docs/pyproject/#packages)
 for how to do this.
@@ -189,8 +202,8 @@ The `pyproject.toml` file has two separate lists,
 allowing us to distinguish between runtime and development dependencies.
 
 ~~~
-$ poetry add matplotlib numpy
-$ poetry add --dev pylint
+$ poetry add matplotlib pandas
+$ poetry add --group dev pylint
 $ poetry install
 ~~~
 {: .language-bash}
@@ -219,7 +232,7 @@ make sure that our code is organised in the recommended structure.
 This is the Python module structure -
 a directory containing an `__init__.py` and our Python source code files.
 Make sure that the name of this Python package
-(`inflammation` - unless you've renamed it)
+(`lcanalyzer` - unless you've renamed it)
 matches the name of your distributable package in `pyproject.toml`
 unless you've chosen to explicitly list the module packages.
 
@@ -248,14 +261,14 @@ you don't need to run this command yourself,
 you've already installed it using `poetry install` above.
 
 ~~~
-$ pip3 install dist/inflammation*.whl
+$ pip3 install dist/lcanalyzer*.whl
 ~~~
 {: .language-bash}
 
 The star in the line above is a **wildcard**,
 that means Bash should use any filenames that match that pattern,
 with any number of characters in place for the star.
-We could also rely on Bash's autocomplete functionality and type `dist/inflammation`,
+We could also rely on Bash's autocomplete functionality and type `dist/lcanalyzer`,
 then hit the <kbd>Tab</kbd> key if we've only got one version built.
 
 After we've been working on our code for a while and want to publish an update,
@@ -269,11 +282,6 @@ Any re-publishing of the package, no matter how small the changes,
 needs to come with a new version number.
 The advantage of [SemVer](https://semver.org/) is that the change in the version number
 indicates the degree of change in the code and thus the degree of risk of breakage when we update.
-
-~~~
-$ poetry build
-~~~
-{: .language-bash}
 
 In addition to the commands we've already seen,
 Poetry contains a few more that can be useful for our development process.
