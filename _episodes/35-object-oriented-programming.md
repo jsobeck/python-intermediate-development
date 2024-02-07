@@ -778,6 +778,13 @@ before we can properly initialise a `RRLyrae` model with their data.
 > >         if clean_nans == True:
 > >            df = self.clean_table(df)
 > >         return df
+> >
+> >     def clean_table(self,df,nan_val='nan'):
+> >         if nan_val == 'nan':
+> >             filt_nan = ~((df[self.mag_col] == nan_val) | (
+> >                 df[self.mag_col].isnull())
+> >             )
+> >         return df[filt_nan]
 > > 
 > >     def get_obj_band_df(self, obj_id, band):
 > >         filt_band_obj = (self.data[self.id_col] == obj_id) & (
