@@ -67,10 +67,6 @@ and something you should adopt in your development process too.
 
 ## Code Review
 
-Regardless of the collaborative code development model your team uses, 
-[code review][code-review] is one of the widely accepted best practices for software development in teams
-and something you should adopt in your development process too. 
-
 Code review is a software quality assurance practice
 where one or several people from the team (different from the code's author)
 check the software by viewing parts of its source code at the point when the code changes.
