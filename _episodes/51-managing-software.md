@@ -46,7 +46,7 @@ but to avoid people emailing you to report a bug that you already know about!
 GitHub provides **Issues** -
 a framework for managing bug reports, feature requests, and lists of future work.
 
-Go back to the home page for your `python-intermediate-inflammation` repository in GitHub,
+Go back to the home page for your `InterPython_Workshop_Example` repository in GitHub,
 and click on the **Issue** tab.
 You should see a page listing the open issues on your repository -
 currently there should be none.
@@ -328,8 +328,8 @@ Let's create a Project in GitHub to plan the first release of our code.
 
    ![Project board setting in GitHub](../fig/github-project-settings.png){: .image-with-shadow width="1000px"}
 
-4. We can, for example, use "Inflammation project - release v0.1"
-   and "Tasks for the v0.1 release of the inflammation project"
+4. We can, for example, use "lcanalyzer project - release v0.1"
+   and "Tasks for the v0.1 release of the lcanalyzer project"
    for the name and description of our project, respectively.
    Or you can use anything that suits your project.
 
