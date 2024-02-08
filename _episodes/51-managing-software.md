@@ -378,7 +378,7 @@ Let's create a Project in GitHub to plan the first release of our code.
     or write more detailed comments
     (for that, use the `Convert to issue` option from the `...` menu on the card itself).
 
-   ![Coverting a task to issue](../fig/51_ManagingProjects_6_ToIssue.svg.png){: .image-with-shadow width="1000px"}
+   ![Coverting a task to issue](../fig/51_ManagingProjects_6_ToIssue.svg){: .image-with-shadow width="1000px"}
 
 8.  In addition to creating new tasks as notes and converting them to issues -
 you can add an existing issue or pull request (from any repository visible to you)
