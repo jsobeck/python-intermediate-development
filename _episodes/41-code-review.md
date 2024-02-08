@@ -208,9 +208,9 @@ to enable them to create branches and pull requests.
 To do so, each repository owner needs to:
 
 1. Head over to Settings section of your software project's repository in GitHub.
-   ![Accessing settings for a repository in GitHub](../fig/github-settings.png){: .image-with-shadow width="900px"}
+   ![Accessing settings for a repository in GitHub](../fig/41_CodeReview_1_Settings.svg){: .image-with-shadow width="900px"}
 2. Select the **vertical** tab 'Collaborators' from the left and click the 'Add people' button.
-   ![Managing access to a repository in GitHub](../fig/github-manage-access.png){: .image-with-shadow width="900px"}
+   ![Managing access to a repository in GitHub](../fig/41_CodeReview_2_Collaborators.svg){: .image-with-shadow width="900px"}
 3. Add your collaborator(s) by their GitHub username(s), full name(s) or email address(es).
    ![Adding collaborators to a repository in GitHub](../fig/github-add-collaborators.png){: .image-with-shadow width="900px"}
 4. Collaborator(s) will be notified of your invitation to join your repository
@@ -323,9 +323,9 @@ you have to do the following:
 2. Head over to the remote repository in GitHub
    and locate your new (`feature-x-tests`) branch from the dropdown box on the Code tab
    (you can search for your branch or use the "View all branches" option).
-   ![All repository branches in GitHub](../fig/github-branches.png){: .image-with-shadow width="600px"}
+   ![All repository branches in GitHub](../fig/41_CodeReview_3_Branches.svg){: .image-with-shadow width="600px"}
 3. Open a pull request by clicking "Compare & pull request" button.
-   ![Submitting a pull request in GitHub](../fig/github-create-pull-request.png){: .image-with-shadow width="900px"}
+   ![Submitting a pull request in GitHub](../fig/41_CodeReview_4_PR.png){: .image-with-shadow width="900px"}
 4. Select the base and the head branch, e.g. `feature-x` and `feature-x-tests`, respectively.
    Recall that the base branch is where you want your changes to be merged
    and the head branch contains your changes.
