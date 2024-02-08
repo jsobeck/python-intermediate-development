@@ -51,12 +51,10 @@ and click on the **Issue** tab.
 You should see a page listing the open issues on your repository -
 currently there should be none.
 
-![List of project issues in GitHub](../fig/github-issue-list.png){: .image-with-shadow width="1000px"}
+![List of project issues in GitHub](../fig/51_ManagingProjects_1_Issues.svg){: .image-with-shadow width="1000px"}
 
 Let's go through the process of creating a new issue.
 Start by clicking the `New issue` button.
-
-![Creating a new issue in GitHub](../fig/github-new-issue.png){: .image-with-shadow width="1000px"}
 
 When you create an issue, you can add a range of details to them.
 They can be *assigned to a specific developer* for example -
@@ -79,6 +77,8 @@ The [default labels available in GitHub](https://docs.github.com/en/issues/using
 - `invalid` - indicates that an issue, pull request, or discussion is no longer relevant
 - `question` - indicates that an issue, pull request, or discussion needs more information
 - `wontfix` - indicates that work won't continue on an issue, pull request, or discussion
+
+![Creating a new issue in GitHub](../fig/51_ManagingProjects_2_Labels.svg){: .image-with-shadow width="1000px"}
 
 You can also create your own custom labels to help with classifying issues.
 There are no rules really about naming the labels -
@@ -310,39 +310,44 @@ and automatically moved between columns based on their progress or status.
 
 Let's create a Project in GitHub to plan the first release of our code.
 
-1. From your GitHub account's home page (not your repository's home page!),
+1. From your GitHub account's home page,
    select the "Projects" tab, then click the `New project` button on the right.
 
     ![Adding a new project board in GitHub](../fig/github-new-project.png){: .image-with-shadow width="1000px"}
 
-2. In the "Select a template" pop-up window, select "Board" -
+   Alternatively, from you repository page you can click on `Projects` and choose
+   `Link a project > New project`.
+
+   ![Adding a new project board from repo](../fig/51_ManagingProjects_3_LinkRepo.svg){: .image-with-shadow width="1000px"}
+
+3. In the "Select a template" pop-up window, select "Board" -
    this will give you a classic "cards on a board" view of the project.
    An alternative is the "Table" view,
    which presents a spreadsheet-like and slightly more condensed view of a project.
 
     ![Selecting a project board template in GitHub](../fig/github-board-template.png){: .image-with-shadow width="600px"}
 
-3. GitHub will create an unnamed project board for you.
+4. GitHub will create an unnamed project board for you.
    You should populate the name and the description of the project from the project's Settings,
    which can be found by clicking the `...` button in the top right corner of the board.
 
-   ![Project board setting in GitHub](../fig/github-project-settings.png){: .image-with-shadow width="1000px"}
+   ![Project board setting in GitHub](../fig/51_ManagingProjects_3_Project.svg){: .image-with-shadow width="1000px"}
 
-4. We can, for example, use "lcanalyzer project - release v0.1"
+5. We can, for example, use "lcanalyzer project - release v0.1"
    and "Tasks for the v0.1 release of the lcanalyzer project"
    for the name and description of our project, respectively.
    Or you can use anything that suits your project.
 
-   ![Naming a project in GitHub](../fig/github-name-project.png){: .image-with-shadow width="1000px"}
+   ![Naming a project in GitHub](../fig/51_ManagingProjects_4_ProjSettings.png){: .image-with-shadow width="1000px"}
 
-5. GitHub's default card board template contains
+6. GitHub's default card board template contains
    the following three columns with pretty self-explanatory names:
 
    - `To Do`
    - `In Progress`
    - `Done`
 
-   ![Default card board in GitHub](../fig/github-project-view-add-remove-items.png){: .image-with-shadow width="1000px"}
+   ![Default card board in GitHub](../fig/51_ManagingProjects_4_ProjView.svg){: .image-with-shadow width="1000px"}
 
     You can add or remove columns from your project board to suit your use case.
     One commonly seen extra column is `On hold` or `Waiting` -
@@ -355,7 +360,7 @@ Let's create a Project in GitHub to plan the first release of our code.
     to remove a column select the `...` button in the top right corner of the column itself
     and then the `Delete column` option.
 
-6. You can now add new items (cards) to columns by pressing
+7. You can now add new items (cards) to columns by pressing
    the `+ Add item` button at the bottom of each column (see the previous image) -
    a text box to add a card will appear.
    Cards can be simple textual notes
@@ -366,8 +371,6 @@ Let's create a Project in GitHub to plan the first release of our code.
    and selecting the repository
    and an issue or pull request from that repository that you want to add.
 
-    ![Adding issues and notes to a project board in GitHub](../fig/github-project-new-items.png){: .image-with-shadow width="1000px"}
-
     Notes contain task descriptions and can have detailed content like checklists.
     In some cases, e.g. if a note becomes too complex,
     you may want to convert it into an issue so you can add labels,
@@ -375,13 +378,13 @@ Let's create a Project in GitHub to plan the first release of our code.
     or write more detailed comments
     (for that, use the `Convert to issue` option from the `...` menu on the card itself).
 
-   ![Coverting a task to issue](../fig/github-convert-task-to-issue.png){: .image-with-shadow width="1000px"}
+   ![Coverting a task to issue](../fig/51_ManagingProjects_6_ToIssue.svg.png){: .image-with-shadow width="1000px"}
 
-7.  In addition to creating new tasks as notes and converting them to issues -
+8.  In addition to creating new tasks as notes and converting them to issues -
 you can add an existing issue or pull request (from any repository visible to you)
 as a task on a column by pasting its URL into the `Add item` field
 and pressing the `Enter` key.
-8. You can drag a task/card from `Todo` to `In Progress` column to indicate that you are working on it
+9. You can drag a task/card from `Todo` to `In Progress` column to indicate that you are working on it
    or to the `Done` column to indicate that it has been completed.
    Issues and pull requests on cards will automatically be moved to the `Done` column for you
    when you close the issue or merge the pull request -
