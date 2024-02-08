@@ -212,7 +212,6 @@ To do so, each repository owner needs to:
 2. Select the **vertical** tab 'Collaborators' from the left and click the 'Add people' button.
    ![Managing access to a repository in GitHub](../fig/41_CodeReview_2_Collaborators.svg){: .image-with-shadow width="900px"}
 3. Add your collaborator(s) by their GitHub username(s), full name(s) or email address(es).
-   ![Adding collaborators to a repository in GitHub](../fig/github-add-collaborators.png){: .image-with-shadow width="900px"}
 4. Collaborator(s) will be notified of your invitation to join your repository
    based on their notification preferences.
 5. Once they accept the invitation, they will have the collaborator-level access to your repository
