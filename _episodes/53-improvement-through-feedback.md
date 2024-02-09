@@ -194,9 +194,9 @@ We can create a new one by selecting `Issues` on our repository,
 then `Milestones` to display any existing milestones,
 then clicking the "New milestone" button to the right.
 
-![Milestones in GitHub](../fig/github-milestones.png){: .image-with-shadow width="1000px"}
+![Milestones in GitHub](../fig/53_ManagingProjects_2_Milestones.svg){: .image-with-shadow width="1000px"}
 
-![Create a milestone in GitHub](../fig/github-create-milestone.png){: .image-with-shadow width="1000px"}
+![Create a milestone in GitHub](../fig/53_ManagingProjects_1_NewMilestone.svg){: .image-with-shadow width="1000px"}
 
 We add in a title,
 a completion date (i.e. the end of this timebox),

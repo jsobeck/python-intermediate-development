@@ -67,10 +67,6 @@ and something you should adopt in your development process too.
 
 ## Code Review
 
-Regardless of the collaborative code development model your team uses, 
-[code review][code-review] is one of the widely accepted best practices for software development in teams
-and something you should adopt in your development process too. 
-
 Code review is a software quality assurance practice
 where one or several people from the team (different from the code's author)
 check the software by viewing parts of its source code at the point when the code changes.
@@ -212,11 +208,10 @@ to enable them to create branches and pull requests.
 To do so, each repository owner needs to:
 
 1. Head over to Settings section of your software project's repository in GitHub.
-   ![Accessing settings for a repository in GitHub](../fig/github-settings.png){: .image-with-shadow width="900px"}
+   ![Accessing settings for a repository in GitHub](../fig/41_CodeReview_1_Settings.svg){: .image-with-shadow width="900px"}
 2. Select the **vertical** tab 'Collaborators' from the left and click the 'Add people' button.
-   ![Managing access to a repository in GitHub](../fig/github-manage-access.png){: .image-with-shadow width="900px"}
+   ![Managing access to a repository in GitHub](../fig/41_CodeReview_2_Collaborators.svg){: .image-with-shadow width="900px"}
 3. Add your collaborator(s) by their GitHub username(s), full name(s) or email address(es).
-   ![Adding collaborators to a repository in GitHub](../fig/github-add-collaborators.png){: .image-with-shadow width="900px"}
 4. Collaborator(s) will be notified of your invitation to join your repository
    based on their notification preferences.
 5. Once they accept the invitation, they will have the collaborator-level access to your repository
@@ -286,12 +281,23 @@ compared to that of personal repositories.
 {: .challenge}
 
 > ## Testing Based on Requirements
+> 
 > Tests should test functionality,
 > which stem from the software requirements,
 > rather than an implementation.
 > Tests can be seen as a reflection of those requirements -
 > checking if the requirements are satisfied.
+> 
 {: .callout}
+
+> ## Exercise: Edit One of the Notebooks
+>
+> Comparing changes introduced to a notebook may be problematic,
+> since notebooks aren't plain text format. Open one of the notebooks
+> in the `feature-x-tests` branch and make some small changes,
+> e.g. make a plot for a different light curve from our dataset.
+> We will use this change later.
+{: .challenge}
 
 Remember to commit your new code to your branch `feature-x-tests`.
 
@@ -316,9 +322,9 @@ you have to do the following:
 2. Head over to the remote repository in GitHub
    and locate your new (`feature-x-tests`) branch from the dropdown box on the Code tab
    (you can search for your branch or use the "View all branches" option).
-   ![All repository branches in GitHub](../fig/github-branches.png){: .image-with-shadow width="600px"}
+   ![All repository branches in GitHub](../fig/41_CodeReview_3_Branches.svg){: .image-with-shadow width="600px"}
 3. Open a pull request by clicking "Compare & pull request" button.
-   ![Submitting a pull request in GitHub](../fig/github-create-pull-request.png){: .image-with-shadow width="900px"}
+   ![Submitting a pull request in GitHub](../fig/41_CodeReview_4_PR.png){: .image-with-shadow width="900px"}
 4. Select the base and the head branch, e.g. `feature-x` and `feature-x-tests`, respectively.
    Recall that the base branch is where you want your changes to be merged
    and the head branch contains your changes.
@@ -333,14 +339,26 @@ You should receive a similar pull request from other team members on your reposi
 #### Step 5: Code Review
 
 1. The repository moderator/code reviewers reviews your changes
-   and provides feedback to you in the form of comments.
+   and provides feedback to you in the form of comments. 
 2. Respond to their comments and do any subsequent commits,
    as requested by reviewers.
 3. It may take a few rounds of exchanging comments and discussions until
    the team is ready to accept your changes.
 
 Perform the above actions on the pull request you received,
-this time acting as the moderator/code reviewer.
+this time acting as the moderator/code reviewer. 
+In this role, look through the
+`Commits`, `Checks` and `Files` tabs. They provide you with information on what
+are the commits that will be merged with your branch, whether the code passed all the
+workflow checks, and in case of the `Files`, help you to see the introduced changes in each
+file, with green highlighting the additions and red highlighting what was deleted.
+
+In the `Files`, pay attention to the `.ipynb` files (it is likely that you will need to click
+on the `Load diff`). The changes contain a lot of cell metainformation that changes at each execution of
+the cell, even if the actual output didn't change. In order to review these changes properly, click on your
+avatar in the top right corner of the window and select `Feature Preview` option. There in the left side 
+menu you can activate the `Rich Jupyter Notebook Diffs` that will give you an opportunity to review
+the notebooks much like the ordinary `.py` files. 
 
 #### Step 6: Closing a Pull Request
 
