@@ -49,7 +49,7 @@ a framework for managing bug reports, feature requests, and lists of future work
 Go back to the home page for your `InterPython_Workshop_Example` repository in GitHub,
 and click on the **Issue** tab.
 You should see a page listing the open issues on your repository -
-currently there should be none.
+currently there should be none. (If you don't see an **Issues** tab on your repository, go to the repository settings, scroll down to the **Features** section and click the check box next to **Issues**.)
 
 ![List of project issues in GitHub](../fig/github-issue-list.png){: .image-with-shadow width="1000px"}
 
